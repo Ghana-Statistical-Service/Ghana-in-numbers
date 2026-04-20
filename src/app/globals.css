@@ -1,26 +1,110 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --primary: #382873;
+  --primary-50: #AFA2DF;
+  --primary-100: #9F8FD8;
+  --primary-200: #7E69CB;
+  --primary-300: #5D43BE;
+  --primary-400: #4A3599;
+  --primary-500: #382873;
+  --primary-600: #261B4D;
+  --primary-700: #130E27;
+  --primary-800: #010101;
+
+  /* Secondary Colors */
+  --secondary: #17B8A6;
+  --secondary-50: #BEF7F0;
+  --secondary-100: #A7F4EB;
+  --secondary-200: #7AEEE1;
+  --secondary-300: #4CE9D7;
+  --secondary-400: #1FE3CD;
+  --secondary-500: #17B8A6;
+  --secondary-600: #118B7D;
+  --secondary-700: #0C5D54;
+  --secondary-800: #06302B;
+
+  /* Accent Colors */
+  --accent: #DB2988;
+  --accent-50: #FCEDF5;
+  --accent-100: #F8D8E9;
+  --accent-200: #F1ACD1;
+  --accent-300: #EA80B9;
+  --accent-400: #E255A0;
+  --accent-500: #DB2988;
+  --accent-600: #B31E6E;
+  --accent-700: #871753;
+  --accent-800: #5C0F38;
+
+  /* Sidebar */
+  --sidebar-bg: #1B2A4A;
+  --sidebar-hover: rgba(255,255,255,0.08);
+  --sidebar-active: rgba(255,255,255,0.12);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-50: var(--secondary-50);
+  --color-secondary-100: var(--secondary-100);
+  --color-secondary-200: var(--secondary-200);
+  --color-secondary-300: var(--secondary-300);
+  --color-secondary-400: var(--secondary-400);
+  --color-secondary-500: var(--secondary-500);
+  --color-secondary-600: var(--secondary-600);
+  --color-secondary-700: var(--secondary-700);
+  --color-secondary-800: var(--secondary-800);
+
+  --color-accent: var(--accent);
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
+
+  --color-sidebar: var(--sidebar-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  background: #F0F2F5;
+  color: #1a1a2e;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
 }
