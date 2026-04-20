@@ -20,7 +20,7 @@ export default function Home() {
         <main className="flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-4">
 
           {/* Row 1: [Title + KPI Strip] | [Inflation Sparkline] */}
-          <div className="grid items-start gap-4" style={{ gridTemplateColumns: "1fr 264px" }}>
+          <div className="grid items-start gap-4" style={{ gridTemplateColumns: "1fr 246px" }}>
             <div className="flex flex-col gap-3">
               <div>
                 <h1
@@ -35,7 +35,7 @@ export default function Home() {
               </div>
               <KPIStrip />
             </div>
-            <div style={{ marginTop: "-56px" }}>
+            <div style={{ marginTop: "-16px" }}>
               <InflationSparkline />
             </div>
           </div>

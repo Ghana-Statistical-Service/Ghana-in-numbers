@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ghana in Numbers
+
+Ghana in Numbers is a dashboard-style frontend for presenting key national indicators from the Ghana Statistical Service in a fast, visual, and accessible format.
+
+The current implementation focuses on the homepage experience: a national snapshot with headline KPIs, a regional map, macro charts, and quick-entry cards for deeper stories and exploration.
+
+## Current Scope
+
+The app currently includes:
+
+- A dashboard shell with sidebar navigation and top bar
+- A KPI strip for headline national indicators
+- An inflation summary card with a trend graph
+- A regional choropleth map
+- GDP growth and sector breakdown charts
+- Supporting cards for monthly changes, popular indicators, and a featured data story
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Recharts
+- react-simple-maps
+
+## Project Structure
+
+```text
+src/
+  app/
+    layout.tsx
+    page.tsx
+    globals.css
+  components/
+    home/
+      ChoroplethMap.tsx
+      DataStoryCard.tsx
+      GDPGrowthChart.tsx
+      InflationSparkline.tsx
+      KPIStrip.tsx
+      MostSearchedCard.tsx
+      SectorBreakdown.tsx
+      WhatsChangedCard.tsx
+    layout/
+      Sidebar.tsx
+      TopBar.tsx
+  data/
+    dummy.ts
+  lib/
+    geojsonToSvg.ts
+  types/
+    index.ts
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+ recommended
+- npm
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev`: start the development server
+- `npm run build`: create a production build
+- `npm run start`: run the production build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The current interface uses placeholder/demo values stored in [`src/data/dummy.ts`](./src/data/dummy.ts).
 
-## Deploy on Vercel
+This keeps the frontend easy to iterate on while live data integration and final indicator definitions are being refined.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Design and Product Direction
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The broader product direction is documented in [`../docs.md`](../docs.md), including:
+
+- thematic areas
+- homepage structure
+- section templates
+- future storytelling and SDG modules
+
+## Status
+
+This repository is currently a frontend prototype / working dashboard shell, not a finished production release.
+
+Expected next steps include:
+
+- live data integration from official sources
+- expanded thematic pages
+- drill-downs and comparisons
+- production hardening and deployment setup
+
+## Notes
+
+- The app currently uses `next/font/google` for Geist fonts in [`src/app/layout.tsx`](./src/app/layout.tsx).
+- In restricted or offline environments, `npm run build` can fail if Google Fonts cannot be fetched.
+- If offline builds are required, switch to local fonts or a system font stack.
+
+## Ownership
+
+Built for the Ghana in Numbers dashboard initiative in the Ghana Statistical Service context.

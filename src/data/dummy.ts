@@ -18,14 +18,30 @@ export const gdpGrowthData: GDPDataPoint[] = [
 ];
 
 export const inflationSparklineData: InflationDataPoint[] = [
-  { month: "Jan", value: 13.5 },
-  { month: "Feb", value: 13.8 },
-  { month: "Mar", value: 14.1 },
-  { month: "Apr", value: 13.9 },
-  { month: "May", value: 13.6 },
-  { month: "Jun", value: 13.4 },
-  { month: "Jul", value: 13.1 },
-  { month: "Aug", value: 12.8 },
+  { month: "M1", value: 13.24 },
+  { month: "M2", value: 13.28 },
+  { month: "M3", value: 13.26 },
+  { month: "M4", value: 13.30 },
+  { month: "M5", value: 13.12 },
+  { month: "M6", value: 12.86 },
+  { month: "M7", value: 12.83 },
+  { month: "M8", value: 13.05 },
+  { month: "M9", value: 13.28 },
+  { month: "M10", value: 13.52 },
+  { month: "M11", value: 13.56 },
+  { month: "M12", value: 13.74 },
+  { month: "M13", value: 13.32 },
+  { month: "M14", value: 13.28 },
+  { month: "M15", value: 13.72 },
+  { month: "M16", value: 13.58 },
+  { month: "M17", value: 13.98 },
+  { month: "M18", value: 14.34 },
+  { month: "M19", value: 14.10 },
+  { month: "M20", value: 14.46 },
+  { month: "M21", value: 14.38 },
+  { month: "M22", value: 14.82 },
+  { month: "M23", value: 14.76 },
+  { month: "M24", value: 15.34 },
 ];
 
 export const sectorData: SectorData[] = [
