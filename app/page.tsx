@@ -1,5 +1,4 @@
-import Sidebar from "@/components/layout/Sidebar";
-import TopBar from "@/components/layout/TopBar";
+import DashboardShell from "@/components/layout/DashboardShell";
 import GovStatMessageModal from "@/components/home/GovStatMessageModal";
 import PromoSplash from "@/components/home/PromoSplash";
 import KPIStrip from "@/components/home/KPIStrip";
@@ -13,18 +12,14 @@ import DataStoryCard from "@/components/home/DataStoryCard";
 
 export default function Home() {
   return (
-    <div className="flex h-full overflow-hidden" style={{ background: "#EEF1F6" }}>
+    <>
       <PromoSplash />
       <GovStatMessageModal />
-      <Sidebar />
+      <DashboardShell>
+        <main className="flex-1 overflow-y-auto px-4 md:px-5 pt-4 pb-4 space-y-4">
 
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopBar />
-
-        <main className="flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-4">
-
-          {/* Row 1: [Title + KPI Strip] | [Inflation Sparkline] */}
-          <div className="grid items-start gap-4" style={{ gridTemplateColumns: "1fr 246px" }}>
+          {/* Row 1: Title + KPI | Inflation Sparkline */}
+          <div className="grid gap-4 items-start md:grid-cols-[1fr_246px]">
             <div className="flex flex-col gap-3">
               <div>
                 <h1
@@ -58,15 +53,19 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div style={{ marginTop: "-16px" }}>
+
+            {/* Inflation sparkline — stacks below on mobile, side panel on md+ */}
+            <div className="md:-mt-4">
               <InflationSparkline />
             </div>
           </div>
 
-          {/* Row 2: Map 60% | [GDP 70% + Sector 30% stacked] 40% — fixed 400px row */}
-          <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr", height: "400px" }}>
-            <ChoroplethMap />
-            <div className="flex flex-col gap-4 h-full">
+          {/* Row 2: Map | GDP + Sector stacked */}
+          <div className="grid gap-4 md:grid-cols-[3fr_2fr] md:h-[400px]">
+            <div className="min-h-[320px] md:min-h-0 md:h-full">
+              <ChoroplethMap />
+            </div>
+            <div className="flex flex-col gap-4 md:h-full">
               <div style={{ flex: 6, minHeight: 0 }}>
                 <GDPGrowthChart />
               </div>
@@ -77,7 +76,7 @@ export default function Home() {
           </div>
 
           {/* Row 3: Bottom cards */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <WhatsChangedCard />
             <MostSearchedCard />
             <DataStoryCard />
@@ -87,7 +86,7 @@ export default function Home() {
             Powered by StatsBank | © GSS
           </p>
         </main>
-      </div>
-    </div>
+      </DashboardShell>
+    </>
   );
 }

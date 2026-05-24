@@ -52,7 +52,7 @@ const kpiCards = [
 
 export default function KPIStrip() {
   return (
-    <div className="grid grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       {kpiCards.map((card) => (
         <div
           key={card.label}

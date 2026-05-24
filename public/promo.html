@@ -14,7 +14,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 }
 
 /* ── Stage ── */
-#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0D1B2A;overflow:hidden}
 #canvas{position:relative;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:center center}
 
 /* ── Scenes ── */
@@ -35,6 +35,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 }
 #snd-btn:hover{background:rgba(255,255,255,.2);opacity:1}
 #snd-btn.on{opacity:1}
+#tap-hint{
+  position:absolute;top:54px;right:14px;z-index:200;
+  color:rgba(255,255,255,.55);font-size:11px;font-weight:500;
+  letter-spacing:.03em;pointer-events:none;
+  transition:opacity .4s ease;
+}
 
 /* ══════════════════════════════════════
    SCENE 0 — INTRO
@@ -108,7 +114,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
    SCENE 3 — ECONOMY
 ══════════════════════════════════════ */
 #s3{background:var(--bg)}
-.s3-inner{width:960px;display:flex;flex-direction:column;gap:24px}
+.s3-inner{width:860px;display:flex;flex-direction:column;gap:24px}
 .s3-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;text-align:center;opacity:0;transition:opacity .4s ease .1s}
 #s3.active .s3-label{opacity:1}
 .bar-chart{display:flex;align-items:flex-end;gap:20px;height:220px;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:0}
@@ -135,7 +141,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 #s4{background:var(--bg)}
 .s4-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;position:absolute;top:48px;opacity:0;transition:opacity .4s ease .1s}
 #s4.active .s4-label{opacity:1}
-.s4-cols{display:flex;align-items:stretch;width:960px;gap:0}
+.s4-cols{display:flex;align-items:stretch;width:860px;gap:0}
 .s4-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:24px 40px;gap:10px;opacity:0;transition:opacity .5s ease,transform .5s ease}
 #s4-edu{transform:translateX(-48px);transition-delay:.3s}
 #s4-hlt{transform:translateX( 48px);transition-delay:.45s}
@@ -179,8 +185,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 #s6{background:var(--bg);gap:32px}
 .s6-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;opacity:0;transition:opacity .4s ease .05s}
 #s6.active .s6-label{opacity:1}
-.env-row{display:flex;gap:36px}
-.env-card{display:flex;flex-direction:column;align-items:center;padding:28px 36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;gap:6px;opacity:0;transform:scale(.88);transition:opacity .5s ease,transform .5s ease}
+.env-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;justify-items:center}
+.env-card{display:flex;flex-direction:column;align-items:center;padding:28px 36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;gap:6px;opacity:0;transform:scale(.88);transition:opacity .5s ease,transform .5s ease;min-width:180px}
 .env-v{font-size:52px;font-weight:900;color:var(--white);line-height:1}
 .env-u{font-size:18px;font-weight:600;color:var(--slate)}
 .env-lbl{font-size:13px;color:var(--slate);text-align:center;margin-top:4px;line-height:1.45}
@@ -428,6 +434,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 
   <!-- Sound toggle -->
   <button id="snd-btn" class="on" title="Mute sound">🔊</button>
+  <span id="tap-hint">Tap 🔊 to listen</span>
 
   <!-- Progress bar -->
   <div id="prog-bar"><div id="prog-fill"></div></div>
@@ -442,7 +449,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Se
 /* ─── Resize canvas ─────────────────────────── */
 const canvas = document.getElementById('canvas');
 function resize(){
-  const s = Math.min(innerWidth/1280, innerHeight/720);
+  var w = innerWidth, h = innerHeight;
+  var s = (w < h)
+    ? Math.max(Math.min(w/1280, h/720), w/860)
+    : Math.min(w/1280, h/720);
   canvas.style.transform = 'scale('+s+')';
 }
 window.addEventListener('resize', resize);
@@ -565,6 +575,8 @@ function replayNarration(){
 document.addEventListener('click', function(){
   if(_gestured) return;
   _gestured = true;
+  var th = document.getElementById('tap-hint');
+  if(th) th.style.opacity = '0';
   if(!audioCtx) initAudio();
   if(!muted) replayNarration();
 }, {once: true});
@@ -573,6 +585,8 @@ sndBtn.addEventListener('click', function(){
   if(!_gestured){
     /* First interaction via sound button — start narration without toggling mute */
     _gestured = true;
+    var th = document.getElementById('tap-hint');
+    if(th) th.style.opacity = '0';
     if(!audioCtx) initAudio();
     replayNarration();
     return;
