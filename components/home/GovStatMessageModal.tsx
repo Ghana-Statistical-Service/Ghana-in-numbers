@@ -56,7 +56,7 @@ export default function GovStatMessageModal() {
         </button>
 
         {/* Scrollable body */}
-        <div className="overflow-y-auto px-8 pt-7 pb-8 scrollbar-thin" style={{ scrollbarColor: "#CBD5E1 transparent" }}>
+        <div className="overflow-y-auto px-5 sm:px-8 pt-7 pb-8 scrollbar-thin" style={{ scrollbarColor: "#CBD5E1 transparent" }}>
 
           {/* Title */}
           <h2
@@ -75,15 +75,15 @@ export default function GovStatMessageModal() {
           <hr className="mb-5" style={{ borderColor: "#E2E8F0" }} />
 
           {/* Photo + first paragraphs */}
-          <div className="flex gap-5 mb-4">
-            <div className="flex-shrink-0">
+          <div className="flex flex-col sm:flex-row gap-5 mb-4">
+            <div className="flex-shrink-0 flex justify-center sm:block">
               <Image
                 src="/gs.jpg"
                 alt="Dr. Alhassan Iddrisu, Government Statistician"
                 width={210}
                 height={260}
-                className="rounded-lg object-cover"
-                style={{ objectPosition: "center top", width: 210, height: 260 }}
+                className="rounded-lg object-cover w-[160px] sm:w-[210px] h-auto"
+                style={{ objectPosition: "center top" }}
               />
             </div>
             <div className="space-y-3 text-sm leading-relaxed" style={{ color: "#374151" }}>
