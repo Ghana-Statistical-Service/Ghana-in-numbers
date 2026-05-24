@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ghana in Numbers — Ghana Statistical Service</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',Arial,sans-serif}
+
+:root{
+  --red:#CE1126;--gold:#FCD116;--green:#006B3F;
+  --bg:#0D1B2A;--white:#fff;--slate:#8BA3BF;--teal:#17B8A6;
+}
+
+/* ── Stage ── */
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+#canvas{position:relative;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:center center}
+
+/* ── Scenes ── */
+.scene{position:absolute;inset:0;opacity:0;transition:opacity 0.5s ease;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.scene.active{opacity:1;pointer-events:auto}
+
+/* ── Progress bar ── */
+#prog-bar{position:absolute;bottom:0;left:0;width:100%;height:5px;background:rgba(255,255,255,.1);z-index:100}
+#prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--red) 33%,var(--gold) 33% 66%,var(--green) 66%)}
+
+/* ── Sound toggle button ── */
+#snd-btn{
+  position:absolute;top:14px;right:14px;z-index:200;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:10px;padding:7px 12px;font-size:17px;cursor:pointer;
+  color:#fff;backdrop-filter:blur(6px);transition:background .2s,opacity .2s;
+  opacity:.55;line-height:1;user-select:none;
+}
+#snd-btn:hover{background:rgba(255,255,255,.2);opacity:1}
+#snd-btn.on{opacity:1}
+
+/* ══════════════════════════════════════
+   SCENE 0 — INTRO
+══════════════════════════════════════ */
+#s0{background:#000}
+.flag-wrap{position:absolute;inset:0;display:flex;flex-direction:column}
+.flag-stripe{flex:1;transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+#fs-red  {background:var(--red);  transition-delay:.05s}
+#fs-gold {background:var(--gold); transition-delay:.2s}
+#fs-green{background:var(--green);transition-delay:.35s}
+#s0.si .flag-stripe{transform:scaleX(1)}
+
+#flag-star{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90px;height:90px;opacity:0;transition:opacity .4s ease .85s}
+#s0.si #flag-star{opacity:1}
+
+#s0.fd{background:var(--bg);transition:background .7s ease}
+#s0.fd .flag-stripe{transform:scaleY(0);transition:transform .5s ease .1s}
+#s0.fd #flag-star{opacity:0;transition:opacity .2s ease}
+
+.intro-accent{position:absolute;bottom:96px;left:0;width:100%;height:4px;background:linear-gradient(90deg,var(--red) 33%,var(--gold) 33% 66%,var(--green) 66%);transform:scaleX(0);transform-origin:left center;opacity:0;transition:transform .55s ease,opacity .3s ease}
+#s0.fd .intro-accent{transform:scaleX(1);opacity:1;transition-delay:.35s}
+
+.intro-text{position:absolute;bottom:112px;left:0;right:0;text-align:center;opacity:0;transform:translateY(36px);transition:opacity .6s ease,transform .6s ease}
+#s0.fd .intro-text{opacity:1;transform:none;transition-delay:.6s}
+.intro-title{font-size:88px;font-weight:900;color:var(--white);line-height:1;letter-spacing:-.02em}
+.intro-sub{font-size:20px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;margin-top:14px}
+
+/* ══════════════════════════════════════
+   SCENE 1 — WELCOME
+══════════════════════════════════════ */
+#s1{background:var(--bg);gap:28px}
+.s1-logo{height:72px;object-fit:contain;opacity:0;transition:opacity .5s ease .1s}
+#s1.active .s1-logo{opacity:1}
+.s1-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .5s ease .2s}
+#s1.active .s1-label{opacity:1}
+.leader-row{display:flex;gap:120px;align-items:flex-start}
+.leader-card{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;transition:opacity .5s ease,transform .5s ease}
+#lc-left {transform:translateX(-50px);transition-delay:.35s}
+#lc-right{transform:translateX( 50px);transition-delay:.5s}
+#s1.active #lc-left,#s1.active #lc-right{opacity:1;transform:none}
+.leader-avatar-wrap{width:128px;height:128px;border-radius:50%;border:3px solid var(--gold);overflow:hidden;flex-shrink:0}
+.leader-avatar-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.leader-initials{width:128px;height:128px;border-radius:50%;border:3px solid var(--gold);background:#1B3A5C;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;color:var(--gold)}
+.leader-name{font-size:22px;font-weight:700;color:var(--white);text-align:center}
+.leader-title{font-size:14px;color:var(--slate);text-align:center;line-height:1.4}
+.s1-divider{width:2px;height:160px;background:linear-gradient(180deg,transparent,var(--gold),transparent);flex-shrink:0;align-self:center}
+
+/* ══════════════════════════════════════
+   SCENE 2 — POPULATION
+══════════════════════════════════════ */
+#s2{background:var(--bg)}
+.s2-bg-star{position:absolute;width:520px;height:520px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.07;pointer-events:none}
+.s2-inner{display:flex;flex-direction:column;align-items:center;z-index:1}
+.s2-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateY(-18px);transition:opacity .4s ease .1s,transform .4s ease .1s}
+#s2.active .s2-label{opacity:1;transform:none}
+.s2-counter-row{display:flex;align-items:baseline;gap:6px;margin-top:6px}
+.s2-counter{font-size:112px;font-weight:900;color:var(--white);line-height:1;letter-spacing:-.03em}
+.s2-unit{font-size:52px;font-weight:800;color:var(--gold);align-self:flex-end;padding-bottom:8px}
+.s2-sub{font-size:20px;color:var(--slate);margin-top:4px}
+.pill-row{display:flex;gap:18px;margin-top:32px;flex-wrap:wrap;justify-content:center}
+.pill{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(252,209,22,.28);border-radius:14px;padding:14px 28px;opacity:0;transform:translateY(18px);transition:opacity .4s ease,transform .4s ease}
+.pill-v{font-size:30px;font-weight:800;color:var(--gold)}
+.pill-k{font-size:13px;color:var(--slate);margin-top:3px}
+#s2.active .pill:nth-child(1){opacity:1;transform:none;transition-delay:3.6s}
+#s2.active .pill:nth-child(2){opacity:1;transform:none;transition-delay:3.8s}
+#s2.active .pill:nth-child(3){opacity:1;transform:none;transition-delay:4.0s}
+#s2.active .pill:nth-child(4){opacity:1;transform:none;transition-delay:4.2s}
+.s2-people{position:absolute;bottom:48px;right:72px;opacity:.35}
+
+/* ══════════════════════════════════════
+   SCENE 3 — ECONOMY
+══════════════════════════════════════ */
+#s3{background:var(--bg)}
+.s3-inner{width:960px;display:flex;flex-direction:column;gap:24px}
+.s3-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;text-align:center;opacity:0;transition:opacity .4s ease .1s}
+#s3.active .s3-label{opacity:1}
+.bar-chart{display:flex;align-items:flex-end;gap:20px;height:220px;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:0}
+.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;position:relative}
+.bar-group.hi .bar{background:linear-gradient(180deg,#B8920A,var(--gold));box-shadow:0 0 20px rgba(252,209,22,.45)}
+.bar{width:100%;height:0;background:linear-gradient(180deg,#004D2C,#00C97A);border-radius:4px 4px 0 0;transition:height .7s cubic-bezier(.4,0,.2,1)}
+.bar-val{font-size:14px;font-weight:700;color:var(--white);text-align:center;min-height:22px;opacity:0;transition:opacity .3s ease;padding-bottom:4px}
+.bar-lbl{font-size:12px;color:var(--slate);text-align:center;margin-top:8px;line-height:1.35}
+.bar-lbl span{font-size:13px;font-weight:600;color:var(--white)}
+.bar-group.hi .bar-lbl span{color:var(--gold)}
+.chip-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.chip{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 30px;opacity:0;transform:translateY(14px);transition:opacity .4s ease,transform .4s ease}
+.chip-v{font-size:26px;font-weight:700;color:var(--white)}
+.chip-k{font-size:12px;color:var(--slate);margin-top:3px}
+.chip-v.gold{color:var(--gold)}.chip-v.grn{color:#00C97A}
+#s3.active .chip:nth-child(1){opacity:1;transform:none;transition-delay:3.6s}
+#s3.active .chip:nth-child(2){opacity:1;transform:none;transition-delay:3.8s}
+#s3.active .chip:nth-child(3){opacity:1;transform:none;transition-delay:4.0s}
+#s3.active .chip:nth-child(4){opacity:1;transform:none;transition-delay:4.2s}
+
+/* ══════════════════════════════════════
+   SCENE 4 — SOCIAL
+══════════════════════════════════════ */
+#s4{background:var(--bg)}
+.s4-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;position:absolute;top:48px;opacity:0;transition:opacity .4s ease .1s}
+#s4.active .s4-label{opacity:1}
+.s4-cols{display:flex;align-items:stretch;width:960px;gap:0}
+.s4-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:24px 40px;gap:10px;opacity:0;transition:opacity .5s ease,transform .5s ease}
+#s4-edu{transform:translateX(-48px);transition-delay:.3s}
+#s4-hlt{transform:translateX( 48px);transition-delay:.45s}
+#s4.active #s4-edu,#s4.active #s4-hlt{opacity:1;transform:none}
+.s4-icon{width:64px;height:64px}
+.s4-ptitle{font-size:22px;font-weight:700;margin-top:4px}
+.s4-stat{display:flex;flex-direction:column;align-items:center;margin-top:12px}
+.s4-val{font-size:46px;font-weight:900;color:var(--white);line-height:1}
+.s4-key{font-size:13px;color:var(--slate);margin-top:3px;text-align:center}
+.s4-divider{width:2px;align-self:stretch;background:linear-gradient(180deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent);flex-shrink:0;margin:20px 0}
+
+/* ══════════════════════════════════════
+   SCENE 5 — GOVERNANCE
+══════════════════════════════════════ */
+#s5{background:var(--bg);flex-direction:row;justify-content:center;gap:60px}
+#s5-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;position:absolute;top:40px;opacity:0;transition:opacity .4s ease .1s}
+#s5.active #s5-label{opacity:1}
+.map-side{display:flex;flex-direction:column;align-items:center;gap:8px}
+#ghana-map{width:280px;height:364px}
+.map-caption{font-size:14px;color:var(--slate)}
+.gov-side{display:flex;flex-direction:column;gap:18px;width:400px;align-self:center}
+.gov-row{display:flex;flex-direction:column;padding:14px 20px;background:rgba(255,255,255,.05);border-left:4px solid var(--green);border-radius:0 10px 10px 0;opacity:0;transform:translateX(28px);transition:opacity .4s ease,transform .4s ease}
+.gov-v{font-size:34px;font-weight:800;color:var(--white)}
+.gov-k{font-size:13px;color:var(--slate);margin-top:2px}
+.gov-trend{font-size:13px;font-weight:600;color:#00C97A;margin-top:4px}
+#s5.active .gov-row:nth-child(1){opacity:1;transform:none;transition-delay:2.8s}
+#s5.active .gov-row:nth-child(2){opacity:1;transform:none;transition-delay:3.1s}
+#s5.active .gov-row:nth-child(3){opacity:1;transform:none;transition-delay:3.4s}
+#s5.active .gov-row:nth-child(4){opacity:1;transform:none;transition-delay:3.7s}
+
+.region-path{fill:rgba(0,107,63,.22);stroke:rgba(0,200,120,.55);stroke-width:.5;transition:fill .3s}
+.region-path:hover{fill:rgba(0,200,120,.35)}
+.rdot{opacity:0;transition:opacity .2s ease}
+.rdot circle.core{fill:var(--gold)}
+.rdot circle.ring{fill:none;stroke:var(--gold);stroke-width:1.5;animation:ripple 1.4s ease-out infinite}
+@keyframes ripple{0%{r:4;opacity:.9}100%{r:14;opacity:0}}
+
+/* ══════════════════════════════════════
+   SCENE 6 — ENVIRONMENT
+══════════════════════════════════════ */
+#s6{background:var(--bg);gap:32px}
+.s6-label{font-size:16px;font-weight:600;color:var(--slate);letter-spacing:.12em;text-transform:uppercase;opacity:0;transition:opacity .4s ease .05s}
+#s6.active .s6-label{opacity:1}
+.env-row{display:flex;gap:36px}
+.env-card{display:flex;flex-direction:column;align-items:center;padding:28px 36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;gap:6px;opacity:0;transform:scale(.88);transition:opacity .5s ease,transform .5s ease}
+.env-v{font-size:52px;font-weight:900;color:var(--white);line-height:1}
+.env-u{font-size:18px;font-weight:600;color:var(--slate)}
+.env-lbl{font-size:13px;color:var(--slate);text-align:center;margin-top:4px;line-height:1.45}
+#s6.active .env-card:nth-child(1){opacity:1;transform:none;transition-delay:.1s}
+#s6.active .env-card:nth-child(2){opacity:1;transform:none;transition-delay:.3s}
+#s6.active .env-card:nth-child(3){opacity:1;transform:none;transition-delay:.5s}
+#s6.active .env-card:nth-child(4){opacity:1;transform:none;transition-delay:.7s}
+
+/* ══════════════════════════════════════
+   SCENE 7 — OUTRO
+══════════════════════════════════════ */
+#s7{background:#060D15}
+.outro-inner{display:flex;flex-direction:column;align-items:center;gap:14px;opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+#s7.active .outro-inner{opacity:1;transform:none;transition-delay:.2s}
+.outro-logo{height:108px;object-fit:contain}
+.outro-org{font-size:28px;font-weight:700;color:var(--white)}
+.outro-url{font-size:28px;font-weight:700;color:var(--gold)}
+.outro-tag{font-size:20px;color:var(--slate)}
+.outro-stripe{position:absolute;bottom:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--red) 33%,var(--gold) 33% 66%,var(--green) 66%)}
+</style>
+</head>
+<body>
+<div id="stage">
+ <div id="canvas">
+
+  <!-- ── SCENE 0: INTRO ── -->
+  <div class="scene" id="s0">
+    <div class="flag-wrap">
+      <div class="flag-stripe" id="fs-red"></div>
+      <div class="flag-stripe" id="fs-gold"></div>
+      <div class="flag-stripe" id="fs-green"></div>
+    </div>
+    <svg id="flag-star" viewBox="0 0 100 100"><polygon points="50,4 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" fill="#000"/></svg>
+    <div class="intro-accent"></div>
+    <div class="intro-text">
+      <div class="intro-title">Ghana in Numbers</div>
+      <div class="intro-sub">Statistical Yearbook 2024 &nbsp;·&nbsp; Ghana Statistical Service</div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 1: WELCOME ── -->
+  <div class="scene" id="s1">
+    <img src="./gss-logo.png" class="s1-logo" alt="GSS Logo"/>
+    <p class="s1-label">A Message from our Leadership</p>
+    <div class="leader-row">
+      <div class="leader-card" id="lc-left">
+        <div class="leader-avatar-wrap"><img src="./gs.jpg" alt="Dr. Alhassan Iddrisu"/></div>
+        <p class="leader-name">Dr. Alhassan Iddrisu</p>
+        <p class="leader-title">Government Statistician<br>Ghana Statistical Service</p>
+      </div>
+      <div class="s1-divider"></div>
+      <div class="leader-card" id="lc-right">
+        <div class="leader-avatar-wrap"><img src="./omarseidu.webp" alt="Alhaji Omar Seidu"/></div>
+        <p class="leader-name">Alhaji Omar Seidu</p>
+        <p class="leader-title">Deputy Government Statistician<br>Ghana Statistical Service</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 2: POPULATION ── -->
+  <div class="scene" id="s2">
+    <svg class="s2-bg-star" viewBox="0 0 100 100"><polygon points="50,2 61,35 96,35 68,57 80,92 50,70 20,92 32,57 4,35 39,35" fill="#fff"/></svg>
+    <div class="s2-inner">
+      <div class="s2-label">Population of Ghana</div>
+      <div class="s2-counter-row">
+        <span class="s2-counter" id="pop-n">0</span>
+        <span class="s2-unit">M</span>
+      </div>
+      <div class="s2-sub">2025 Projection · Ghana Statistical Service</div>
+      <div class="pill-row">
+        <div class="pill"><span class="pill-v">58.7%</span><span class="pill-k">Urban Population</span></div>
+        <div class="pill"><span class="pill-v">65.1 yrs</span><span class="pill-k">Life Expectancy</span></div>
+        <div class="pill"><span class="pill-v">2.1%</span><span class="pill-k">Annual Growth Rate</span></div>
+        <div class="pill"><span class="pill-v">3.9</span><span class="pill-k">Fertility Rate</span></div>
+      </div>
+    </div>
+    <svg class="s2-people" width="180" height="44" viewBox="0 0 180 44">
+      <circle cx="18" cy="10" r="7" fill="#FCD116" opacity=".65"/>
+      <rect x="11" y="19" width="14" height="18" rx="4" fill="#FCD116" opacity=".65"/>
+      <circle cx="54" cy="10" r="7" fill="#FCD116" opacity=".75"/>
+      <rect x="47" y="19" width="14" height="18" rx="4" fill="#FCD116" opacity=".75"/>
+      <circle cx="90" cy="10" r="7" fill="#FCD116" opacity=".9"/>
+      <rect x="83" y="19" width="14" height="18" rx="4" fill="#FCD116" opacity=".9"/>
+      <circle cx="126" cy="10" r="7" fill="#FCD116" opacity=".75"/>
+      <rect x="119" y="19" width="14" height="18" rx="4" fill="#FCD116" opacity=".75"/>
+      <circle cx="162" cy="10" r="7" fill="#FCD116" opacity=".65"/>
+      <rect x="155" y="19" width="14" height="18" rx="4" fill="#FCD116" opacity=".65"/>
+    </svg>
+  </div>
+
+  <!-- ── SCENE 3: ECONOMY ── -->
+  <div class="scene" id="s3">
+    <div class="s3-inner">
+      <div class="s3-label">Economy &amp; GDP Growth</div>
+      <div class="bar-chart">
+        <div class="bar-group">
+          <div class="bar-val" id="bv0"></div>
+          <div class="bar" id="b0"></div>
+          <div class="bar-lbl">2020<br><span>0.5%</span></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-val" id="bv1"></div>
+          <div class="bar" id="b1"></div>
+          <div class="bar-lbl">2021<br><span>5.1%</span></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-val" id="bv2"></div>
+          <div class="bar" id="b2"></div>
+          <div class="bar-lbl">2022<br><span>3.8%</span></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-val" id="bv3"></div>
+          <div class="bar" id="b3"></div>
+          <div class="bar-lbl">2023<br><span>3.1%</span></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-val" id="bv4"></div>
+          <div class="bar" id="b4"></div>
+          <div class="bar-lbl">2024<br><span>5.8%</span></div>
+        </div>
+        <div class="bar-group hi">
+          <div class="bar-val" id="bv5" style="color:var(--gold)"></div>
+          <div class="bar" id="b5"></div>
+          <div class="bar-lbl">2025<br><span>6.0%</span></div>
+        </div>
+      </div>
+      <div class="chip-row">
+        <div class="chip"><span class="chip-v">GH¢ 1,434 bn</span><span class="chip-k">Nominal GDP 2025</span></div>
+        <div class="chip"><span class="chip-v grn">3.2%</span><span class="chip-k">Inflation — Mar 2026</span></div>
+        <div class="chip"><span class="chip-v">GH¢ 148.3 bn</span><span class="chip-k">Trade Surplus</span></div>
+        <div class="chip"><span class="chip-v gold">62.9%</span><span class="chip-k">Exports: Gold</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 4: SOCIAL ── -->
+  <div class="scene" id="s4">
+    <div class="s4-label">Social Development</div>
+    <div class="s4-cols">
+      <div class="s4-panel" id="s4-edu">
+        <svg class="s4-icon" viewBox="0 0 64 64">
+          <rect x="8" y="10" width="48" height="44" rx="4" fill="none" stroke="#FCD116" stroke-width="3"/>
+          <line x1="32" y1="10" x2="32" y2="54" stroke="#FCD116" stroke-width="2"/>
+          <line x1="13" y1="24" x2="29" y2="24" stroke="#FCD116" stroke-width="2"/>
+          <line x1="13" y1="33" x2="29" y2="33" stroke="#FCD116" stroke-width="2"/>
+          <line x1="13" y1="42" x2="29" y2="42" stroke="#FCD116" stroke-width="2"/>
+          <line x1="35" y1="24" x2="51" y2="24" stroke="#FCD116" stroke-width="2"/>
+          <line x1="35" y1="33" x2="51" y2="33" stroke="#FCD116" stroke-width="2"/>
+          <line x1="35" y1="42" x2="51" y2="42" stroke="#FCD116" stroke-width="2"/>
+        </svg>
+        <div class="s4-ptitle" style="color:var(--gold)">Education</div>
+        <div class="s4-stat"><span class="s4-val" id="ner">0</span><span class="s4-key">Primary Net Enrolment Rate</span></div>
+        <div class="s4-stat"><span class="s4-val" id="jhs">0</span><span class="s4-key">JHS Gross Enrolment Rate</span></div>
+      </div>
+      <div class="s4-divider"></div>
+      <div class="s4-panel" id="s4-hlt">
+        <svg class="s4-icon" viewBox="0 0 64 64">
+          <path d="M32 56 C32 56 10 40 10 24 C10 16 16 10 23 12 C27 13 32 18 32 18 C32 18 37 13 41 12 C48 10 54 16 54 24 C54 40 32 56 32 56Z" fill="none" stroke="#CE1126" stroke-width="3"/>
+          <line x1="32" y1="20" x2="32" y2="36" stroke="#CE1126" stroke-width="2.5"/>
+          <line x1="24" y1="28" x2="40" y2="28" stroke="#CE1126" stroke-width="2.5"/>
+        </svg>
+        <div class="s4-ptitle" style="color:var(--red)">Health &amp; Housing</div>
+        <div class="s4-stat"><span class="s4-val" id="ins">0</span><span class="s4-key">Health Insurance Coverage</span></div>
+        <div class="s4-stat"><span class="s4-val" id="elec">0</span><span class="s4-key">Electricity Access</span></div>
+        <div class="s4-stat" style="margin-top:6px"><span class="s4-val" id="hdef" style="color:#EF4444;font-size:38px">0</span><span class="s4-key">Housing Deficit (units)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 5: GOVERNANCE ── -->
+  <div class="scene" id="s5">
+    <div id="s5-label">Governance &amp; Regions</div>
+    <div class="map-side">
+      <svg id="ghana-map" viewBox="0 0 200 260"><g id="map-regions"></g><g id="map-dots"></g></svg>
+      <div class="map-caption">16 Administrative Regions</div>
+    </div>
+    <div class="gov-side">
+      <div class="gov-row"><span class="gov-v">14.9%</span><span class="gov-k">Women in Parliament (2025)</span></div>
+      <div class="gov-row"><span class="gov-v">48.6%</span><span class="gov-k">Women — High Court Judges</span></div>
+      <div class="gov-row">
+        <span class="gov-v" style="color:#EF4444">14.3%</span>
+        <span class="gov-k">Corruption (Gifts to Officials)</span>
+        <span class="gov-trend">↓ Down from 56.2% in 2013</span>
+      </div>
+      <div class="gov-row"><span class="gov-v" style="color:var(--gold)">98.1%</span><span class="gov-k">Know Right to Vote</span></div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 6: ENVIRONMENT ── -->
+  <div class="scene" id="s6">
+    <div class="s6-label">Environment &amp; Climate</div>
+    <div class="env-row">
+      <div class="env-card">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <path d="M26 6 C14 6 7 16 7 26 C7 38 14 48 26 50 C38 48 45 38 45 26 C45 16 38 6 26 6Z" fill="none" stroke="#00C97A" stroke-width="2.5"/>
+          <path d="M26 50 C26 38 15 27 7 23" fill="none" stroke="#00C97A" stroke-width="2"/>
+          <path d="M26 50 C26 38 37 27 45 23" fill="none" stroke="#00C97A" stroke-width="2"/>
+        </svg>
+        <span class="env-v" id="ev-carbon">0</span>
+        <span class="env-u">Mt</span>
+        <span class="env-lbl">Forest Carbon<br>Retention</span>
+      </div>
+      <div class="env-card">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <path d="M26 8 L40 32 C40 41 33 47 26 47 C19 47 12 41 12 32Z" fill="none" stroke="#12AEE3" stroke-width="2.5"/>
+        </svg>
+        <span class="env-v" id="ev-rain">0</span>
+        <span class="env-u">mm</span>
+        <span class="env-lbl">Peak Rainfall<br>June 2024</span>
+      </div>
+      <div class="env-card">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <rect x="22" y="8" width="8" height="24" rx="4" fill="none" stroke="#FF6B6B" stroke-width="2.5"/>
+          <circle cx="26" cy="38" r="7" fill="none" stroke="#FF6B6B" stroke-width="2.5"/>
+          <rect x="24" y="20" width="4" height="18" rx="2" fill="#FF6B6B" opacity=".7"/>
+        </svg>
+        <span class="env-v" id="ev-temp">0</span>
+        <span class="env-u">°C</span>
+        <span class="env-lbl">Avg Temperature<br>2024</span>
+      </div>
+      <div class="env-card">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <path d="M4 22 C14 10 38 10 48 22" fill="none" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M10 30 C17 21 35 21 42 30" fill="none" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M18 38 C21 33 31 33 34 38" fill="none" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="26" cy="45" r="3" fill="#FCD116"/>
+        </svg>
+        <span class="env-v" id="ev-inet">0</span>
+        <span class="env-u">%</span>
+        <span class="env-lbl">Internet<br>Penetration</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENE 7: OUTRO ── -->
+  <div class="scene" id="s7">
+    <div class="outro-inner">
+      <img src="./gss-logo.png" class="outro-logo" alt="GSS"/>
+      <p class="outro-org">Ghana Statistical Service</p>
+      <p class="outro-url">statsghana.gov.gh</p>
+      <p class="outro-tag">Data for Development</p>
+    </div>
+    <div class="outro-stripe"></div>
+  </div>
+
+  <!-- Sound toggle -->
+  <button id="snd-btn" class="on" title="Mute sound">🔊</button>
+
+  <!-- Progress bar -->
+  <div id="prog-bar"><div id="prog-fill"></div></div>
+
+ </div><!-- /canvas -->
+</div><!-- /stage -->
+
+<script>
+(function(){
+'use strict';
+
+/* ─── Resize canvas ─────────────────────────── */
+const canvas = document.getElementById('canvas');
+function resize(){
+  const s = Math.min(innerWidth/1280, innerHeight/720);
+  canvas.style.transform = 'scale('+s+')';
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ─── Web Audio ─────────────────────────────── */
+var audioCtx = null, masterGain = null, muted = false;
+var sndBtn = document.getElementById('snd-btn');
+
+// Per-scene chime notes (Hz) — C major pentatonic
+var CHIMES = {
+  s0: [261.6,329.6,392.0],          // C4 E4 G4 — fanfare
+  s1: [220.0,329.6,440.0],          // A3 E4 A4 — welcoming
+  s2: [392.0,493.9,587.3],          // G4 B4 D5 — rising
+  s3: [293.7,440.0,587.3],          // D4 A4 D5 — economic drive
+  s4: [329.6,440.0,523.3],          // E4 A4 C5 — warm social
+  s5: [261.6,392.0,523.3],          // C4 G4 C5 — authoritative
+  s6: [329.6,523.3,659.3],          // E4 C5 E5 — bright environment
+  s7: [261.6,329.6,392.0,523.3],    // C4 E4 G4 C5 — full resolution
+};
+
+function initAudio(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 1;
+  masterGain.connect(audioCtx.destination);
+
+  // Ambient pad: three layered sine drones (C2/G2/C3 — warm cinematic)
+  [[65.4,0.030],[98.0,0.018],[130.8,0.012]].forEach(function(cfg){
+    var osc   = audioCtx.createOscillator();
+    var lfo   = audioCtx.createOscillator();
+    var lfogn = audioCtx.createGain();
+    var gain  = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = cfg[0];
+    gain.gain.value = cfg[1];
+    // LFO for subtle tremolo on each layer
+    lfo.frequency.value = 0.18 + Math.random()*0.1;
+    lfogn.gain.value = cfg[0] * 0.003; // tiny pitch waver
+    lfo.connect(lfogn);
+    lfogn.connect(osc.frequency);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    lfo.start();
+    osc.start();
+  });
+
+  // Subtle high shimmer: triangle wave at C5, very quiet
+  var shimmer = audioCtx.createOscillator();
+  var sGain   = audioCtx.createGain();
+  var sFilter = audioCtx.createBiquadFilter();
+  shimmer.type = 'triangle';
+  shimmer.frequency.value = 523.3;
+  sGain.gain.value = 0.006;
+  sFilter.type = 'lowpass';
+  sFilter.frequency.value = 1200;
+  shimmer.connect(sFilter);
+  sFilter.connect(sGain);
+  sGain.connect(masterGain);
+  shimmer.start();
+}
+
+function playChime(sceneId){
+  if(!audioCtx || muted) return;
+  var notes = CHIMES[sceneId];
+  if(!notes) return;
+  var now = audioCtx.currentTime;
+  notes.forEach(function(freq, i){
+    var osc  = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    // Stagger each note 60ms apart for an arpeggio feel
+    var t = now + i*0.06;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.10, t + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 1.6);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(t);
+    osc.stop(t + 1.6);
+  });
+}
+
+function playTick(){
+  if(!audioCtx || muted) return;
+  var now  = audioCtx.currentTime;
+  var osc  = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 1047; // C6
+  gain.gain.setValueAtTime(0.022, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+  osc.connect(gain);
+  gain.connect(masterGain);
+  osc.start(now);
+  osc.stop(now + 0.04);
+}
+
+var _gestured = false;
+function replayNarration(){
+  if(muted || !window.speechSynthesis || t0 === null) return;
+  var elapsed = (performance.now() - t0) / 1000;
+  for(var i = 0; i < SCENES.length; i++){
+    var s = SCENES[i];
+    if(elapsed >= s.start - FADE && elapsed < s.end + FADE){
+      var text = NARRATION[s.id];
+      if(text){
+        speechSynthesis.cancel();
+        pickVoice();
+        var sents = text.replace(/([.!?])\s+/g, '$1|').split('|').filter(Boolean);
+        speakSentences(sents);
+      }
+      return;
+    }
+  }
+}
+
+document.addEventListener('click', function(){
+  if(_gestured) return;
+  _gestured = true;
+  if(!audioCtx) initAudio();
+  if(!muted) replayNarration();
+}, {once: true});
+
+sndBtn.addEventListener('click', function(){
+  if(!_gestured){
+    /* First interaction via sound button — start narration without toggling mute */
+    _gestured = true;
+    if(!audioCtx) initAudio();
+    replayNarration();
+    return;
+  }
+  if(!audioCtx) initAudio();
+  muted = !muted;
+  if(audioCtx) masterGain.gain.setTargetAtTime(muted ? 0 : 1, audioCtx.currentTime, 0.08);
+  if(muted) speechSynthesis.cancel();
+  else replayNarration();
+  sndBtn.textContent = muted ? '🔇' : '🔊';
+  sndBtn.classList.toggle('on', !muted);
+  sndBtn.title = muted ? 'Unmute sound' : 'Mute sound';
+});
+
+/* ─── narration ──────────────────────────────── */
+var NARRATION = {
+  s0: "Ghana in Numbers. The official statistical story of our nation.",
+  s1: "At the helm of the Ghana Statistical Service is Dr. Alhassan Iddrisu, ably supported by his deputy, Alhaji Omar Seidu.",
+  s2: "Ghana's population stands at 34.4 million people. The population grows by over 700 thousand each year. More than half of Ghanaians now live in urban areas.",
+  s3: "Ghana's economy grew at 6 percent in 2025. Inflation has eased to 3.2 percent. In 2022, it stood above 50 percent. A significant recovery.",
+  s4: "Primary school enrolment stands at 79 percent. Junior high school enrolment reaches 115 percent. Health insurance coverage stands at 88 percent. Electricity access reaches 86 percent of households.",
+  s5: "Women hold 14.9 percent of parliamentary seats. Reports of gifts to public officials have declined. In 2013, the figure was 56 percent. By 2025, it had fallen to 14 percent.",
+  s6: "Ghana's forests store 344 million tonnes of carbon. Average rainfall peaks at 211 millimetres per month. Temperatures average 28.3 degrees Celsius.",
+  s7: "Ghana Statistical Service. Powering decisions with data. statsghana.gov.gh"
+};
+var _voice = null, _voicePicked = false;
+function pickVoice(){
+  if(_voicePicked) return;
+  var voices = speechSynthesis.getVoices();
+  if(!voices.length) return;   /* voices not ready yet — voiceschanged will retry */
+  _voicePicked = true;
+  _voice =
+    voices.find(function(v){ return v.name === 'Google UK English Female'; }) ||
+    voices.find(function(v){ return v.lang === 'en-GB' && /female/i.test(v.name); }) ||
+    voices.find(function(v){ return v.lang.startsWith('en') && /female/i.test(v.name); }) ||
+    voices.find(function(v){ return v.name === 'Samantha'; }) ||
+    voices.find(function(v){ return v.lang === 'en-IN'; }) ||
+    voices.find(function(v){ return v.lang === 'en-GB'; }) ||
+    voices.find(function(v){ return v.lang.startsWith('en'); }) ||
+    voices[0] || null;
+}
+if(window.speechSynthesis) speechSynthesis.addEventListener('voiceschanged', pickVoice);
+
+function speakSentences(sentences){
+  if(!sentences.length || muted) return;
+  var utt = new SpeechSynthesisUtterance(sentences[0]);
+  if(_voice) utt.voice = _voice;
+  utt.rate   = 0.85;
+  utt.pitch  = 1.1;
+  utt.volume = 1.0;
+  utt.onend = function(){
+    if(muted) return;
+    var rest = sentences.slice(1);
+    if(rest.length) setTimeout(function(){ speakSentences(rest); }, 120);
+  };
+  speechSynthesis.speak(utt);
+}
+
+function narrate(id){
+  if(muted || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  var text = NARRATION[id];
+  if(!text) return;
+  pickVoice();
+  var sentences = text.replace(/([.!?])\s+/g, '$1|').split('|').filter(Boolean);
+  speakSentences(sentences);
+}
+
+/* ─── countUp ───────────────────────────────── */
+function countUp(el, target, ms, dec, suf){
+  if(!el || window.__dbg) return;
+  const t0 = performance.now();
+  var lastTick = -1;
+  function step(now){
+    const p = Math.min((now-t0)/ms, 1);
+    const e = 1 - Math.pow(1-p, 3);
+    el.textContent = (e*target).toLocaleString('en-GB',{
+      minimumFractionDigits:dec,maximumFractionDigits:dec
+    })+(suf||'');
+    // Tick sound every 25% of progress (4 ticks per counter)
+    var tick4 = Math.floor(p*4);
+    if(tick4 > lastTick){ lastTick = tick4; playTick(); }
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ─── Bar chart ─────────────────────────────── */
+const BARS = [
+  {id:'b0',vid:'bv0',pct:8.3, lbl:'0.5%'},
+  {id:'b1',vid:'bv1',pct:85,  lbl:'5.1%'},
+  {id:'b2',vid:'bv2',pct:63,  lbl:'3.8%'},
+  {id:'b3',vid:'bv3',pct:52,  lbl:'3.1%'},
+  {id:'b4',vid:'bv4',pct:97,  lbl:'5.8%'},
+  {id:'b5',vid:'bv5',pct:100, lbl:'6.0%'},
+];
+function animateBars(){
+  BARS.forEach(function(d,i){
+    setTimeout(function(){
+      var bar = document.getElementById(d.id);
+      if(bar) bar.style.height = (d.pct/100*180)+'px';
+      setTimeout(function(){
+        var v = document.getElementById(d.vid);
+        if(v){ v.textContent=d.lbl; v.style.opacity='1'; }
+      }, 750);
+    }, i*200);
+  });
+}
+
+/* ─── Ghana Map ─────────────────────────────── */
+// Bounding box for projection
+var LON_MIN=-3.26, LON_MAX=1.21, LAT_MIN=4.74, LAT_MAX=11.17;
+var VW=200, VH=260, PAD=10;
+function projX(lon){ return (lon-LON_MIN)/(LON_MAX-LON_MIN)*(VW-2*PAD)+PAD; }
+function projY(lat){ return (LAT_MAX-lat)/(LAT_MAX-LAT_MIN)*(VH-2*PAD)+PAD; }
+
+function coordsToPath(coords){
+  return coords.map(function(ring){
+    return ring.map(function(pt,i){
+      return (i===0?'M':'L')+projX(pt[0]).toFixed(2)+' '+projY(pt[1]).toFixed(2);
+    }).join(' ')+'Z';
+  }).join(' ');
+}
+
+function centroid(coords){
+  var pts = coords[0];
+  var sx=0,sy=0;
+  pts.forEach(function(p){ sx+=p[0]; sy+=p[1]; });
+  return {lon:sx/pts.length, lat:sy/pts.length};
+}
+
+var mapDots = [];
+function buildMap(geojson){
+  var regG = document.getElementById('map-regions');
+  var dotG = document.getElementById('map-dots');
+  var features = geojson.features;
+
+  // Sort north → south by centroid lat for dot sequencing
+  var withCentroid = features.map(function(f){
+    var coords = f.geometry.type==='MultiPolygon'
+      ? f.geometry.coordinates[0]
+      : f.geometry.coordinates;
+    return {f:f, c:centroid(coords), coords:coords};
+  }).sort(function(a,b){ return b.c.lat - a.c.lat; });
+
+  withCentroid.forEach(function(item){
+    var coords = item.f.geometry.type==='MultiPolygon'
+      ? item.f.geometry.coordinates.map(function(ring){ return ring[0]; })
+      : [item.coords[0]];
+    var pathData = item.f.geometry.type==='MultiPolygon'
+      ? item.f.geometry.coordinates.map(function(poly){
+          return poly[0].map(function(pt,i){
+            return (i===0?'M':'L')+projX(pt[0]).toFixed(2)+' '+projY(pt[1]).toFixed(2);
+          }).join(' ')+'Z';
+        }).join(' ')
+      : coordsToPath(item.f.geometry.coordinates);
+
+    var path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', pathData);
+    path.setAttribute('class','region-path');
+    regG.appendChild(path);
+
+    var cx = projX(item.c.lon).toFixed(2);
+    var cy = projY(item.c.lat).toFixed(2);
+    var g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','rdot');
+    var core = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    core.setAttribute('cx',cx); core.setAttribute('cy',cy); core.setAttribute('r','3.5');
+    core.setAttribute('class','core');
+    var ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ring.setAttribute('cx',cx); ring.setAttribute('cy',cy); ring.setAttribute('r','3.5');
+    ring.setAttribute('class','ring');
+    g.appendChild(ring); g.appendChild(core);
+    dotG.appendChild(g);
+    mapDots.push(g);
+  });
+}
+
+function animateDots(){
+  mapDots.forEach(function(dot,i){
+    setTimeout(function(){ dot.style.opacity='1'; }, i*280);
+  });
+}
+
+fetch('./map/Regions.gh.json').then(function(r){ return r.json(); }).then(buildMap).catch(function(){
+  // Silent fail — map shows empty outline
+});
+
+/* ─── Scene table ───────────────────────────── */
+var SCENES = [
+  {id:'s0', start:0,   end:8  },
+  {id:'s1', start:8,   end:20 },
+  {id:'s2', start:20,  end:38 },
+  {id:'s3', start:38,  end:56 },
+  {id:'s4', start:56,  end:74 },
+  {id:'s5', start:74,  end:89 },
+  {id:'s6', start:89,  end:102},
+  {id:'s7', start:102, end:110},
+];
+var FADE = 0.5;
+var TOTAL = 110;
+
+var els = {};
+SCENES.forEach(function(s){ els[s.id]=document.getElementById(s.id); });
+var pf = document.getElementById('prog-fill');
+var activated = {};
+
+/* ─── Activate scene ────────────────────────── */
+function activate(id){
+  if(activated[id]) return;
+  activated[id] = true;
+  els[id].classList.add('active');
+  narrate(id);
+
+  if(id==='s0'){
+    setTimeout(function(){ els['s0'].classList.add('si'); }, 60);
+    setTimeout(function(){ els['s0'].classList.add('fd'); }, 1250);
+  }
+  if(id==='s2'){
+    countUp(document.getElementById('pop-n'), 34.4, 12000, 1, '');
+  }
+  if(id==='s3'){
+    animateBars();
+  }
+  if(id==='s4'){
+    countUp(document.getElementById('ner'),  79.4, 7000, 1, '%');
+    countUp(document.getElementById('jhs'), 115.5, 7000, 1, '%');
+    setTimeout(function(){
+      countUp(document.getElementById('ins'),  88.2, 6000, 1, '%');
+      countUp(document.getElementById('elec'), 86.3, 6000, 1, '%');
+      countUp(document.getElementById('hdef'), 1.81, 6000, 2, 'M');
+    }, 2000);
+  }
+  if(id==='s5'){
+    animateDots();
+  }
+  if(id==='s6'){
+    countUp(document.getElementById('ev-carbon'), 344.0, 6000, 1, '');
+    countUp(document.getElementById('ev-rain'),   211.8, 6000, 1, '');
+    countUp(document.getElementById('ev-temp'),    28.3, 4500, 1, '');
+    countUp(document.getElementById('ev-inet'),    56.1, 6000, 1, '');
+  }
+}
+
+function deactivate(id){
+  els[id].classList.remove('active');
+}
+
+/* ─── RAF loop ──────────────────────────────── */
+var t0 = null;
+function tick(ts){
+  if(t0===null) t0=ts;
+  var elapsed = (ts-t0)/1000;
+
+  pf.style.width = Math.min(elapsed/TOTAL,1)*100+'%';
+
+  SCENES.forEach(function(s){
+    var vis = elapsed >= Math.max(0, s.start-FADE) && elapsed < s.end+FADE;
+    if(vis){ activate(s.id); }
+    else if(els[s.id].classList.contains('active')){ deactivate(s.id); }
+  });
+
+  if(elapsed < TOTAL+1){
+    requestAnimationFrame(tick);
+  } else {
+    window.parent.postMessage({type:'gin-promo-done'}, window.location.origin);
+  }
+}
+/* ─── Debug: ?scene=N skips straight to that scene ── */
+var dbgScene = new URLSearchParams(location.search).get('scene');
+if(dbgScene !== null){
+  var si = parseInt(dbgScene,10);
+  // Disable transitions & animations for instant render
+  window.__dbg = true;
+  var dbgStyle = document.createElement('style');
+  dbgStyle.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }';
+  document.head.appendChild(dbgStyle);
+  // Activate the target scene
+  activate(els[SCENES[si].id] ? SCENES[si].id : 's0');
+  var targetEl = els[SCENES[si].id];
+  // Immediately force all opacity/transform to visible
+  targetEl.querySelectorAll('*').forEach(function(e){
+    e.style.opacity='1'; e.style.transform='none';
+  });
+  // Instantly complete all countUp values
+  var finalValues = {
+    'pop-n':'34.4','ner':'79.4%','jhs':'115.5%',
+    'ins':'88.2%','elec':'86.3%','hdef':'1.81M',
+    'ev-carbon':'344.0','ev-rain':'211.8','ev-temp':'28.3','ev-inet':'56.1'
+  };
+  Object.keys(finalValues).forEach(function(id){
+    var e = document.getElementById(id);
+    if(e) e.textContent = finalValues[id];
+  });
+  // Instantly set bar heights
+  BARS.forEach(function(d){
+    var bar = document.getElementById(d.id);
+    if(bar) bar.style.height = (d.pct/100*180)+'px';
+    var v = document.getElementById(d.vid);
+    if(v){ v.textContent=d.lbl; v.style.opacity='1'; }
+  });
+  pf.style.width = (SCENES[si].start/TOTAL*100)+'%';
+} else {
+  requestAnimationFrame(tick);
+}
+
+})();
+</script>
+</body>
+</html>
