@@ -5,10 +5,10 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  ComposedChart,
   LabelList,
   Legend,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -46,7 +46,7 @@ export default function TradePanel() {
         <div className="h-[315px]">
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={tradeGoodsData} margin={{ top: 18, right: 18, left: -12, bottom: 0 }}>
+              <ComposedChart data={tradeGoodsData} margin={{ top: 18, right: 18, left: -12, bottom: 0 }}>
                 <CartesianGrid stroke="#EEF2F7" strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="year" tick={{ fontSize: 10, fill: "#64748B", fontWeight: 700 }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: "#94A3B8" }} tickLine={false} axisLine={false} />
@@ -55,7 +55,7 @@ export default function TradePanel() {
                 <Bar dataKey="balance" name="Trade Balance" fill="#C7DCF4" radius={[3, 3, 0, 0]} />
                 <Line type="monotone" dataKey="export" name="Export" stroke="#6DBE45" strokeWidth={3} strokeDasharray="8 6" dot={{ r: 4, fill: "#fff", stroke: "#6DBE45", strokeWidth: 3 }} />
                 <Line type="monotone" dataKey="import" name="Import" stroke="#2E8BFF" strokeWidth={3} strokeDasharray="2 7" dot={{ r: 4, fill: "#fff", stroke: "#2E8BFF", strokeWidth: 3 }} />
-              </LineChart>
+              </ComposedChart>
             </ResponsiveContainer>
           )}
         </div>

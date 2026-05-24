@@ -12,7 +12,10 @@ import {
   TrendingUp,
   Landmark,
   Leaf,
+  Target,
   BookOpen,
+  Wheat,
+  Sparkles,
   Star,
   FileText,
   Download,
@@ -33,6 +36,7 @@ const navItems = [
       { label: "Business & Economy",             icon: TrendingUp,   href: "/business-and-economy" },
       { label: "Governance",                     icon: Landmark,     href: "/governance" },
       { label: "Environment and Climate change", icon: Leaf,         href: "/environment-and-climate-change" },
+      { label: "Progress on SDGs",              icon: Target,       href: "/progress-on-sdgs" },
     ],
   },
   {
@@ -40,7 +44,9 @@ const navItems = [
     icon: BookOpen,
     href: "#",
     children: [
-      { label: "Youth bulge", icon: Users2, href: "#" },
+      { label: "Youth bulge",                    icon: Users2, href: "/youth-bulge" },
+      { label: "Agriculture, Forestry & Fishing", icon: Wheat,     href: "/agriculture-forestry-fishing" },
+      { label: "The Next Ghana is Young",         icon: Sparkles,  href: "/data-story" },
     ],
   },
 ];

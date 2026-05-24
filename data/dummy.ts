@@ -3,7 +3,7 @@ import type { KPICard, GDPDataPoint, InflationDataPoint, SectorData, SearchedInd
 export const kpiCards: KPICard[] = [
   { label: "Population", value: "34.4 M", borderColor: "#17B8A6" },
   { label: "GDP Growth", value: "6.0%", borderColor: "#F59E0B" },
-  { label: "Inflation (CPI)", value: "3.2%", borderColor: "#EF4444" },
+  { label: "Consumer Inflation", value: "3.2%", borderColor: "#EF4444" },
   { label: "Unemployment", value: "13.0%", borderColor: "#8B5CF6" },
   { label: "Life Expectancy", value: "65.1 Years", borderColor: "#3B82F6" },
 ];

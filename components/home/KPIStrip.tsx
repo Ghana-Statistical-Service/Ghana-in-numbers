@@ -20,7 +20,7 @@ const kpiCards = [
     ],
   },
   {
-    label: "Inflation (CPI)",
+    label: "Consumer Inflation",
     value: "3.2",
     unit: "%",
     stripes: [
