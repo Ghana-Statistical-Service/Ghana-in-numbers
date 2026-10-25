@@ -58,7 +58,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
     }
   }, [open]);
 
-  useEffect(() => { if (open && transcript.current) transcript.current.scrollTop = transcript.current.scrollHeight; }, [messages, busy, error, open]);
+  useEffect(() => { if (open && transcript.current) transcript.current.scrollTop = messages.length > 0 || busy || error ? transcript.current.scrollHeight : 0; }, [messages, busy, error, open]);
   useEffect(() => () => controller.current?.abort(), []);
 
   // While the reader is scrolling, the closed launcher steps aside so it never sits over a value; it returns when scrolling stops.
@@ -113,7 +113,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
         <header className="on-dark flex shrink-0 items-center gap-3 bg-nav px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] text-white">
           <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/12 ring-1 ring-white/20"><MessageSquareText size={18} /></span>
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="text-[15px] font-semibold leading-tight text-white">Ask Ghana in Numbers</h2>
+            <h2 id={titleId} className="text-[15px] font-semibold leading-tight text-white">Ask StatsChat</h2>
             <p className="text-xs text-white/75">Answers from the dashboard’s published data</p>
           </div>
           {messages.length > 0 && (
@@ -126,8 +126,10 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
         <div ref={transcript} role="log" aria-label="Conversation" aria-busy={busy} aria-live="polite" tabIndex={0} className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-4 py-5">
           {messages.length === 0 && (
             <div>
-              <p className="text-[15px] font-semibold text-ink">Ask about any indicator</p>
-              <p className="mt-1 text-[13px] leading-relaxed text-muted">Compare years or regions, or ask what a chart means. Each answer cites the dashboard source, unit and reference period it used.</p>
+              <p className="text-[15px] font-semibold leading-relaxed text-ink">I am StatsChat, an AI model for official statistics developed by Ghana Statistical Service.</p>
+              <p className="mt-3 text-[13px] leading-relaxed text-muted">I help you explore Ghana’s statistics, understand indicators, and interpret the stories behind the numbers.</p>
+              <p className="mt-3 text-[13px] leading-relaxed text-muted">I answer questions using Ghana in Numbers and its supporting official data, with references you can check. If the available sources cannot answer your question, I will let you know.</p>
+              <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">What would you like to know about Ghana?</p>
               <p className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-subtle">Suggested for this page</p>
               <ul className="space-y-2">
                 {starters(path).map(text => (
@@ -198,12 +200,12 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
         type="button"
         onClick={open ? onMinimise : onOpen}
         aria-expanded={open}
-        aria-label={open ? "Minimise Ask Ghana in Numbers" : "Ask Ghana in Numbers"}
+        aria-label={open ? "Minimise Ask StatsChat" : "Ask StatsChat"}
         className={`group fixed bottom-[max(16px,env(safe-area-inset-bottom))] right-4 z-40 flex h-14 items-center justify-center gap-2 rounded-full bg-brand text-white shadow-pop ring-1 ring-white/20 transition-[opacity,transform,background-color] duration-200 hover:bg-brand-hover focus-visible:translate-y-0 focus-visible:opacity-100 sm:bottom-5 sm:right-5 sm:h-12 ${open ? "hidden w-12 sm:flex" : "w-14 whitespace-nowrap sm:w-12 min-[1760px]:w-auto! min-[1760px]:px-5"} ${!open && scrolling ? "pointer-events-none translate-y-3 opacity-0" : ""}`}
       >
         {open ? <ChevronDown size={22} aria-hidden /> : <MessageSquareText size={22} aria-hidden className="shrink-0 sm:h-5 sm:w-5" />}
-        {!open && <span className="hidden text-sm font-semibold min-[1760px]:inline">Ask Ghana in Numbers</span>}
-        {!open && <span role="tooltip" className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-md bg-ink px-2.5 py-1.5 text-xs font-medium text-white shadow-pop group-hover:block group-focus-visible:block min-[1760px]:!hidden">Ask Ghana in Numbers</span>}
+        {!open && <span className="hidden text-sm font-semibold min-[1760px]:inline">Ask StatsChat</span>}
+        {!open && <span role="tooltip" className="pointer-events-none absolute bottom-full right-0 mb-2 hidden whitespace-nowrap rounded-md bg-ink px-2.5 py-1.5 text-xs font-medium text-white shadow-pop group-hover:block group-focus-visible:block min-[1760px]:!hidden">Ask StatsChat</span>}
         {!open && busy && <span aria-hidden className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-[#F5C451] ring-2 ring-brand" />}
       </button>
     </>

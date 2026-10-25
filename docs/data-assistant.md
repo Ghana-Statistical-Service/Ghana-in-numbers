@@ -1,6 +1,6 @@
-# Ask Ghana in Numbers
+# Ask StatsChat
 
-A persistent **Ask Ghana in Numbers** launcher sits at the bottom-right of every page. On desktop it opens a 400 px chat window anchored above the launcher; on phones it opens a full-screen sheet that respects safe areas and the on-screen keyboard. Minimising keeps the conversation (and any request in progress); **New conversation** clears it. It supports suggested questions, follow-ups, source citations, stop and retry. It never opens automatically. Page content reserves bottom padding so the launcher does not cover the last chart or table, and the Explain panels and search dialog sit above it in the top layer.
+A persistent **Ask StatsChat** launcher sits at the bottom-right of every page. The welcome message begins: “I am StatsChat, an AI model for official statistics developed by Ghana Statistical Service.” It explains the supported Ghana in Numbers sources, references and unavailable-information handling. On desktop it opens a 400 px chat window anchored above the launcher; on phones it opens a full-screen sheet that respects safe areas and the on-screen keyboard. Minimising keeps the conversation (and any request in progress); **New conversation** clears it. It supports suggested questions, follow-ups, source citations, stop and retry. It never opens automatically. Page content reserves bottom padding so the launcher does not cover the last chart or table, and the Explain panels and search dialog sit above it in the top layer.
 
 ## Local configuration
 
