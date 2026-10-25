@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, ReferenceDot, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
-import { ChartCard } from "@/components/ui/Card";
+import { Factory, HardHat, Pickaxe, RadioTower, ShoppingBag, ShoppingBasket, Truck, UtensilsCrossed, Waves, Zap, type LucideIcon } from "lucide-react";
+import { ChartCard, Qualifier } from "@/components/ui/Card";
+import { BeforeAfter, tones } from "@/components/ui/Infographic";
 import { DataDisclosure, DataTable, Legend, Segmented } from "@/components/ui/Data";
 import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, tick, tickSmall } from "@/components/ui/chart";
 import { foodNonFoodInflationData, iipSectorData } from "@/data/businessEconomyData";
@@ -16,6 +18,7 @@ export function CpiCard() {
   const [points, setPoints] = useState<Point[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [measure, setMeasure] = useState<"yoy" | "mom">("yoy");
+  const [year, setYear] = useState("all");
   useEffect(() => {
     let live = true;
     fetch("/data/cpiData.json").then(r => r.json()).then((raw: { response: { data: { key: string[]; values: string[] }[] } }) => {
@@ -33,26 +36,40 @@ export function CpiCard() {
     }).catch(() => live && setFailed(true));
     return () => { live = false; };
   }, []);
-  const yearTicks = points?.filter(p => p.code.endsWith("M01")).map(p => p.label);
+  const years = points ? [...new Set(points.map(p => p.code.slice(0, 4)))] : [];
+  const shown = points && year !== "all" ? points.filter(p => p.code.startsWith(year)) : points;
+  const yearTicks = year === "all" ? points?.filter(p => p.code.endsWith("M01")).map(p => p.label) : undefined;
+  // Annual average inflation = mean of the 12 monthly year-on-year rates (reproduces the published 14.6% for 2025).
+  const avgYear = year === "all" ? "2025" : year;
+  const avgPoints = points?.filter(p => p.code.startsWith(avgYear) && p.yoy != null) ?? [];
+  const annualAverage = avgPoints.length === 12 ? avgPoints.reduce((a, p) => a + (p.yoy ?? 0), 0) / 12 : null;
 
   return (
-    <ChartCard title="Consumer price inflation" subtitle={measure === "yoy" ? "Year-on-year change in the CPI, % · monthly" : "Month-on-month change in the CPI, % · monthly"} period="Jan 2014 – Dec 2025"
+    <ChartCard title="Consumer price inflation" subtitle={measure === "yoy" ? "Year-on-year change in the CPI, % · monthly" : "Month-on-month change in the CPI, % · monthly"} period={year === "all" ? "Jan 2014 to Dec 2025" : `Jan to Dec ${year}`}
+      qualifier={annualAverage != null ? <Qualifier tone="brand">{avgYear} annual average {annualAverage.toFixed(1)}%</Qualifier> : undefined}
       explain={{ indicator: "inflation" }}
-      actions={<Segmented label="Inflation measure" size="sm" value={measure} onChange={setMeasure} options={[{ value: "yoy", label: "Year on year" }, { value: "mom", label: "Month on month" }]} />}
-      notes={<>Year-on-year inflation peaked at 54.1% in December 2022 and fell to 5.4% in December 2025. The 2025 annual average was 14.6%. Lower inflation means prices rose more slowly; it does not mean they fell. {measure === "mom" && "Negative month-on-month values mean the index fell from the previous month."}</>}
+      actions={<>
+        <label className="sr-only" htmlFor="cpi-year">Year</label>
+        <select id="cpi-year" value={year} onChange={e => setYear(e.target.value)} className="h-8 rounded-md border border-line-strong bg-surface px-2 text-[13px] text-ink">
+          <option value="all">All years</option>
+          {[...years].reverse().map(y => <option key={y} value={y}>{y}</option>)}
+        </select>
+        <Segmented label="Inflation measure" size="sm" value={measure} onChange={setMeasure} options={[{ value: "yoy", label: "Year on year" }, { value: "mom", label: "Month on month" }]} />
+      </>}
+      notes={<>Year-on-year inflation peaked at 54.1% in December 2022 and fell to 5.4% in December 2025. The annual average (badge) is the mean of the 12 monthly year-on-year rates: 14.6% in 2025. Lower inflation means prices rose more slowly; it does not mean they fell. {measure === "mom" && "Negative month-on-month values mean the index fell from the previous month."}</>}
       source="GSS Consumer Price Index (StatsBank extract) · Figure 5.11, p. 51"
       footer={points && <DataDisclosure hint="Monthly values, Ghana"><DataTable caption="Monthly CPI inflation, Ghana" headings={["Month", "Year on year (%)", "Month on month (%)"]} rows={[...points].reverse().map(p => [p.label, p.yoy, p.mom])} decimals={1} minWidth={360} /></DataDisclosure>}>
       {failed ? <p role="alert" className="rounded-md bg-caution-bg px-3 py-6 text-center text-[13px] text-caution">Monthly CPI data could not be loaded. Refresh to try again.</p> : !points ? <div className="h-[300px] animate-pulse rounded-md bg-surface-muted" /> : (
-        <ChartFrame height={300} minWidth={600} label="Monthly year-on-year inflation, 2014 to 2025, peaking at 54.1% in December 2022 and ending at 5.4% in December 2025">
-          <LineChart data={points} margin={{ top: 20, right: 24, left: -6, bottom: 0 }}>
+        <ChartFrame height={300} minWidth={600} label="Monthly inflation; year-on-year inflation peaked at 54.1% in December 2022 and ending at 5.4% in December 2025">
+          <LineChart data={shown ?? []} margin={{ top: 20, right: 24, left: 0, bottom: 0 }}>
             <CartesianGrid stroke={C.grid} vertical={false} />
-            <XAxis dataKey="label" {...axisCommon} tick={tickSmall} ticks={yearTicks} tickFormatter={l => String(l).slice(4)} />
+            <XAxis dataKey="label" {...axisCommon} tick={tickSmall} ticks={yearTicks} interval={year === "all" ? undefined : 0} tickFormatter={l => year === "all" ? String(l).slice(4) : String(l).slice(0, 3)} />
             <YAxis {...axisCommon} tick={tick} domain={measure === "yoy" ? [0, 60] : [-2, 10]} ticks={measure === "yoy" ? [0, 10, 20, 30, 40, 50, 60] : [-2, 0, 2, 4, 6, 8, 10]} tickFormatter={v => `${v}%`} width={44} />
             {measure === "mom" && <ReferenceLine y={0} stroke={C.slate} />}
             <Tooltip content={makeTooltip({ unit: "%" })} />
-            <Line dataKey={measure} name={measure === "yoy" ? "Year on year" : "Month on month"} stroke={C.purple} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls={false} />
-            {measure === "yoy" && <ReferenceDot x="Dec 2022" y={54.1} r={4} fill={C.purple} stroke="#fff" strokeWidth={2} label={{ value: "54.1% · Dec 2022", position: "right", fontSize: 12, fill: C.ink, fontWeight: 600 }} />}
-            {measure === "yoy" && <ReferenceDot x="Dec 2025" y={5.4} r={4} fill={C.purple} stroke="#fff" strokeWidth={2} label={{ value: "5.4%", position: "top", fontSize: 12, fill: C.ink, fontWeight: 600 }} />}
+            <Line type="linear" dataKey={measure} name={measure === "yoy" ? "Year on year" : "Month on month"} stroke={C.purple} strokeWidth={2} dot={year === "all" ? false : { r: 3, fill: C.purple }} isAnimationActive={false} connectNulls={false} />
+            {measure === "yoy" && (year === "all" || year === "2022") && <ReferenceDot x="Dec 2022" y={54.1} r={4} fill={C.purple} stroke="#fff" strokeWidth={2} label={{ value: "54.1% · Dec 2022", position: "right", fontSize: 12, fill: C.ink, fontWeight: 600 }} />}
+            {measure === "yoy" && (year === "all" || year === "2025") && <ReferenceDot x="Dec 2025" y={5.4} r={4} fill={C.purple} stroke="#fff" strokeWidth={2} label={{ value: "5.4%", position: "top", fontSize: 12, fill: C.ink, fontWeight: 600 }} />}
           </LineChart>
         </ChartFrame>
       )}
@@ -93,8 +110,14 @@ export function FoodLocalCard() {
       footer={<DataDisclosure><DataTable caption="Food and non-food inflation" headings={["Month", "Food (%)", "Non-food (%)"]} rows={foodNonFoodInflationData.map(d => [d.year, d.food, d.nonFood])} decimals={1} minWidth={320} /><DataTable caption="Local and imported inflation" headings={["Month", "Local (%)", "Imported (%)", "Source"]} rows={localImportedInflation.map(d => [d.period, d.local, d.imported, d.source])} decimals={[undefined, 1, 1]} minWidth={460} /></DataDisclosure>}>
       <div className="grid gap-6 md:grid-cols-2">
         <div>
-          <p className="mb-2 text-[13.5px] font-semibold text-ink">Food and non-food</p>
-          <DatedPairs rows={foodNonFoodInflationData.map(d => ({ period: d.year, a: d.food, b: d.nonFood }))} a={{ label: "Food", color: C.teal }} b={{ label: "Non-food", color: C.slate }} />
+          <p className="mb-3 text-[13.5px] font-semibold text-ink">Food and non-food</p>
+          <div className="space-y-5">
+            {[{ key: "food" as const, label: "Food", icon: ShoppingBasket, tone: "teal" as const }, { key: "nonFood" as const, label: "Non-food", icon: ShoppingBag, tone: "purple" as const }].map(g => {
+              const [a, b] = [foodNonFoodInflationData[0], foodNonFoodInflationData.at(-1)!];
+              const diff = b[g.key] - a[g.key];
+              return <BeforeAfter key={g.key} label={g.label} icon={g.icon} tone={g.tone} before={{ value: a[g.key], label: a.year }} after={{ value: b[g.key], label: b.year }} format={v => `${v.toFixed(1)}%`} change={`${diff < 0 ? "−" : "+"}${Math.abs(diff).toFixed(1)} pp`} lowerIsBetter changeLabel="percentage points" />;
+            })}
+          </div>
           <p className="mt-3 text-xs leading-relaxed text-subtle">Food led the 2022–23 surge, which weighs most on households that spend a large share of their budget on food.</p>
         </div>
         <div>
@@ -129,6 +152,8 @@ export function PbciCard() {
   );
 }
 
+const ppiIcons: Record<string, LucideIcon> = { "All industries": Factory, "Electricity and gas": Zap, "Mining and quarrying": Pickaxe, "Water supply and waste": Waves, "Construction": HardHat, "Information and communication": RadioTower, "Manufacturing": Factory, "Accommodation and food": UtensilsCrossed, "Transportation and storage": Truck };
+
 const years = [{ key: "y2023", label: "2023", color: C.slateLight }, { key: "y2024", label: "2024", color: C.purpleLight }, { key: "y2025", label: "2025", color: C.purple }] as const;
 
 function SectorBars({ data, height, domain, ticks, label }: { data: Record<string, number | string>[]; height: number; domain: [number, number]; ticks: number[]; label: string }) {
@@ -157,8 +182,24 @@ export function PpiCard() {
       notes="Labels show 2025. Negative values (accommodation and food, transport) mean producer prices were below the same point a year earlier, not below 2023 levels. Table 2.1 lists different sector values; the detailed figure is used."
       source="GSS Producer Price Index · Figure 5.15, p. 55"
       footer={<DataDisclosure><DataTable caption="Producer price inflation by sector" headings={["Sector", "2023 (%)", "2024 (%)", "2025 (%)"]} rows={ppiBySector.map(d => [d.sector, d.y2023, d.y2024, d.y2025])} decimals={1} minWidth={420} /></DataDisclosure>}>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+      <ul className="grid content-start grid-cols-1 gap-2 min-[420px]:grid-cols-2" aria-label="Producer price inflation by sector, end of 2025">
+        {ppiBySector.map(d => {
+          const Icon = ppiIcons[d.sector] ?? Factory;
+          const neg = d.y2025 < 0;
+          return (
+            <li key={d.sector} className="flex items-center gap-2.5 rounded-[var(--radius-md)] bg-surface-muted px-2.5 py-2">
+              <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md" style={{ background: tones.purple.bg, color: tones.purple.fg }}><Icon size={16} aria-hidden="true" /></span>
+              <span className="min-w-0 text-[13px] leading-tight"><span className="block text-body">{d.sector}</span><span className="tabular font-semibold" style={{ color: neg ? tones.rose.fg : C.ink }}>{d.y2025 > 0 ? "+" : d.y2025 < 0 ? "−" : ""}{Math.abs(d.y2025).toFixed(1)}%</span><span className="text-xs text-muted"> in 2025</span></span>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="flex min-w-0 flex-col">
       <Legend className="mb-2" items={years.map(y => ({ label: y.label, color: y.color }))} />
       <SectorBars data={ppiBySector} height={430} domain={[-10, 50]} ticks={[-10, 0, 10, 20, 30, 40, 50]} label="Producer price inflation by sector, 2023 to 2025. All industries: 16.4%, 26.1%, 1.9%." />
+      </div>
+      </div>
     </ChartCard>
   );
 }
@@ -172,7 +213,7 @@ export function IipCard() {
       source="GSS Index of Industrial Production · Figure 5.16, pp. 56–57"
       footer={<DataDisclosure><DataTable caption="Industrial production growth" headings={["Sector", "2023 (%)", "2024 (%)", "2025 (%)"]} rows={data.map(d => [d.sector, d.y2023, d.y2024, d.y2025])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <Legend className="mb-2" items={years.map(y => ({ label: y.label, color: y.color }))} />
-      <SectorBars data={data} height={300} domain={[-8, 8]} ticks={[-8, -4, 0, 4, 8]} label="Industrial production growth by sector, 2023 to 2025. All industries 1.9% in 2025." />
+      <SectorBars data={data} height={220} domain={[-8, 8]} ticks={[-8, -4, 0, 4, 8]} label="Industrial production growth by sector, 2023 to 2025. All industries 1.9% in 2025." />
     </ChartCard>
   );
 }

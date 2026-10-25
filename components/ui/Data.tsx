@@ -19,15 +19,16 @@ export function DataDisclosure({ children, label = "View data", hint = "Publishe
 export type Cell = string | number | null | undefined;
 export type TableRow = Cell[] | { cells: Cell[]; depth?: number; emphasis?: "subtotal" | "total"; note?: string };
 
-const fmt = (value: Cell, decimals?: number) => {
-  if (value === null || value === undefined || value === "") return "—";
+const fmt = (value: Cell, decimals?: number): React.ReactNode => {
+  if (value === "") return "";
+  if (value === null || value === undefined) return <abbr title="Not reported" aria-label="Not reported" className="no-underline">n/a</abbr>;
   if (typeof value === "number") return value.toLocaleString("en-GB", decimals === undefined ? { maximumFractionDigits: 2 } : { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   return value;
 };
 
 /**
  * Accessible data table. Rows can carry depth (parent–child indentation) and subtotal/total emphasis.
- * Missing values render as an em dash, never as zero.
+ * Missing values render as "n/a" (not reported), never as zero.
  */
 export function DataTable({ caption, headings, rows, decimals, minWidth = 520, unitNote }: { caption: string; headings: string[]; rows: TableRow[]; decimals?: number | (number | undefined)[]; minWidth?: number; unitNote?: string }) {
   const id = useId();
@@ -50,7 +51,7 @@ export function DataTable({ caption, headings, rows, decimals, minWidth = 520, u
                     const d = Array.isArray(decimals) ? decimals[column] : decimals;
                     return column === 0
                       ? <th key={column} scope="row" className={`px-3 py-2.5 text-left ${strong ? "font-semibold text-ink" : "font-normal text-body"}`} style={{ paddingLeft: 12 + depth * 18 }}>
-                          {depth > 0 && <span aria-hidden className="mr-1.5 text-line-strong">└</span>}{value}{row.note && <span className="ml-1.5 text-xs font-normal text-subtle">{row.note}</span>}
+                          {depth > 0 && <span aria-hidden className="mr-1.5 text-subtle">└</span>}{value}{row.note && <span className="ml-1.5 text-xs font-normal text-subtle">{row.note}</span>}
                         </th>
                       : <td key={column} className={`tabular whitespace-nowrap px-3 py-2.5 text-right ${strong ? "font-semibold text-ink" : "text-body"}`}>{fmt(value, d)}</td>;
                   })}

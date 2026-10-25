@@ -1,7 +1,9 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
+import { Mountain, Sprout, ThermometerSnowflake, ThermometerSun, TreeDeciduous, TreePine, Trees, Wheat, type LucideIcon } from "lucide-react";
 import { ChartCard } from "@/components/ui/Card";
+import { IconTile, StatTile, tones, type Tone } from "@/components/ui/Infographic";
 import { DataDisclosure, DataTable, Legend } from "@/components/ui/Data";
 import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, num, tick, tickSmall } from "@/components/ui/chart";
 import RegionalMap from "@/components/maps/RegionalMap";
@@ -14,8 +16,32 @@ export function ForestCard() {
     <ChartCard title="Forest reserve area by region" subtitle="Designated forest reserve, km²" period="December 2025" explain={{ indicator: "forest" }}
       notes={`Reported total ${forestReserveTotal2025.toLocaleString("en-GB")} km² across 12 regions. Western North, Oti, Savannah and North East are not reported separately (hatched): a missing value is not zero. Reserve area is designated land, not current tree cover. Western, Ashanti and Northern hold about 60.8% of the reported area.`}
       source="Forestry Commission (2025) · Figure 7.1, p. 96"
-      footer={<DataDisclosure><DataTable caption="Forest reserve area by region, December 2025" headings={["Region", "Area (km²)"]} rows={[...data].sort((a, b) => (b.value ?? -1) - (a.value ?? -1)).map(d => [d.region, d.value])} decimals={2} minWidth={300} unitNote="— not reported separately in the source. Some smaller regional areas are printed rounded to whole km²." /></DataDisclosure>}>
+      footer={<DataDisclosure><DataTable caption="Forest reserve area by region, December 2025" headings={["Region", "Area (km²)"]} rows={[...data].sort((a, b) => (b.value ?? -1) - (a.value ?? -1)).map(d => [d.region, d.value])} decimals={2} minWidth={300} unitNote="n/a: not reported separately in the source. Some smaller regional areas are printed rounded to whole km²." /></DataDisclosure>}>
       <RegionalMap data={data} measure="Forest reserve area (km²)" format={v => v.toLocaleString("en-GB", { maximumFractionDigits: v < 100 ? 2 : 0 })} height={420} highlight={`Reported total: ${forestReserveTotal2025.toLocaleString("en-GB")} km²`} />
+    </ChartCard>
+  );
+}
+
+export function ForestHeadlineCard() {
+  const sorted = [...forestReserveArea2025].sort((a, b) => b.area - a.area);
+  const top = sorted.slice(0, 3);
+  const regionalSum = forestReserveArea2025.reduce((a, f) => a + f.area, 0);
+  const share = (v: number) => (v / forestReserveTotal2025) * 100;
+  const topShare = top.reduce((a, f) => a + share(f.area), 0);
+  const tones3: Tone[] = ["teal", "teal", "teal"];
+  return (
+    <ChartCard title="Forest reserves at a glance" subtitle="Designated forest reserve area, km²" period="December 2025" explain={{ indicator: "forest" }}
+      notes={`Shares are of the reported total. The ${forestReserveArea2025.length} regional areas sum to ${regionalSum.toLocaleString("en-GB", { maximumFractionDigits: 2 })} km², ${(forestReserveTotal2025 - regionalSum).toFixed(2)} km² below the published total because smaller regions are printed rounded.`}
+      source="Forestry Commission (2025) · Figure 7.1, p. 96"
+      footer={<DataDisclosure><DataTable caption="Largest forest reserve areas, December 2025" headings={["Region", "Area (km²)", "Share of total (%)"]} rows={top.map(f => [f.region, f.area, +share(f.area).toFixed(1)])} decimals={[undefined, 2, 1]} minWidth={300} /></DataDisclosure>}>
+      <div className="flex items-center gap-4">
+        <IconTile icon={TreePine} tone="teal" size="lg" />
+        <p className="tabular"><span className="block text-[32px] font-bold leading-none" style={{ color: tones.teal.fg }}>{forestReserveTotal2025.toLocaleString("en-GB")}</span><span className="mt-1 block text-xs font-semibold text-ink">km², 12 reporting regions</span></p>
+      </div>
+      <p className="mb-2 mt-5 text-xs font-medium text-muted">Three largest regions, {topShare.toFixed(1)}% of the total</p>
+      <ul className="grid gap-2">
+        {top.map((f, i) => <StatTile key={f.region} icon={Trees} tone={tones3[i]} label={f.region} value={f.area.toLocaleString("en-GB", { minimumFractionDigits: 2 })} unit="km²" period={`${share(f.area).toFixed(1)}% of the total`} />)}
+      </ul>
     </ChartCard>
   );
 }
@@ -67,6 +93,35 @@ export function CarbonCard() {
   );
 }
 
+const coverIcons: Record<string, LucideIcon> = { Grassland: Sprout, "Open Forest": TreeDeciduous, Cropland: Wheat };
+
+export function CarbonTopCard() {
+  const top = carbonRetentionData.map(d => ({ ...d, total: +(d.soil + d.nonSoil).toFixed(1) })).sort((a, b) => b.total - a.total).slice(0, 3);
+  return (
+    <ChartCard title="The three largest carbon stores" subtitle="Carbon stock, Mt C: total, soil and non-soil (vegetation)" period="2021" explain={{ indicator: "carbon" }}
+      notes="Grassland’s total (344.0 Mt C) is the figure used in the KPI; the text’s 334.0 is an arithmetic slip."
+      source="EPA, GSS and FC (2025) · Figure 7.2, p. 97"
+      footer={<DataDisclosure><DataTable caption="Largest carbon stores, 2021" headings={["Land cover", "Total (Mt C)", "Soil (Mt C)", "Non-soil (Mt C)"]} rows={top.map(d => [d.landCover, d.total, d.soil, d.nonSoil])} decimals={1} minWidth={360} /></DataDisclosure>}>
+      <ul className="grid gap-3 md:grid-cols-3">
+        {top.map(d => {
+          const Icon = coverIcons[d.landCover] ?? Mountain;
+          return (
+            <li key={d.landCover} className="rounded-[var(--radius-md)] bg-surface-muted p-3.5">
+              <div className="flex items-center gap-2.5"><IconTile icon={Icon} tone="teal" /><p className="text-[13.5px] font-semibold text-ink">{d.landCover}</p></div>
+              <p className="tabular mt-3"><span className="text-[26px] font-bold leading-none" style={{ color: tones.teal.fg }}>{num(d.total)}</span> <span className="text-[13px] text-muted">Mt C</span></p>
+              <div className="mt-2 flex h-2 overflow-hidden rounded-full" role="img" aria-label={`${d.landCover}: soil ${num(d.soil)}, non-soil ${num(d.nonSoil)} Mt C`}>
+                <span style={{ width: `${(d.nonSoil / d.total) * 100}%`, background: C.teal }} /><span style={{ width: `${(d.soil / d.total) * 100}%`, background: C.amber }} />
+              </div>
+              <p className="tabular mt-2 text-xs text-body">Non-soil {num(d.nonSoil)} · Soil {num(d.soil)}</p>
+            </li>
+          );
+        })}
+      </ul>
+      <Legend className="mt-3" items={[{ label: "Non-soil (vegetation)", color: C.teal }, { label: "Soil", color: C.amber }]} />
+    </ChartCard>
+  );
+}
+
 export function CarbonChangeCard() {
   let running = carbonStockChange.start;
   const steps = carbonStockChange.steps.map(([label, change]) => { const start = running; running = +(running + change).toFixed(1); return { label, change, start, end: running }; });
@@ -97,12 +152,38 @@ export function CarbonChangeCard() {
   );
 }
 
+/** 12 month tiles shaded by rainfall; the wettest and driest months are outlined and labelled. */
+function RainyStrip() {
+  const max = Math.max(...monthlyRainfall2025.map(d => d.value)), min = Math.min(...monthlyRainfall2025.map(d => d.value));
+  const peak = monthlyRainfall2025.find(d => d.value === max)!, low = monthlyRainfall2025.find(d => d.value === min)!;
+  // Five stepped shades, each paired with a text colour that keeps WCAG AA contrast.
+  const steps = [{ upTo: 40, bg: "#E8F0FA", fg: C.ink }, { upTo: 80, bg: "#C9DBF0", fg: C.ink }, { upTo: 130, bg: "#93B6E0", fg: C.ink }, { upTo: 180, bg: "#2F6DB5", fg: "#fff" }, { upTo: Infinity, bg: "#1D4E89", fg: "#fff" }];
+  const step = (v: number) => steps.find(x => v < x.upTo)!;
+  return (
+    <div className="mb-5">
+      <ol className="grid grid-cols-6 gap-1 sm:grid-cols-12" aria-label="Rainfall by month, 2025">
+        {monthlyRainfall2025.map(d => {
+          const mark = d === peak || d === low;
+          return (
+            <li key={d.month} className={`flex flex-col items-center rounded-md px-0.5 py-1.5 text-center ${mark ? "ring-2 ring-ink" : ""}`} style={{ background: step(d.value).bg, color: step(d.value).fg }}>
+              <span className="text-xs font-semibold">{d.month}</span>
+              <span className="tabular text-xs">{Math.round(d.value)}</span>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="mt-2 text-xs text-muted">Darker = wetter (mm): under 40, 40–80, 80–130, 130–180, 180 and over. Wettest: <span className="font-semibold text-ink">{peak.month}, {num(peak.value)} mm</span>. Driest: <span className="font-semibold text-ink">{low.month}, {num(low.value)} mm</span>.</p>
+    </div>
+  );
+}
+
 export function RainfallCard() {
   return (
     <ChartCard title="Monthly rainfall" subtitle="Average rainfall, millimetres" period="2025" explain={{ indicator: "rain" }}
       notes={`Two peaks: 216.7 mm in June and 185.1 mm in October, typical of the two rainy seasons in much of southern Ghana. Monthly average ${climateAverages2025.rainfallMonthlyAverage} mm (dashed). The 2000–2010 and 2011–2024 reference curves in Figure 7.4 are unlabelled and not reproduced.`}
       source="Ghana Meteorological Agency · Figure 7.4, p. 98; Table 2.1"
       footer={<DataDisclosure><DataTable caption="Monthly rainfall, 2025" headings={["Month", "Rainfall (mm)"]} rows={monthlyRainfall2025.map(d => [d.month, d.value])} decimals={1} minWidth={260} /></DataDisclosure>}>
+      <RainyStrip />
       <ChartFrame height={250} label="Monthly rainfall in 2025, peaking at 216.7 mm in June and 185.1 mm in October">
         <BarChart data={monthlyRainfall2025} margin={{ top: 22, right: 8, left: -6, bottom: 0 }}>
           <CartesianGrid stroke={C.grid} vertical={false} />
@@ -117,12 +198,26 @@ export function RainfallCard() {
   );
 }
 
+const monthName: Record<string, string> = { Jan: "January", Feb: "February", Mar: "March", Apr: "April", May: "May", Jun: "June", Jul: "July", Aug: "August", Sep: "September", Oct: "October", Nov: "November", Dec: "December" };
+
+function TempExtremes() {
+  const hot = monthlyTemperature2025.reduce((a, b) => (b.value > a.value ? b : a));
+  const cool = monthlyTemperature2025.reduce((a, b) => (b.value < a.value ? b : a));
+  return (
+    <ul className="mb-5 grid gap-2.5 sm:grid-cols-2">
+      <StatTile icon={ThermometerSun} tone="rose" label="Hottest month" value={`${num(hot.value)}°C`} period={`${monthName[hot.month] ?? hot.month} 2025`} />
+      <StatTile icon={ThermometerSnowflake} tone="blue" label="Coolest month" value={`${num(cool.value)}°C`} period={`${monthName[cool.month] ?? cool.month} 2025`} />
+    </ul>
+  );
+}
+
 export function TemperatureCard() {
   return (
     <ChartCard title="Monthly temperature" subtitle="Average temperature, °C" period="2025" explain={{ indicator: "temperature" }}
       notes={`Warmest in March (30.4°C), coolest in August (25.4°C); the range across the year is under 5°C. Monthly average ${climateAverages2025.temperatureMonthlyAverage}°C (dashed). The axis starts at 20°C to show the seasonal cycle; one year cannot show a long-term trend.`}
       source="Ghana Meteorological Agency · Figure 7.5, p. 99; Table 2.1"
       footer={<DataDisclosure><DataTable caption="Monthly temperature, 2025" headings={["Month", "Temperature (°C)"]} rows={monthlyTemperature2025.map(d => [d.month, d.value])} decimals={1} minWidth={260} /></DataDisclosure>}>
+      <TempExtremes />
       <ChartFrame height={250} label="Monthly average temperature in 2025, from 30.4°C in March to 25.4°C in August">
         <LineChart data={monthlyTemperature2025} margin={{ top: 22, right: 16, left: -6, bottom: 0 }}>
           <CartesianGrid stroke={C.grid} vertical={false} />
@@ -130,7 +225,7 @@ export function TemperatureCard() {
           <YAxis {...axisCommon} tick={tick} domain={[20, 32]} ticks={[20, 24, 28, 32]} tickFormatter={v => `${v}°`} width={40} />
           <ReferenceLine y={climateAverages2025.temperatureMonthlyAverage} stroke={C.slate} strokeDasharray="4 4" />
           <Tooltip content={makeTooltip({ unit: "°C" })} />
-          <Line dataKey="value" name="Temperature" stroke={C.negative} strokeWidth={2.5} dot={{ r: 3.5, fill: C.negative }} isAnimationActive={false}><LabelList dataKey="value" position="top" offset={8} formatter={(v: unknown) => num(Number(v))} style={{ ...labelStyle, fontSize: 12 }} /></Line>
+          <Line type="linear" dataKey="value" name="Temperature" stroke={C.negative} strokeWidth={2.5} dot={{ r: 3.5, fill: C.negative }} isAnimationActive={false}><LabelList dataKey="value" position="top" offset={8} formatter={(v: unknown) => num(Number(v))} style={{ ...labelStyle, fontSize: 12 }} /></Line>
         </LineChart>
       </ChartFrame>
     </ChartCard>

@@ -1,7 +1,9 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { Briefcase, BriefcaseBusiness, Flower2, GraduationCap, UserRoundX, Users, UsersRound, type LucideIcon } from "lucide-react";
 import { ChartCard, Stat } from "@/components/ui/Card";
+import { StatTile, tones } from "@/components/ui/Infographic";
 import { DataDisclosure, DataTable, Legend } from "@/components/ui/Data";
 import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, tick } from "@/components/ui/chart";
 import { labourParticipationData, neetData, tourismPurposeData, unemploymentData } from "@/data/businessEconomyData";
@@ -9,16 +11,24 @@ import { labourLevels2025, tourismPurposes, tourismSplit } from "@/data/publicat
 
 const yearLabel = (y: string) => y === "2025" ? "2025 (Q1–Q3 avg)" : y;
 
-function TrendLines({ data, series, max, label, height = 240 }: { data: Record<string, string | number>[]; series: { key: string; label: string; color: string; dashed?: boolean; below?: boolean }[]; max: number; label: string; height?: number }) {
+/**
+ * Survey series drawn with straight segments and markers. `proportional` spaces years by elapsed time
+ * (e.g. 2017 then 2021–2025) instead of one step per observation.
+ */
+function TrendLines({ data, series, max, label, height = 240, proportional = false }: { data: Record<string, string | number>[]; series: { key: string; label: string; color: string; dashed?: boolean; below?: boolean }[]; max: number; label: string; height?: number; proportional?: boolean }) {
+  const rows = data.map(d => ({ ...d, yearNum: Number(d.year) }));
+  const yearNums = rows.map(r => r.yearNum);
   return (
     <ChartFrame height={height} label={label}>
-      <LineChart data={data} margin={{ top: 22, right: 20, left: -8, bottom: 0 }}>
+      <LineChart data={rows} margin={{ top: 22, right: 20, left: 0, bottom: 0 }}>
         <CartesianGrid stroke={C.grid} vertical={false} />
-        <XAxis dataKey="year" {...axisCommon} tick={tick} padding={{ left: 14, right: 14 }} />
+        {proportional
+          ? <XAxis dataKey="yearNum" type="number" {...axisCommon} tick={tick} domain={[Math.min(...yearNums) - 0.5, Math.max(...yearNums) + 0.5]} ticks={yearNums} allowDecimals={false} />
+          : <XAxis dataKey="year" {...axisCommon} tick={tick} padding={{ left: 14, right: 14 }} />}
         <YAxis {...axisCommon} tick={tick} domain={[0, max]} tickFormatter={v => `${v}%`} width={48} />
-        <Tooltip content={makeTooltip({ unit: "%", labelFormat: yearLabel })} />
+        <Tooltip content={makeTooltip({ unit: "%", labelFormat: l => yearLabel(String(l)) })} />
         {series.map(s => (
-          <Line key={s.key} dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={2.5} strokeDasharray={s.dashed ? "6 4" : undefined} dot={{ r: 3.5, fill: s.color }} isAnimationActive={false}>
+          <Line key={s.key} type="linear" dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={2.5} strokeDasharray={s.dashed ? "6 4" : undefined} dot={{ r: 3.5, fill: s.color }} isAnimationActive={false}>
             <LabelList dataKey={s.key} position={s.below ? "bottom" : "top"} offset={8} formatter={(v: unknown) => Number(v).toFixed(1)} style={{ ...labelStyle, fontSize: 12, fill: s.color }} />
           </Line>
         ))}
@@ -44,11 +54,11 @@ export function UnemploymentCard() {
   const s = [{ key: "youth1524", label: "Youth 15–24", color: C.amber }, { key: "youth1535", label: "Youth 15–35", color: C.rose }, { key: "national", label: "National", color: C.purple, below: true }];
   return (
     <ChartCard title="Unemployment rate" subtitle="% of the labour force in each group" period="2017, 2021–2025" explain={{ indicator: "unemployment" }}
-      notes="A share of each group’s labour force, not of all young people. Years are unevenly spaced (2017, then 2021–2025); 2025 is the Q1–Q3 average."
+      notes="A share of each group’s labour force, not of all young people. The year axis is spaced by time: there is no observation between 2017 and 2021. 2025 is the Q1–Q3 average."
       source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.18, p. 59"
       footer={<DataDisclosure><DataTable caption="Unemployment rate by group" headings={["Year", "Youth 15–24 (%)", "Youth 15–35 (%)", "National (%)"]} rows={unemploymentData.map(d => [yearLabel(d.year), d.youth1524, d.youth1535, d.national])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
-      <TrendLines data={unemploymentData} series={s} max={40} label="Unemployment in 2025: 32.4% for ages 15–24, 21.9% for ages 15–35, 12.8% nationally" />
+      <TrendLines proportional data={unemploymentData} series={s} max={40} label="Unemployment in 2025: 32.4% for ages 15–24, 21.9% for ages 15–35, 12.8% nationally" />
     </ChartCard>
   );
 }
@@ -66,6 +76,19 @@ export function NeetCard() {
   );
 }
 
+export function LabourGlance() {
+  const p = labourParticipationData.at(-1)!, u = unemploymentData.at(-1)!, n = neetData.at(-1)!;
+  return (
+    <ul className="mb-4 grid gap-2.5 sm:grid-cols-2 lg:mb-5 xl:grid-cols-5" aria-label="Labour market, latest values">
+      <StatTile icon={Users} label="Labour-force participation" value={`${p.labourForce.toFixed(1)}%`} period={yearLabel(p.year)} />
+      <StatTile icon={Briefcase} tone="teal" label="Employment-to-population" value={`${p.employmentPopulation.toFixed(1)}%`} period={yearLabel(p.year)} />
+      <StatTile icon={UserRoundX} tone="blue" label="National unemployment" value={`${u.national.toFixed(1)}%`} period={yearLabel(u.year)} />
+      <StatTile icon={GraduationCap} tone="amber" label="Youth unemployment, 15–24" value={`${u.youth1524.toFixed(1)}%`} period={yearLabel(u.year)} />
+      <StatTile icon={UsersRound} tone="rose" label="NEET, ages 15–24" value={`${n.youth1524.toFixed(1)}%`} period={yearLabel(n.year)} note={`Ages 15–35: ${n.youth1535.toFixed(1)}%`} />
+    </ul>
+  );
+}
+
 export function LabourStats() {
   return (
     <div className="grid gap-3 sm:grid-cols-3">
@@ -77,6 +100,8 @@ export function LabourStats() {
 }
 
 /* ── Tourism ─────────────────────────────────────────────────────────────── */
+
+const purposeIcons: Record<string, LucideIcon> = { "Funeral": Flower2, "Visiting friends & relatives": Users, "Business & professional": BriefcaseBusiness };
 
 const flowColor = { Domestic: C.purple, Inbound: C.teal, Outbound: C.amber } as Record<string, string>;
 
@@ -125,14 +150,18 @@ export function TourismCard() {
       <div className="mt-5 grid gap-4 border-t border-line pt-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <div>
           <p className="mb-2 text-[13.5px] font-semibold text-ink">Main purpose of domestic trips</p>
+          <p className="mb-2 text-xs text-muted">% of domestic trips; bars on a 0–100% scale</p>
           <ul className="space-y-2">
-            {tourismPurposeData.map(p => (
-              <li key={p.purpose} className="grid grid-cols-[10rem_minmax(0,1fr)_3rem] items-center gap-2 text-[13px]">
-                <span className="text-body">{p.purpose}</span>
-                <span className="h-3 rounded-sm bg-surface-muted"><span className="block h-full rounded-sm" style={{ width: `${(p.share / 50) * 100}%`, background: flowColor.Domestic }} /></span>
-                <span className="tabular text-right font-semibold text-ink">{p.share}%</span>
-              </li>
-            ))}
+            {tourismPurposeData.map(p => {
+              const Icon = purposeIcons[p.purpose] ?? Users;
+              return (
+                <li key={p.purpose} className="grid grid-cols-[2rem_minmax(0,1fr)_3.25rem] items-center gap-x-3 text-[13px]">
+                  <span aria-hidden="true" className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: tones.purple.bg, color: tones.purple.fg }}><Icon size={16} aria-hidden="true" /></span>
+                  <span className="min-w-0"><span className="block text-body">{p.purpose}</span><span aria-hidden="true" className="mt-1 block h-1.5 rounded-full bg-surface-muted"><span className="block h-full rounded-full" style={{ width: `${p.share}%`, background: flowColor.Domestic }} /></span></span>
+                  <span className="tabular text-right font-semibold text-ink">{p.share.toFixed(1)}%</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <dl className="space-y-1.5 text-[13px] leading-relaxed">

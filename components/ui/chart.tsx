@@ -53,7 +53,7 @@ export function ChartFrame({ height, label, children, minWidth }: { height: numb
   const plot = (
     <div role="img" aria-label={label} style={{ minHeight: height, minWidth }} className="relative w-full flex-1">
       <div className="absolute inset-0">
-        {mounted ? <ResponsiveContainer width="100%" height="100%" minWidth={0}>{children}</ResponsiveContainer> : <div className="h-full animate-pulse rounded-md bg-surface-muted" />}
+        {mounted ? <ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 1, height: 1 }}>{children}</ResponsiveContainer> : <div className="h-full animate-pulse rounded-md bg-surface-muted" />}
       </div>
     </div>
   );

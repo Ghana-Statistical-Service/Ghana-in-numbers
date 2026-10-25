@@ -38,7 +38,7 @@ export function ShareEndpointsCard() {
     <ChartCard title="Fewer children, a large youth population" subtitle="% of the total population" period="2000 and 2025" explain={{ indicator: "youth" }}
       notes="The child share fell from 41.8% to 33.2%. The publication states a youth-to-child ratio of about 0.83 that has “barely moved since 2000”; the 2025 shares shown (30.0 / 33.2) give about 0.90. The 15–24 share for 2000 is described as about 18% but not printed."
       source="pp. 108–109"
-      footer={<DataDisclosure><DataTable caption="Population shares by age group" headings={["Age group", "2000 (%)", "2025 (%)"]} rows={rows.map(r => [r.label, r.y2000, r.y2025])} decimals={1} minWidth={320} unitNote="— not printed for that year. 2025 youth shares are approximate (“about”)." /></DataDisclosure>}>
+      footer={<DataDisclosure><DataTable caption="Population shares by age group" headings={["Age group", "2000 (%)", "2025 (%)"]} rows={rows.map(r => [r.label, r.y2000, r.y2025])} decimals={1} minWidth={320} unitNote="n/a: not printed for that year. 2025 youth shares are approximate (“about”)." /></DataDisclosure>}>
       <Legend className="mb-3" items={[{ label: "2000", color: C.slateLight, shape: "dot" }, { label: "2025", color: C.purple, shape: "dot" }]} />
       <ul className="space-y-5">
         {rows.map(r => (

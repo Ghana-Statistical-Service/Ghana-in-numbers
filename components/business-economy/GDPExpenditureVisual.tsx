@@ -84,7 +84,7 @@ export default function GDPExpenditureVisual() {
                     <rect x={x} y={top} width={72} height={Math.max(2, bottom - top)} rx={4} fill={bar.color} stroke={active === index ? "#0F172B" : "none"} strokeWidth={1.5} />
                     <text x={x + 36} y={top - 9} textAnchor="middle" fontSize="13" fontWeight="600" fill="#0F172B">{label}</text>
                     <text x={x + 36} y={306} textAnchor="middle" fontSize="12.5" fontWeight={bar.total ? "700" : "500"} fill="#0F172B">{bar.label}</text>
-                    <text x={x + 36} y={324} textAnchor="middle" fontSize="11" fill="#64748B">{bar.total ? "Total" : bar.sign < 0 ? "Subtract" : "Add"}</text>
+                    <text x={x + 36} y={324} textAnchor="middle" fontSize="12" fill="#4B5A70">{bar.total ? "Total" : bar.sign < 0 ? "Subtract" : "Add"}</text>
                   </g>
                 );
               })}

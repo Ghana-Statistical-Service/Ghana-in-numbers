@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { User, type LucideIcon } from "lucide-react";
+import { ArrowRight, User, type LucideIcon } from "lucide-react";
 
 /**
  * Icon-led figures: a meaningful icon, big numbers, short labels and a one-line takeaway.
@@ -40,13 +40,13 @@ export function Milestones({ data, tone = "purple", format = v => v.toFixed(1), 
   return (
     <div className="flex items-end gap-3 sm:gap-4">
       {icon && <div className="mb-7 hidden min-[420px]:block"><IconTile icon={icon} tone={tone} size="lg" /></div>}
-      <ol className="grid flex-1 items-end gap-2" style={{ gridTemplateColumns: `repeat(${data.length}, minmax(0, 1fr))` }}>
+      <ol className="grid min-w-0 flex-1 items-end gap-2" style={{ gridTemplateColumns: `repeat(${data.length}, minmax(0, 1fr))`, containerType: "inline-size" }}>
         {data.map((d, i) => {
           const latest = i === data.length - 1;
           const size = 22 + (max === min ? 1 : (d.value - min) / (max - min)) * 14;
           return (
             <li key={d.year} className="flex flex-col items-center text-center">
-              <span className="tabular font-semibold leading-none tracking-tight" style={{ fontSize: `min(${size + (latest ? 4 : 0)}px, 7vw)`, color: latest ? tones[tone].fg : "#334155", fontWeight: latest ? 700 : 600 }}>
+              <span className="tabular font-semibold leading-none tracking-tight" style={{ fontSize: `min(${size + (latest ? 4 : 0)}px, ${(30 / data.length).toFixed(1)}cqi)`, color: latest ? tones[tone].fg : "#334155", fontWeight: latest ? 700 : 600 }}>
                 {format(d.value)}
               </span>
               {unit && <span className="sr-only"> {unit}</span>}
@@ -96,5 +96,52 @@ export function IconBarRow({ icon, label, value, tone = "purple", max = 100, for
       </div>
       <span className="tabular text-right text-[15px] font-semibold text-ink">{format(value)}</span>
     </li>
+  );
+}
+
+/** Small figure tile: icon, label, big value with unit, period and an optional note. Render inside a <ul>. */
+export function StatTile({ icon, tone = "purple", label, value, unit, period, note }: { icon: LucideIcon; tone?: Tone; label: string; value: string; unit?: string; period: string; note?: string }) {
+  return (
+    <li className="flex min-w-0 items-start gap-3 rounded-[var(--radius-md)] bg-surface-muted px-3.5 py-3">
+      <IconTile icon={icon} tone={tone} />
+      <div className="min-w-0">
+        <p className="text-[13px] leading-snug text-body">{label}</p>
+        <p className="tabular mt-1 flex flex-wrap items-baseline gap-x-1"><span className="text-[24px] font-bold leading-none tracking-tight" style={{ color: tones[tone].fg }}>{value}</span>{unit && <span className="text-[13px] text-muted">{unit}</span>}</p>
+        <p className="mt-1 text-xs font-medium text-ink">{period}</p>
+        {note && <p className="text-xs text-muted">{note}</p>}
+      </div>
+    </li>
+  );
+}
+
+/** Change badge: green when the change is an improvement, rose when it is a deterioration, neutral otherwise. */
+export function ChangeBadge({ children, good }: { children: ReactNode; good?: boolean | null }) {
+  const t = good == null ? { bg: "#EEF0F4", fg: "#334155" } : good ? { bg: tones.teal.bg, fg: tones.teal.fg } : { bg: tones.rose.bg, fg: tones.rose.fg };
+  return <span className="tabular inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ background: t.bg, color: t.fg }}>{children}</span>;
+}
+
+/**
+ * Before and after figures for a two-observation series, with an icon and a computed change badge.
+ * `lowerIsBetter` decides whether a fall is shown as an improvement.
+ */
+export function BeforeAfter({ icon, tone = "purple", label, before, after, format, change, lowerIsBetter, changeLabel = "change" }: {
+  icon: LucideIcon; tone?: Tone; label?: string; before: { value: number; label: string }; after: { value: number; label: string };
+  format: (v: number) => string; change: string; lowerIsBetter?: boolean; changeLabel?: string;
+}) {
+  const diff = after.value - before.value;
+  const good = lowerIsBetter == null || diff === 0 ? null : lowerIsBetter ? diff < 0 : diff > 0;
+  return (
+    <div className="min-w-0">
+      {label && <p className="mb-2 text-[13.5px] font-semibold text-ink">{label}</p>}
+      <div className="flex items-center gap-3">
+        <IconTile icon={icon} tone={tone} size="lg" />
+        <div className="grid flex-1 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
+          <p className="text-center"><span className="tabular block text-[22px] font-semibold leading-none text-body">{format(before.value)}</span><span className="mt-1 block text-xs text-muted">{before.label}</span></p>
+          <ArrowRight size={18} aria-hidden="true" className="text-subtle" />
+          <p className="text-center"><span className="tabular block text-[26px] font-bold leading-none" style={{ color: tones[tone].fg }}>{format(after.value)}</span><span className="mt-1 block text-xs font-semibold text-ink">{after.label}</span></p>
+        </div>
+      </div>
+      <p className="mt-3 flex flex-wrap items-center gap-2 text-[13px] text-body"><ChangeBadge good={good}>{change}</ChangeBadge><span>{changeLabel}</span></p>
+    </div>
   );
 }

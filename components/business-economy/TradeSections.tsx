@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
+import { Bean, BrickWall, Car, Droplet, Fuel, Gem, Nut, Package, type LucideIcon } from "lucide-react";
 import { ChartCard, Stat } from "@/components/ui/Card";
 import { DataDisclosure, DataTable, Legend, Segmented } from "@/components/ui/Data";
 import { Grid } from "@/components/ui/Page";
@@ -55,16 +56,23 @@ export function MerchandiseTradeCard() {
   );
 }
 
-function ShareList({ items, color, max }: { items: { name: string; share: number }[]; color: string; max: number }) {
+const commodityIcons: [RegExp, LucideIcon][] = [[/gold/i, Gem], [/cocoa/i, Bean], [/cashew/i, Nut], [/crude/i, Droplet], [/gas oil|motor spirit/i, Fuel], [/car/i, Car], [/cement|clinker/i, BrickWall]];
+const iconFor = (name: string) => commodityIcons.find(([re]) => re.test(name))?.[1] ?? Package;
+
+/** Commodity rows: icon, name, a thin bar on a 0–100% scale (shares of all exports or imports) and the share. */
+function ShareList({ items, color, tint }: { items: { name: string; share: number }[]; color: string; tint: string }) {
   return (
-    <ul className="space-y-2">
-      {items.map(i => (
-        <li key={i.name} className="grid grid-cols-[9rem_minmax(0,1fr)_3rem] items-center gap-2 text-[13px]">
-          <span className="text-body">{i.name}</span>
-          <span className="h-3 rounded-sm bg-surface-muted"><span className="block h-full rounded-sm" style={{ width: `${(i.share / max) * 100}%`, background: color }} /></span>
-          <span className="tabular text-right font-semibold text-ink">{i.share}%</span>
-        </li>
-      ))}
+    <ul className="space-y-2.5">
+      {items.map(i => {
+        const Icon = iconFor(i.name);
+        return (
+          <li key={i.name} className="grid grid-cols-[2rem_minmax(0,1fr)_3.25rem] items-center gap-x-3 text-[13px]">
+            <span aria-hidden="true" className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: tint, color }}><Icon size={16} aria-hidden="true" /></span>
+            <span className="min-w-0"><span className="block text-body">{i.name}</span><span aria-hidden="true" className="mt-1 block h-1.5 rounded-full bg-surface-muted"><span className="block h-full rounded-full" style={{ width: `${i.share}%`, background: color }} /></span></span>
+            <span className="tabular text-right font-semibold text-ink">{i.share.toFixed(1)}%</span>
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -73,12 +81,12 @@ export function CommoditiesCard() {
   return (
     <ChartCard title="Top five export and import commodities" subtitle="% of the value of exports or imports" period="2025"
       explain={{ indicator: "exports" }}
-      notes={`Exports are concentrated: the top five make up ${tradeFacts2025.top5ExportShare}% (gold bullion alone 62.9%). Imports are spread out: the top five make up ${tradeFacts2025.top5ImportShare}%. Crude oil is 8.3% of exports while refined fuels (gas oil and motor spirit) are 20.4% of imports.`}
+      notes={`Bars are drawn on a 0–100% scale. Exports are concentrated: the top five make up ${tradeFacts2025.top5ExportShare}% (gold bullion alone 62.9%). Imports are spread out: the top five make up ${tradeFacts2025.top5ImportShare}%. Crude oil is 8.3% of exports while refined fuels (gas oil and motor spirit) are 20.4% of imports.`}
       source="GSS · Figure 5.24, pp. 82–83"
       footer={<DataDisclosure><DataTable caption="Top five exports, 2025" headings={["Export", "% of exports"]} rows={topExports2025.map(i => [i.name, i.share])} decimals={1} minWidth={280} /><DataTable caption="Top five imports, 2025" headings={["Import", "% of imports"]} rows={topImports2025.map(i => [i.name, i.share])} decimals={1} minWidth={280} /></DataDisclosure>}>
       <div className="grid gap-6">
-        <div><p className="mb-2.5 text-[13.5px] font-semibold text-ink">Exports</p><ShareList items={topExports2025} color={C.purple} max={70} /></div>
-        <div><p className="mb-2.5 text-[13.5px] font-semibold text-ink">Imports</p><ShareList items={topImports2025.map(i => ({ ...i, name: i.name.replace("Used cars 1.5-3.0L", "Used cars (1.5–3.0L)") }))} color={C.amber} max={70} /></div>
+        <div><p className="mb-2.5 text-[13.5px] font-semibold text-ink">Exports</p><ShareList items={topExports2025} color={C.purple} tint="#EEECFA" /></div>
+        <div><p className="mb-2.5 text-[13.5px] font-semibold text-ink">Imports</p><ShareList items={topImports2025.map(i => ({ ...i, name: i.name.replace("Used cars 1.5-3.0L", "Used cars (1.5–3.0L)") }))} color="#9A5512" tint="#FBEFE2" /></div>
       </div>
     </ChartCard>
   );
@@ -88,7 +96,7 @@ export function PartnersCard() {
   return (
     <ChartCard title="Trade by continent" subtitle="% of exports and of imports" period="2025"
       explain={{ indicator: "partner" }}
-      notes={`Ghana exported to ${tradeFacts2025.exportPartners} partners and imported from ${tradeFacts2025.importPartners}. Trade with Africa ran a surplus: GH¢${tradeFacts2025.africaExports}bn exported, GH¢${tradeFacts2025.africaImports}bn imported. South America, Oceania and unknown destinations are small and not labelled in the source.`}
+      notes={`Bars are drawn on a 0–100% scale. Ghana exported to ${tradeFacts2025.exportPartners} partners and imported from ${tradeFacts2025.importPartners}. Trade with Africa ran a surplus: GH¢${tradeFacts2025.africaExports}bn exported, GH¢${tradeFacts2025.africaImports}bn imported. South America, Oceania and unknown destinations are small and not labelled in the source.`}
       source="GSS · Figure 5.25, pp. 83–84"
       footer={<DataDisclosure><DataTable caption="Trade by continent, 2025" headings={["Continent", "% of exports", "% of imports"]} rows={tradePartnerRegions.map(r => [r.region, r.export, r.import])} decimals={1} minWidth={320} /><DataTable caption="Named export destinations, 2025" headings={["Destination", "Exports (GH¢ bn)"]} rows={namedExportDestinations2025.map(d => [d.name, d.value])} decimals={1} minWidth={300} unitNote="Destinations named in the text; the publication does not print a complete top-ten country list." /></DataDisclosure>}>
       <Legend className="mb-2" items={[{ label: "Exports", color: C.purple }, { label: "Imports", color: C.amber }]} />
@@ -98,7 +106,7 @@ export function PartnersCard() {
             <span className="font-medium text-ink">{r.region}</span>
             <div className="space-y-1">
               {[{ v: r.export, c: C.purple }, { v: r.import, c: C.amber }].map((s, i) => (
-                <div key={i} className="grid grid-cols-[minmax(0,1fr)_3rem] items-center gap-2"><span className="h-2.5 rounded-sm bg-surface-muted"><span className="block h-full rounded-sm" style={{ width: `${(s.v / 60) * 100}%`, background: s.c }} /></span><span className="tabular text-right text-[12.5px] font-semibold text-ink">{s.v}%</span></div>
+                <div key={i} className="grid grid-cols-[minmax(0,1fr)_3rem] items-center gap-2"><span className="h-2.5 rounded-sm bg-surface-muted"><span className="block h-full rounded-sm" style={{ width: `${s.v}%`, background: s.c }} /></span><span className="tabular text-right text-[12.5px] font-semibold text-ink">{s.v.toFixed(1)}%</span></div>
               ))}
             </div>
           </li>

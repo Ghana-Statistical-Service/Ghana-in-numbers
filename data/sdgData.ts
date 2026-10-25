@@ -103,3 +103,11 @@ export const coastalDebrisData = [
   { year: "2019", value: 179.76 },
   { year: "2020", value: 152.13 },
 ];
+
+// SDG 3.2 – Infant Mortality Rate (per 1,000 live births), GDHS; Figure 8.4, p. 103
+export const infantMortality = [
+  { year: "2003", value: 64 },
+  { year: "2008", value: 50 },
+  { year: "2014", value: 41 },
+  { year: "2022", value: 28 },
+];

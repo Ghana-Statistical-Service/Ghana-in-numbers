@@ -1,11 +1,14 @@
+import { CloudRain, Leaf, Sun, Thermometer, Trees } from "lucide-react";
 import DashboardShell from "@/components/layout/DashboardShell";
-import { CarbonCard, CarbonChangeCard, ForestCard, ForestShareCard, RainfallCard, TemperatureCard } from "@/components/environment/EnvironmentSections";
+import OverviewTopBar from "@/components/home/OverviewTopBar";
+import { CarbonCard, CarbonChangeCard, CarbonTopCard, ForestCard, ForestHeadlineCard, ForestShareCard, RainfallCard, TemperatureCard } from "@/components/environment/EnvironmentSections";
 import { KpiCard, KpiGrid } from "@/components/ui/Card";
 import { Grid, PageBody, PageHeader, Section, SectionNav } from "@/components/ui/Page";
 
 export default function EnvironmentAndClimateChangePage() {
   return (
     <DashboardShell>
+      <OverviewTopBar page="Environment and Climate Change" />
       <PageBody>
         <PageHeader
           eyebrow="Chapter 7"
@@ -15,24 +18,22 @@ export default function EnvironmentAndClimateChangePage() {
         />
 
         <KpiGrid>
-          <KpiCard label="Reported forest reserve area" value="24,133.53" unit="km²" period="Dec 2025, 12 regions" explain={{ label: "Forest Reserve Area" }} />
-          <KpiCard label="Total carbon stock" value="1,147.6" unit="Mt C" period="2021" explain={{ indicator: "carbon" }} note="1,367.5 Mt C in 2015" />
-          <KpiCard label="Grassland carbon" value="344.0" unit="Mt C" period="2021" explain={{ label: "Grassland Carbon" }} note="Largest store of any land cover" />
-          <KpiCard label="Wettest month" value="216.7" unit="mm" period="June 2025" explain={{ label: "Peak Rainfall" }} note="Monthly average 99.3 mm" />
-          <KpiCard label="Warmest month" value="30.4" unit="°C" period="March 2025" explain={{ label: "Peak Temperature" }} note="Monthly average 28.2°C" />
+          <KpiCard icon={Trees} label="Forest reserve area" value="24,133.53" unit="km²" period="Dec 2025, 12 regions" explain={{ label: "Forest Reserve Area" }} note="Western holds 29.5%" />
+          <KpiCard icon={Leaf} label="Grassland carbon" value="344.0" unit="Mt C" period="2021" explain={{ label: "Grassland Carbon" }} note="Largest store of any land cover" />
+          <KpiCard icon={CloudRain} label="Peak rainfall" value="216.7" unit="mm" period="June 2025" explain={{ label: "Peak Rainfall" }} note="Monthly average 99.3 mm" />
+          <KpiCard icon={Thermometer} label="Peak temperature" value="30.4" unit="°C" period="March 2025" explain={{ label: "Peak Temperature" }} note="Monthly average 28.2°C" />
+          <KpiCard icon={Sun} label="Lowest rainfall" value="11.1" unit="mm" period="January 2025" explain={{ label: "Lowest Rainfall" }} note="The driest month" />
         </KpiGrid>
 
         <SectionNav items={[{ id: "forests", label: "Forest reserves" }, { id: "carbon", label: "Carbon" }, { id: "climate", label: "Rainfall and temperature" }]} />
 
-        <Section id="forests" title="Forest reserves" description="Three regions hold about 60% of the reported reserve area." source="§7.1 · p. 96">
-          <Grid cols="2-1"><ForestCard /><ForestShareCard /></Grid>
+        <Section id="forests" accent="green" title="Forest reserves and carbon retention" description="Three regions hold about 60% of the reported reserve area; vegetation and soils hold carbon that would otherwise reach the atmosphere, and the stock fell between 2015 and 2021." source="§7.1–7.2 · pp. 96–97">
+          <Grid cols="2-1"><ForestCard /><ForestHeadlineCard /></Grid>
+          <Grid cols="1-2" className="mt-4 lg:mt-5"><ForestShareCard /><div id="carbon" className="flex min-w-0 scroll-mt-16 flex-col"><CarbonTopCard /></div></Grid>
+          <Grid cols={2} className="mt-4 lg:mt-5"><CarbonCard /><CarbonChangeCard /></Grid>
         </Section>
 
-        <Section id="carbon" title="Carbon retention" description="Vegetation and soils hold carbon that would otherwise reach the atmosphere; the stock fell between 2015 and 2021." source="§7.2 · p. 97">
-          <Grid cols={2}><CarbonCard /><CarbonChangeCard /></Grid>
-        </Section>
-
-        <Section id="climate" title="Rainfall and temperature" description="Two rainfall peaks and a narrow temperature range shape the farming calendar." source="§7.3–7.4 · pp. 98–99">
+        <Section id="climate" accent="green" title="Rainfall and temperature" description="Two rainfall peaks and a narrow temperature range shape the farming calendar." source="§7.3–7.4 · pp. 98–99">
           <Grid cols={2}><RainfallCard /><TemperatureCard /></Grid>
         </Section>
       </PageBody>

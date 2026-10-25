@@ -5,7 +5,10 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, Line, LineChart, Tooltip
 import { ChartCard, Qualifier, Stat } from "@/components/ui/Card";
 import { DataDisclosure, DataTable, Segmented } from "@/components/ui/Data";
 import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, tick, tickSmall } from "@/components/ui/chart";
-import { nominalGdpData, nominalGdpPerCapitaData, realGdpData } from "@/data/businessEconomyData";
+import { Ship, Store, TrendingUp, Wallet } from "lucide-react";
+import { StatTile } from "@/components/ui/Infographic";
+import { nominalGdpData, nominalGdpPerCapitaData, realGdpData, tradeGoodsData } from "@/data/businessEconomyData";
+import { enterpriseTypes } from "@/data/reportAdditions";
 import { gdpPerCapitaUsd, nominalGdpUsd, nonOilGdpGrowth2025 } from "@/data/publicationAdditions";
 
 type Currency = "ghs" | "usd";
@@ -89,19 +92,19 @@ export function PerCapitaCard() {
       notes={cur === "ghs" ? "About nine times the 2013 level in cedis; prices also rose, so purchasing power grew far less. An average of output, not household income." : "In dollars, output per person moved between US$1,756 (2015) and US$3,385 (2025)."}
       source="GSS Annual GDP 2013–2025 · Figures 5.3–5.4, pp. 37–38"
       footer={<DataDisclosure><DataTable caption="GDP per capita" headings={["Year", "GH¢", "US$"]} rows={nominalGdpPerCapitaData.map((d, i) => [statusLabel(d.year), d.value, gdpPerCapitaUsd[i].value])} decimals={[undefined, 1, 0]} minWidth={340} unitNote="Figure 5.3 is captioned in thousand US$ but its axis and the text are in thousand GH¢; the GH¢ reading is used. Intermediate GH¢ values are labelled in thousands (one decimal)." /></DataDisclosure>}>
-      <ChartFrame height={250} label={`GDP per capita by year in ${cur === "ghs" ? "Ghana cedis" : "US dollars"}`}>
-        <BarChart data={data} margin={{ top: 22, right: 4, left: -4, bottom: 0 }}>
+      <ChartFrame height={260} minWidth={620} label={`GDP per capita by year in ${cur === "ghs" ? "Ghana cedis" : "US dollars"}`}>
+        <BarChart data={data} margin={{ top: 22, right: 22, left: 0, bottom: 0 }}>
           <CartesianGrid stroke={C.grid} vertical={false} />
           <XAxis dataKey="label" {...axisCommon} tick={tickSmall} interval={0} />
           <YAxis {...axisCommon} tick={tick} width={48} tickFormatter={v => cur === "ghs" ? `${v / 1000}k` : v.toLocaleString("en-GB")} domain={cur === "ghs" ? [0, 45000] : [0, 4000]} />
           <Tooltip cursor={{ fill: "rgba(60,47,163,0.06)" }} content={makeTooltip({ format: v => `${cur === "ghs" ? "GH¢" : "US$"}${v.toLocaleString("en-GB", { maximumFractionDigits: 1 })}`, labelFormat: (_l, p) => statusLabel(String(p?.year ?? "")) })} />
           <Bar dataKey="value" name="Per capita" radius={[3, 3, 0, 0]} isAnimationActive={false}>
             {data.map(d => <Cell key={d.year} fill={d.year.includes("*") ? C.amberLight : C.amber} />)}
-            <LabelList dataKey="value" position="top" formatter={(v: unknown) => cur === "ghs" ? (Number(v) / 1000).toFixed(1) : Number(v).toLocaleString("en-GB")} style={{ ...labelStyle, fontSize: 12 }} />
+            <LabelList dataKey="value" position="top" formatter={(v: unknown) => Math.round(Number(v)).toLocaleString("en-GB")} style={{ ...labelStyle, fontSize: 12 }} />
           </Bar>
         </BarChart>
       </ChartFrame>
-      {cur === "ghs" && <p className="text-xs text-subtle">Bar labels in thousand GH¢.</p>}
+      <p className="text-xs text-muted">Bar labels in whole {cur === "ghs" ? "cedis" : "US dollars"} per person. 2013 is GH¢4,710; 2014–2024 are printed rounded to the nearest GH¢100.</p>
     </ChartCard>
   );
 }
@@ -113,5 +116,24 @@ export function OutputStats() {
       <Stat label="Real GDP growth, 2025 (provisional)" value="6.0" unit="%" context="5.8% in 2024 (revised)" />
       <Stat label="Non-oil GDP growth, 2025" value={nonOilGdpGrowth2025.toFixed(1)} unit="%" context="Table 2.1, p. 7" />
     </div>
+  );
+}
+
+/** Headline icon row under the KPI strip; every value is read from the data files. */
+export function EconomyGlanceCard() {
+  const pc = nominalGdpPerCapitaData.at(-1)!, real = realGdpData.at(-1)!, trade = tradeGoodsData.at(-1)!;
+  const businesses = enterpriseTypes.find(r => r[0] === "All businesses")?.[1] ?? "";
+  return (
+    <ChartCard title="Economy at a glance" subtitle="Latest figure for each indicator" period={`${cleanYear(pc.year)} (output and trade); 2024 (businesses)`}
+      qualifier={<Qualifier tone="caution">2025 provisional</Qualifier>} explain={{ indicator: "nominalGdp" }}
+      source="GSS Annual GDP; merchandise trade statistics; 2024 IBES I · pp. 37–38, 46, 81"
+      footer={<DataDisclosure><DataTable caption="Economy at a glance" headings={["Indicator", "Year", "Value"]} rows={[["GDP per capita (GH¢)", statusLabel(pc.year), Math.round(pc.value)], ["Real GDP growth (%)", statusLabel(real.year), real.growth], ["Goods trade balance (GH¢ billion)", trade.year, trade.balance], ["Businesses counted", "2024", businesses]]} decimals={[undefined, undefined, 1]} minWidth={380} /></DataDisclosure>}>
+      <ul className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+        <StatTile icon={Wallet} tone="amber" label="GDP per capita" value={`GH¢${Math.round(pc.value).toLocaleString("en-GB")}`} period={statusLabel(pc.year)} />
+        <StatTile icon={TrendingUp} tone="teal" label="Real GDP growth" value={`${real.growth.toFixed(1)}%`} period={statusLabel(real.year)} />
+        <StatTile icon={Ship} tone="blue" label="Goods trade surplus" value={`GH¢${trade.balance.toFixed(1)}`} unit="billion" period={`${trade.year}, current prices`} />
+        <StatTile icon={Store} tone="purple" label="Businesses counted" value={String(businesses)} period="2024 IBES I census" />
+      </ul>
+    </ChartCard>
   );
 }

@@ -112,7 +112,7 @@ export function FishValueCard() {
       explain={{ indicator: "fish" }}
       notes={<>Figure 5.6 is captioned “production in hundred thousand metric tonnes”, but its labels are values in GH¢ billion: the totals (1.94 in 2010, 20.44 in 2025) match the value figures in the text. For 2010–2014 the aquaculture segment is not labelled; the hatched part is the remainder of the printed total. Values are nominal, so they rise with prices as well as catch.</>}
       source="Ministry of Fisheries and Aquaculture Development · Figure 5.6 and text, p. 42"
-      footer={<DataDisclosure><DataTable caption="Value of fish production, GH¢ billion" headings={["Year", "Marine", "Inland", "Aquaculture", "Total (printed)"]} rows={fishValue.map(d => [d.year, d.marine, d.inland, d.aquaculture, d.total])} decimals={2} minWidth={460} unitNote="— aquaculture not labelled for 2010–2014." /></DataDisclosure>}>
+      footer={<DataDisclosure><DataTable caption="Value of fish production, GH¢ billion" headings={["Year", "Marine", "Inland", "Aquaculture", "Total (printed)"]} rows={fishValue.map(d => [d.year, d.marine, d.inland, d.aquaculture, d.total])} decimals={2} minWidth={460} unitNote="n/a: aquaculture not labelled for 2010–2014." /></DataDisclosure>}>
       <Legend className="mb-1" items={[{ label: "Marine", color: C.blue }, { label: "Inland", color: C.teal }, { label: "Aquaculture", color: C.amber }, { label: "Aquaculture, not labelled", color: C.amber, shape: "hatch" }]} />
       <ChartFrame height={260} minWidth={560} label="Value of fish production rose from GH¢1.94 billion in 2010 to GH¢20.44 billion in 2025">
         <BarChart data={data} margin={{ top: 22, right: 6, left: -8, bottom: 0 }}>

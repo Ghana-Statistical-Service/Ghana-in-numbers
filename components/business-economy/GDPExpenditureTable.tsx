@@ -25,7 +25,7 @@ export default function GDPExpenditureTable() {
     return <tr key={item.label} data-depth={item.depth} className={total ? "bg-nav text-white" : group ? "border-t border-slate-200 bg-slate-100/80 text-slate-800" : "border-t border-slate-100 text-slate-700 hover:bg-slate-50"}>
       <th scope="row" className={`py-3 pr-4 text-left ${group || subtotal ? "font-semibold" : "font-normal"} ${item.depth === 2 ? "pl-12" : item.depth === 1 ? "pl-8" : "pl-4"}`}>
         <span className="flex items-start gap-2">
-          {item.number ? <span className={`shrink-0 tabular-nums ${total ? "text-slate-300" : "text-slate-500"}`}>{item.number}</span> : <span className="mt-0.5 shrink-0 text-xs font-medium uppercase tracking-wide text-slate-400">of which</span>}
+          {item.number ? <span className={`shrink-0 tabular-nums ${total ? "text-white/85" : "text-muted"}`}>{item.number}</span> : <span className="mt-0.5 shrink-0 text-xs font-medium uppercase tracking-wide text-muted">of which</span>}
           <span>{item.label}</span>
         </span>
       </th>
