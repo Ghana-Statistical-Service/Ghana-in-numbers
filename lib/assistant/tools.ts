@@ -1,6 +1,9 @@
 import { findIndicators, getIndicator } from "./catalog";
+import { searchPublication, readPublicationPages, publicationDocument } from "./publication";
 
 export const assistantTools = [
+  { type: "function" as const, name: "search_publication", description: "Search the full Ghana in Numbers 2025 publication Markdown for preface, explanations, glossary definitions, methods, narrative interpretation or material absent from chart datasets. Returns physical PDF page numbers and short excerpts; read pages before citing them.", strict: true, parameters: { type: "object", properties: { query: { type: "string", maxLength: 500 }, limit: { type: "integer", minimum: 1, maximum: 6 } }, required: ["query", "limit"], additionalProperties: false } },
+  { type: "function" as const, name: "read_publication_pages", description: "Read 1–3 pages from the full publication Markdown using physical PDF page numbers returned by search_publication. Includes original wording, printed page labels, extraction limitations and correction notices. These pages may support narrative answers. Use structured datasets and calculate_from_records for statistical arithmetic.", strict: true, parameters: { type: "object", properties: { pdf_pages: { type: "array", minItems: 1, maxItems: 3, items: { type: "integer", minimum: 1, maximum: publicationDocument.pageCount } } }, required: ["pdf_pages"], additionalProperties: false } },
   { type: "function" as const, name: "find_indicators", description: "Find dashboard datasets for a question. Search concise indicator terms. Returns IDs, fields, units and reference periods; it does not itself return observations.", strict: true, parameters: { type: "object", properties: { query: { type: "string", maxLength: 300 } }, required: ["query"], additionalProperties: false } },
   { type: "function" as const, name: "read_indicator", description: "Read exact records plus definitions, interpretation, units and sources. Filters are case-insensitive exact matches on named fields; empty filters reads all rows up to limit. Returned _row indices are stable and can be used for calculations. Use offset to page through truncated results.", strict: true, parameters: { type: "object", properties: { indicator_id: { type: "string" }, filters: { type: "array", maxItems: 6, items: { type: "object", properties: { field: { type: "string" }, value: { type: "string" } }, required: ["field", "value"], additionalProperties: false } }, offset: { type: "integer", minimum: 0 }, limit: { type: "integer", minimum: 1, maximum: 80 } }, required: ["indicator_id", "filters", "offset", "limit"], additionalProperties: false } },
   { type: "function" as const, name: "calculate_from_records", description: "Calculate using numeric cells from datasets already read. Do not perform arithmetic in your answer. For difference, percentage-point difference, percent_change, ratio and percentage_of, operand order is [earlier/base, later/comparison]. difference = second minus first; percent_change = (second-first)/first*100; percentage_of = second/first*100. sum adds values. scale multiplies one numeric cell by scale_factor for explicit unit conversion. Numeric strings containing % or commas are accepted.", strict: true, parameters: { type: "object", properties: { operation: { type: "string", enum: ["difference", "percentage_point_difference", "percent_change", "ratio", "percentage_of", "sum", "scale"] }, operands: { type: "array", minItems: 1, maxItems: 12, items: { type: "object", properties: { indicator_id: { type: "string" }, row: { type: "integer", minimum: 0 }, field: { type: "string" } }, required: ["indicator_id", "row", "field"], additionalProperties: false } }, scale_factor: { type: ["number", "null"], enum: [null, 0.001, 0.00001, 0.000001, 1000, 100000, 1000000] } }, required: ["operation", "operands", "scale_factor"], additionalProperties: false } },
@@ -15,6 +18,12 @@ function numeric(value: unknown) {
 }
 export function runAssistantTool(name: string, args: unknown, readIds: Set<string>, readCells: Map<string, Set<number>>) {
   if (!isObject(args)) return { error: "Invalid tool arguments." };
+  if (name === "search_publication") {
+    if (typeof args.query !== "string" || !args.query.trim() || args.query.length > 500) return { error: "Supply search terms of up to 500 characters." };
+    if (!Number.isInteger(args.limit) || Number(args.limit) < 1 || Number(args.limit) > 6) return { error: "Supply a result limit between 1 and 6." };
+    return { publication: publicationDocument.title, pages: searchPublication(args.query, Number(args.limit)) };
+  }
+  if (name === "read_publication_pages") return readPublicationPages(args.pdf_pages, readIds);
   if (name === "find_indicators") return { indicators: findIndicators(typeof args.query === "string" ? args.query.slice(0, 300) : "") };
   if (name === "read_indicator") {
     if (typeof args.indicator_id !== "string") return { error: "Missing indicator ID." };
@@ -65,5 +74,5 @@ export function runAssistantTool(name: string, args: unknown, readIds: Set<strin
     if (!Number.isFinite(result)) return { error: "Calculation did not produce a finite number." };
     return { operation, operands, scale_factor: operation === "scale" ? args.scale_factor : null, result: Math.round(result * 1e6) / 1e6, reminder: "Retain source reference periods, units and denominators. Percentage-point difference is not percentage change. A computed sum does not replace a published rounded total." };
   }
-  return { error: "Unknown tool. Only dashboard retrieval and source-based calculation tools are available." };
+  return { error: "Unknown tool. Only dashboard/publication retrieval and source-based calculation tools are available." };
 }

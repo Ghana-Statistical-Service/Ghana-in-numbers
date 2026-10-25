@@ -139,3 +139,9 @@ New documented conflicts (not resolved by guesswork):
 - Table 11.1 gives 29.2% for "no say"; the figure, chapter text and Table 2.1 give 29.7%.
 
 Validation for this pass: TypeScript, `scripts/check-report-data.mjs` (extended), `scripts/check-assistant.cjs` (105 datasets), production build, and browser tests with a mocked assistant (48 checks: navigation, search and Ctrl/Cmd+K, switches, Explain, View data, chatbot states, mobile drawer and full-screen chat, no horizontal overflow at 390 px and 820 px).
+
+## Publication text as assistant evidence
+
+The complete source PDF now has a reproducible local text-to-Markdown conversion, with sections for all 167 physical PDF pages (164 have extractable text), retained printed page labels and source/Markdown hashes. Source wording and inconsistencies are preserved; images, maps and plotted marks are not reconstructed. The original PDF remains authoritative for visual inspection. The assistant searches and reads bounded page passages for explanations, methods, glossary entries and narrative context, alongside the 105 structured datasets. Only pages actually read can become citations, which open the new publication reader at the relevant physical page. Downloadable Markdown is at `/documents/ghana-in-numbers-2025.md`.
+
+Audited structured datasets remain the numerical calculation source. Reading printed p. 97 additionally supplies the grassland carbon correction, so the preserved prose error does not override the corrected dashboard total. Page-bound validation and search-only/empty-page citation rejection are covered by the assistant checks. See `data-assistant.md` for regeneration and extraction limitations.

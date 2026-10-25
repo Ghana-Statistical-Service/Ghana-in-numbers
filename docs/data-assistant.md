@@ -20,14 +20,29 @@ The model is configurable. GPT-5.4 Mini was verified as available to the configu
 ## How answers are assembled
 
 1. The server identifies candidate indicators from a catalogue of 105 datasets, including the series added in the October 2026 redesign (`data/publicationAdditions.ts`).
-2. The model can search the catalogue and read selected records, filtered by year, region or another dimension.
-3. Tool results include the values, units, reference period, publication definitions, interpretation and source.
+2. The model can search the catalogue and read selected records, filtered by year, region or another dimension. It can also search the 167-page source publication and read up to three physical PDF pages per tool call.
+3. Tool results include the values, units, reference period, publication definitions, interpretation and source. Publication pages supply the original narrative, glossary and methods, with both physical PDF page numbers and printed labels.
 4. Calculations use server code and references to numeric cells that were actually retrieved. Differences, percentage-point changes, percentage growth, ratios, percentages and unit conversions are supported. Unread cells, missing values, invalid numbers and zero-denominator ratios are rejected.
-5. The model returns a structured answer. Source IDs must refer to retrieved datasets; the server supplies the dashboard links and reference labels. Answers without retrieved evidence fall back to a request for an available indicator rather than presenting statistics.
+5. The model returns a structured answer. Source IDs must refer to datasets or publication pages actually read; search results alone cannot be cited. The server supplies the dashboard links and reference labels. Publication citations open `/publication#pdf-page-N`. Answers without retrieved evidence fall back to a request for an available indicator rather than presenting statistics.
 
 The catalogue imports the same publication data as the charts. It also decodes the cached CPI, population projection, census and GDP JSON files. Publication datasets are the default for publication questions. Cached snapshots retain their source and fetch date; they are not live statistics. Filters and pagination keep large JSON results bounded. Migration charts and sex-composition cards now share their data exports with the assistant.
 
 The model has no general filesystem, shell, database-write or web-search tool. It cannot read environment files. JSON schemas and the server both validate tool arguments. Arbitrary arithmetic expressions are not evaluated. Retrieved evidence reduces unsupported answers but does not guarantee that every generated interpretation is correct; the interface keeps the cited source visible for review.
+
+## Publication Markdown and page retrieval
+
+The source is `2025 GIN-Draft 24-12Oct26-Final (1).pdf` in the workspace parent directory. Its extractable text is converted locally into `public/documents/ghana-in-numbers-2025.md`, with the matching retrieval/reader index in `data/publicationText.json`. Both files are committed application assets: runtime access requires no local PDF, external vector database or uploaded OpenAI file. The model receives relevant passages on demand, rather than the entire document on each question.
+
+Regenerate after replacing the PDF using:
+
+```sh
+python3 scripts/convert-gin-publication.py
+node scripts/check-assistant.cjs
+```
+
+The converter requires Poppler's `pdfinfo` and `pdftotext`. It records the source PDF SHA-256, Markdown SHA-256, physical page number and detected printed label. All 167 physical pages have sections; 164 contain extractable text. Physical numbers are stable citation IDs because some printed labels repeat. Narrative line wraps are joined and aligned text is preserved in fenced blocks. The `/publication` reader provides page anchors and a Markdown download.
+
+This is a text conversion, not a reconstruction of images, maps or plotted marks. Pages without extractable text are explicitly marked, and ambiguous column layouts must not be interpreted as precise numeric evidence. Original publication errors remain visible. Retrieval attaches the known grassland-carbon correction on printed p. 97 (PDF p. 108); model instructions prioritise audited datasets and documented corrections over contradictory original prose. Structured chart records remain the numerical calculation source. Document-only figures must be attributed with their period and caveats.
 
 ## Usage and request limits
 
@@ -39,10 +54,12 @@ Only bounded user/assistant text is sent in conversation history. The applicatio
 
 ## Validation
 
-- `node scripts/check-assistant.cjs`: source catalogue, JSON filters, units/period anchors, paging, arithmetic and access rejection.
+- `node scripts/check-assistant.cjs`: source catalogue, JSON filters, units/period anchors, paging, arithmetic and access rejection; 167-page index/Markdown integrity, search relevance, physical/printed labels, citation eligibility, empty-page rejection, invalid page bounds and grassland correction preservation.
 - `node --experimental-strip-types scripts/check-report-data.mjs`: publication data consistency.
 - `npm run build`: TypeScript, production compilation and routes.
 - Browser checks with a local simulated provider: retrieval/calculation loop, citations, follow-ups, clear/stop, keyboard/focus, mobile fit, malformed requests, origin rejection and error/retry behavior.
 - Six live OpenAI questions: population growth (9.0 million / 36.4%), December versus annual-average inflation, Q3 versus Q1–Q3 NEET (1.6 percentage points), nominal/real GDP, Greater Accra’s cached projection, and refusal to invent an unemployment forecast for 2055.
+- Three live publication questions: preface audience/purpose, youth demographic-dividend recommendations, and the grassland-carbon prose correction. All returned verified page citations; the carbon answer also cited the audited numerical dataset.
+- Publication browser checks at 1440 px and 390 px: downloadable Markdown hash, all 167 sections, direct physical-page anchors, source-link navigation, automatic chat minimisation when opening a publication citation, and no horizontal page overflow or browser runtime errors.
 
 The local `.env` assignment formatting was corrected before successful authentication. No secret key was printed, committed or embedded in the client bundle.

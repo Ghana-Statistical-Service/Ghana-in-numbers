@@ -45,6 +45,50 @@ assert.equal(empty.matched_records, 0); assert.equal(empty.records.length, 0);
 const first = read('population-size', [], 2); assert.equal(first.next_offset, 2);
 assert.equal(read('monetary-financial').records.find(row => row.indicator === 'Monetary policy rate (%)')['2025'], 18);
 assert.equal(read('gdp-expenditure').records.find(row => row.item === 'GDP at market prices').real, 209.6);
+// The publication is a bounded, page-referenced evidence source, independent of chart records.
+const crypto = require('node:crypto');
+const { publicationDocument, searchPublication, getPublicationSource } = require('../lib/assistant/publication.ts');
+const markdown = fs.readFileSync(path.join(root, 'public', publicationDocument.markdownUrl), 'utf8');
+assert.equal(crypto.createHash('sha256').update(markdown).digest('hex'), publicationDocument.markdownSha256);
+assert.equal(publicationDocument.pageCount, 167);
+assert.equal(publicationDocument.pages.length, 167);
+assert.equal(new Set(publicationDocument.pages.map(page => page.id)).size, 167);
+for (const [index, page] of publicationDocument.pages.entries()) {
+  assert.equal(page.pdfPage, index + 1);
+  assert.equal(page.id, `gin-pdf-page-${index + 1}`);
+  assert.ok(markdown.includes(`<a id="pdf-page-${page.pdfPage}"></a>`));
+  assert.ok(markdown.includes(page.markdown));
+  assert.ok(page.markdown.length < 15000, 'Page reads stay bounded');
+}
+assert.equal(publicationDocument.pages[5].printedPage, 'v');
+assert.equal(publicationDocument.pages[30].printedPage, '12');
+assert.equal(searchPublication('preface')[0].pdf_page, 6);
+assert.ok(searchPublication('demographic dividend skills investment youth').some(page => page.pdf_page === 119));
+assert.ok(searchPublication('housing deficit affordability quality').some(page => page.pdf_page === 53));
+assert.equal(searchPublication('grassland carbon')[0].pdf_page, 108);
+assert.deepEqual(searchPublication('the and what'), []);
+const publicationIds = new Set();
+const publicationCells = new Map();
+const publicationTool = (name, args) => runAssistantTool(name, args, publicationIds, publicationCells);
+assert.ok(publicationTool('search_publication', { query: 'preface', limit: 3 }).pages.length);
+assert.equal(publicationIds.size, 0, 'Search snippets cannot become cited evidence');
+assert.ok(publicationTool('search_publication', { query: 'x'.repeat(501), limit: 3 }).error);
+assert.ok(publicationTool('search_publication', { query: 'preface', limit: 7 }).error);
+const preface = publicationTool('read_publication_pages', { pdf_pages: [6] });
+assert.equal(preface.pages[0].printed_page, 'v');
+assert.match(preface.pages[0].markdown, /Preface/);
+assert.ok(publicationIds.has('gin-pdf-page-6'));
+assert.deepEqual([...publicationCells.keys()], [], 'Document text is not a numeric cell');
+const grassland = publicationTool('read_publication_pages', { pdf_pages: [108] });
+assert.match(grassland.pages[0].correction_notice, /344\.0/);
+assert.match(grassland.pages[0].markdown, /334\.0/, 'The conversion preserves original errors');
+publicationTool('read_publication_pages', { pdf_pages: [1] });
+assert.ok(!publicationIds.has('gin-pdf-page-1'), 'An image-only page cannot supply text evidence');
+for (const pdf_pages of [[], [0], [168], [1.5], ['6'], ['../../.env'], [1, 2, 3, 4], null]) assert.ok(publicationTool('read_publication_pages', { pdf_pages }).error);
+assert.equal(getPublicationSource('gin-pdf-page-6').href, '/publication#pdf-page-6');
+assert.equal(getPublicationSource('../../.env'), null);
+assert.equal(getPublicationSource('gin-pdf-page-1'), null);
+assert.ok(publicationTool('calculate_from_records', { operation: 'sum', operands: [{ indicator_id: 'gin-pdf-page-6', row: 0, field: 'markdown' }], scale_factor: null }).error);
 const { reserveAssistantRequest } = require('../lib/assistant/limits.ts');
 const originalNow = Date.now;
 const originalDailyLimit = process.env.AI_DAILY_REQUEST_LIMIT;
@@ -65,4 +109,4 @@ try {
   if (originalDailyLimit === undefined) delete process.env.AI_DAILY_REQUEST_LIMIT;
   else process.env.AI_DAILY_REQUEST_LIMIT = originalDailyLimit;
 }
-console.log(`Assistant checks passed: ${indicatorCatalogue.length} source datasets, catalogue search, period distinctions, cached JSON filters, paging, safe calculations, unread-cell rejection, file-access rejection and request/concurrency limits.`);
+console.log(`Assistant checks passed: ${indicatorCatalogue.length} source datasets, ${publicationDocument.pageCount} publication pages, Markdown integrity, page search/citations, correction notices, period distinctions, cached JSON filters, paging, safe calculations, unread-evidence rejection, file-access rejection and request/concurrency limits.`);
