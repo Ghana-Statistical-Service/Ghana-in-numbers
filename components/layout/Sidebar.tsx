@@ -46,7 +46,7 @@ const navItems = [
     children: [
       { label: "Youth bulge",                    icon: Users2, href: "/youth-bulge" },
       { label: "Agriculture, Forestry & Fishing", icon: Wheat,     href: "/agriculture-forestry-fishing" },
-      { label: "The Next Ghana is Young",         icon: Sparkles,  href: "/data-story" },
+      { label: "Data Stories",         icon: Sparkles,  href: "/data-story" },
     ],
   },
 ];

@@ -1,6 +1,8 @@
+import { sexComposition2025 } from "@/data/populationData";
+import CardExplanation from "@/components/shared/CardExplanation";
 export default function GenderSplitCard() {
-  const male = 49.3;
-  const female = 50.7;
+  const male = sexComposition2025[0].value;
+  const female = sexComposition2025[1].value;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
@@ -9,6 +11,7 @@ export default function GenderSplitCard() {
           Population Composition{" "}
           <span className="text-gray-400 font-normal">2025</span>
         </p>
+          <CardExplanation indicator="composition" />
       </div>
 
       <div className="flex flex-1">

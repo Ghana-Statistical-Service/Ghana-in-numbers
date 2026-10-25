@@ -1,174 +1,57 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-  LabelList,
-} from "recharts";
+import CardExplanation from "@/components/shared/CardExplanation";
+
+import { useEffect, useState } from "react";
+import { CartesianGrid, LabelList, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { populationSize } from "@/data/populationData";
 
-const SHOW_LABEL_YEARS = new Set(["2000", "2005", "2010", "2015", "2021", "2025*"]);
-
-const explanation = {
-  what: `This chart counts how many people live in Ghana each year from 2000 to 2025. Each dot on the line is one year's population figure — like reading the total number of people on a national census or estimate sheet.`,
-  story: `Ghana's population has grown from about 18.9 million in 2000 to 33.7 million in 2025 — nearly doubling in 25 years. The vertical dashed lines mark the two recent national censuses (2010 and 2021), when the government physically counted every person. The growth is real but gradually slowing: the rate was 2.7% per year in the 1980s and is now around 2.1%.`,
-  why: `Every additional person creates demand for food, schools, hospitals, roads, and jobs. Knowing how many people there are — and how fast that number is growing — is the foundation of every government plan, from how many teachers to train to how many hospital beds to build.`,
-};
+const colors = { census: "#382873", estimate: "#0891B2", projection: "#16A34A" };
+const names = { census: "Census count", estimate: "Intercensal estimate", projection: "Population projection" };
+const chartData = populationSize.map(d => ({ ...d, historical: Number(d.year) <= 2021 ? d.value : null, projected: Number(d.year) >= 2021 ? d.value : null }));
 
 export default function PopulationGrowthChart() {
   const [mounted, setMounted] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [open]);
-
-  return (
-    <>
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col h-full">
-      <div className="flex items-start justify-between mb-1 flex-shrink-0">
-        <div>
-          <p className="text-gray-800 font-bold text-sm">
-            Population Size{" "}
-            <span className="text-gray-400 font-normal">(2000 — 2025)</span>
-          </p>
-          <p className="text-xs mt-0.5" style={{ color: "#9CA3AF" }}>
-            Ghana has experienced sustained population growth over the period.
-          </p>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span
-            className="text-xs font-bold px-2 py-0.5 rounded"
-            style={{ background: "#F0FDF4", color: "#16A34A" }}
-          >
-            33.7M in 2025
-          </span>
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
-            style={{
-              background: open ? "#1B2A4A" : "#F0FDF4",
-              color: open ? "#ffffff" : "#16A34A",
-              border: "1px solid",
-              borderColor: open ? "#1B2A4A" : "#BBF7D0",
-            }}
-          >
-            Explain
-          </button>
-        </div>
-      </div>
-
-      <div className="flex-1 min-h-0" style={{ minHeight: "200px" }}>
-        {mounted && (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={populationSize} margin={{ top: 24, right: 16, left: -18, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-              <XAxis
-                dataKey="year"
-                tick={{ fontSize: 9, fill: "#9CA3AF" }}
-                tickLine={false}
-                axisLine={false}
-                interval={4}
-              />
-              <YAxis
-                tickFormatter={(v) => `${v}M`}
-                tick={{ fontSize: 9, fill: "#9CA3AF" }}
-                tickLine={false}
-                axisLine={false}
-                domain={[16, 36]}
-                ticks={[18, 22, 26, 30, 34]}
-              />
-              <Tooltip
-                formatter={(value) => [`${value}M`, "Population"]}
-                contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #e5e7eb" }}
-              />
-              <ReferenceLine x="2010" stroke="#E2E8F0" strokeDasharray="4 2" label={{ value: "Census", position: "top", fontSize: 8, fill: "#94A3B8" }} />
-              <ReferenceLine x="2021" stroke="#E2E8F0" strokeDasharray="4 2" label={{ value: "Census", position: "top", fontSize: 8, fill: "#94A3B8" }} />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#17B8A6"
-                strokeWidth={2.5}
-                dot={(props) => {
-                  const { cx, cy, payload } = props;
-                  const isLast = payload.year === "2025*";
-                  return (
-                    <circle
-                      key={payload.year}
-                      cx={cx}
-                      cy={cy}
-                      r={isLast ? 5 : 3}
-                      fill={isLast ? "#17B8A6" : "#fff"}
-                      stroke="#17B8A6"
-                      strokeWidth={isLast ? 0 : 2}
-                    />
-                  );
-                }}
-                activeDot={{ r: 5, fill: "#17B8A6", strokeWidth: 0 }}
-              >
-                <LabelList
-                  dataKey="value"
-                  position="top"
-                  content={(props) => {
-                    const { x, y, value, index } = props as { x: number; y: number; value: number; index: number };
-                    const year = populationSize[index]?.year;
-                    if (!SHOW_LABEL_YEARS.has(year)) return null;
-                    return (
-                      <text x={x} y={y - 6} textAnchor="middle" fontSize={8} fontWeight={700} fill="#1B2A4A">
-                        {value}
-                      </text>
-                    );
-                  }}
-                />
-              </Line>
-            </LineChart>
-          </ResponsiveContainer>
-        )}
-      </div>
-
-      <p className="text-xs flex-shrink-0 mt-1" style={{ color: "#9CA3AF" }}>
-        * 2025 projected population
-      </p>
+  useEffect(() => setMounted(true), []);
+  return <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+    <div className="flex flex-wrap items-start justify-between gap-3">
+      <div><div className="min-w-0"><h2 className="text-sm font-bold text-slate-800">Population Size, 2000–2025</h2><CardExplanation indicator="population" /></div><p className="text-xs text-slate-500 mt-1">Population in millions · Annual values from Figure 3.1</p></div>
+      <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">2025 projection: 33.7 million</span>
     </div>
-
-    {open && (
-      <>
-        <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-        <div className="fixed z-40 rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-          style={{ top: "60px", right: "16px", width: "320px", maxHeight: "calc(100vh - 76px)", background: "#ffffff" }}>
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100" style={{ background: "#F0FDF4" }}>
-            <p className="text-sm font-bold" style={{ color: "#1B2A4A" }}>What is this chart telling me?</p>
-            <button onClick={() => setOpen(false)} className="w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold" style={{ background: "#E2E8F0", color: "#64748B" }}>✕</button>
-          </div>
-          <div className="overflow-y-auto p-4 space-y-3" style={{ maxHeight: "calc(100vh - 140px)" }}>
-            <div className="rounded-lg p-3" style={{ background: "#EFF6FF" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#1D4ED8" }}>📊 What it measures</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explanation.what}</p>
-            </div>
-            <div className="rounded-lg p-3" style={{ background: "#F0FDF4" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#15803D" }}>📖 The story in this chart</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explanation.story}</p>
-            </div>
-            <div className="rounded-lg p-3" style={{ background: "#FFFBEB" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#B45309" }}>💡 Why does it matter?</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explanation.why}</p>
-            </div>
-          </div>
-        </div>
-      </>
-    )}
-    </>
-  );
+    <div className="overflow-x-auto mt-3">
+      <div className="h-[310px] min-w-[760px]">
+        {mounted && <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData} margin={{ top: 35, right: 28, left: 10, bottom: 22 }}>
+            <CartesianGrid stroke="#E8EEF5" strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="year" interval={0} angle={-45} textAnchor="end" height={45} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
+            <YAxis domain={[16, 36]} ticks={[18,22,26,30,34]} label={{ value: "Millions", angle: -90, position: "insideLeft", style: { fontSize: 11 } }} tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={55} />
+            <Tooltip content={({ active, payload }) => {
+              const d = payload?.[0]?.payload as typeof chartData[number] | undefined;
+              if (!active || !d) return null;
+              return <div className="rounded-xl border border-slate-200 bg-white p-3 text-xs shadow-lg"><p className="font-bold text-slate-800">{d.year} · {d.value.toFixed(1)} million</p><p className="mt-1 text-slate-500">{names[d.kind as keyof typeof names]}</p></div>;
+            }} />
+            {["2000","2010","2021"].map(year => <ReferenceLine key={year} x={year} stroke="#DDD6FE" strokeDasharray="3 3" />)}
+            <Line type="linear" dataKey="historical" stroke="#382873" strokeWidth={3} dot={false} activeDot={false} isAnimationActive={false} />
+            <Line type="linear" dataKey="projected" stroke="#16A34A" strokeWidth={3} strokeDasharray="6 4" dot={false} activeDot={false} isAnimationActive={false} />
+            <Line dataKey="value" stroke="transparent" isAnimationActive={false} activeDot={{ r: 6 }} dot={({ cx,cy,payload }) => {
+              const kind = payload.kind as keyof typeof colors;
+              return <circle key={payload.year} cx={cx} cy={cy} r={kind === "census" ? 6 : 4} fill={kind === "census" ? colors.census : "white"} stroke={colors[kind]} strokeWidth={2.5} />;
+            }}>
+              <LabelList dataKey="value" content={props => {
+                const { x,y,value,index } = props as { x:number; y:number; value:number; index:number };
+                const d=populationSize[index];
+                return <text x={x} y={y+(index%2===0 ? -13 : 20)} textAnchor="middle" fontSize={10} fontWeight={d.kind === "census" ? 800 : 600} fill={colors[d.kind as keyof typeof colors]}>{Number(value).toFixed(1)}</text>;
+              }} />
+            </Line>
+          </LineChart>
+        </ResponsiveContainer>}
+      </div>
+    </div>
+    <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-600 mt-2">
+      <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-[#382873]" />Census counts: 2000, 2010, 2021</span>
+      <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full border-2 border-cyan-600" />Intercensal estimates</span>
+      <span className="flex items-center gap-2"><span className="w-5 border-t-2 border-dashed border-green-600" />Projections after 2021</span>
+    </div>
+    <p className="text-[11px] text-slate-500 mt-3">Source: GSS, 2010 &amp; 2021 PHC; 2021–2050 Population Projections · Ghana in Numbers 2025, p. 12. Values rounded to one decimal million.</p>
+  </div>;
 }

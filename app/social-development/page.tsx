@@ -44,7 +44,7 @@ export default function SocialDevelopmentPage() {
               <p className="text-lg font-bold" style={{ color: "#00A651" }}>Learning and opportunity</p>
               <p className="text-xs" style={{ color: "#94A3B8" }}>Enrolment, completion and trained teacher ratios.</p>
             </div>
-            <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr", height: "380px" }}>
+            <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr", height: "450px" }}>
               <LearningOpportunityChart />
               <CompletionTrajectoryChart />
             </div>

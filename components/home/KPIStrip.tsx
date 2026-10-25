@@ -1,7 +1,9 @@
+import CardExplanation from "@/components/shared/CardExplanation";
 const kpiCards = [
   {
     label: "Population",
-    value: "34.4",
+    note: "2025 projection",
+    value: "33.7",
     unit: "M",
     stripes: [
       { color: "#17B8A6", pct: 55 },
@@ -11,6 +13,7 @@ const kpiCards = [
   },
   {
     label: "GDP Growth",
+    note: "2025 · provisional",
     value: "6.0",
     unit: "%",
     stripes: [
@@ -21,7 +24,8 @@ const kpiCards = [
   },
   {
     label: "Consumer Inflation",
-    value: "3.2",
+    note: "December 2025 · year on year",
+    value: "5.4",
     unit: "%",
     stripes: [
       { color: "#EF4444", pct: 48 },
@@ -31,7 +35,8 @@ const kpiCards = [
   },
   {
     label: "Unemployment",
-    value: "13.0",
+    note: "Q1–Q3 2025 average",
+    value: "12.8",
     unit: "%",
     stripes: [
       { color: "#8B5CF6", pct: 62 },
@@ -40,6 +45,7 @@ const kpiCards = [
   },
   {
     label: "Life Expectancy",
+    note: "At birth · 2021",
     value: "65.1",
     unit: "Years",
     stripes: [
@@ -57,7 +63,7 @@ export default function KPIStrip() {
         <div
           key={card.label}
           className="bg-white rounded-xl px-3 pt-2.5 pb-0 shadow-sm border border-gray-100 relative overflow-hidden cursor-pointer hover:shadow-md transition-shadow flex flex-col"
-          style={{ height: "112px" }}
+          style={{ minHeight: "132px" }}
         >
           <div>
             <p
@@ -81,7 +87,9 @@ export default function KPIStrip() {
               </span>
             </div>
           </div>
-          {/* Multi-color stripe */}
+          <p className="text-[10px] text-slate-500 mt-1">{card.note}</p>
+          <CardExplanation label={card.label} />
+          {/* Decorative stripe */}
           <div className="flex mt-auto h-2 rounded-b overflow-hidden -mx-3">
             {card.stripes.map((stripe, i) => (
               <div

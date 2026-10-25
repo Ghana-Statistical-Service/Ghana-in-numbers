@@ -18,7 +18,7 @@ export const governanceKPIs = [
   },
   {
     label: "Gifts to Public Officials",
-    value: "14.3",
+    value: "16.8",
     unit: "%",
     note: "2025",
     color: "#082B73",
@@ -27,12 +27,12 @@ export const governanceKPIs = [
     label: "Right to Vote Knowledge",
     value: "98.1",
     unit: "%",
-    note: "Public knowledge",
+    note: "Adults aged 18+, 2024",
     color: "#285F18",
   },
   {
     label: "No Say",
-    value: "29.2",
+    value: "29.7",
     unit: "%",
     note: "Decision-making, 2025",
     color: "#C85017",
@@ -66,32 +66,53 @@ export const womenJudgesData = [
   { year: "2020", supreme: 29.4, appeal: 42.4, high: 44.1 },
   { year: "2021", supreme: 33.3, appeal: 39.4, high: 45.3 },
   { year: "2022", supreme: 38.5, appeal: 48.4, high: 45.0 },
-  { year: "2023", supreme: 41.7, appeal: 41.0, high: 44.8 },
+  { year: "2023", supreme: 46.2, appeal: 41.0, high: 44.8 },
   { year: "2024", supreme: 28.6, appeal: 40.6, high: 44.7 },
   { year: "2025", supreme: 25.0, appeal: 40.3, high: 48.6 },
 ];
 
 export const giftsToOfficialsData = [
-  { year: "2013", value: 56.2 },
-  { year: "2017", value: 46.8 },
-  { year: "2021", value: 26.7 },
-  { year: "2024", value: 18.4 },
-  { year: "2025", value: 14.3 },
+  {
+    "year": "2021",
+    "value": 26.7
+  },
+  {
+    "year": "2024",
+    "value": 18.4
+  },
+  {
+    "year": "2025",
+    "value": 16.8
+  }
 ];
 
 export const rightToVoteKnowledge = {
   value: 98.1,
-  label: "Knowledge of right to vote",
+  label: "Knowledge of right to vote (adults 18+, 2024)",
 };
 
 export const noSayData = [
-  { year: "2013", value: 59.9 },
-  { year: "2017", value: 56.2 },
-  { year: "2024", value: 45.2 },
-  { year: "2025*", value: 29.2 },
+  {
+    "year": "2013",
+    "value": 59.9
+  },
+  {
+    "year": "2024",
+    "value": 42.4
+  },
+  {
+    "year": "2025",
+    "value": 29.7
+  }
 ];
 
 export const noInfluenceData = [
-  { year: "2024", value: 46.0 },
-  { year: "2025*", value: 32.5 },
+  {
+    "year": "2024",
+    "value": 43.2
+  },
+  {
+    "year": "2025",
+    "value": 33
+  }
 ];

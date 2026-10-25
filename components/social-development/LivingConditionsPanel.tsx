@@ -1,15 +1,13 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
-  Area,
-  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
   LabelList,
-  Legend,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -29,6 +27,7 @@ function UtilityBars({ data, color, title }: { data: { year: string; value: numb
   return (
     <div className="rounded-xl border border-slate-100 p-3" style={{ background: "#FBFCFE" }}>
       <p className="text-sm font-bold mb-2" style={{ color }}>{title}</p>
+      <CardExplanation indicator={title === "Access to electricity" ? "electricity" : "water"} />
       <div className="h-40">
         {mounted && (
           <ResponsiveContainer width="100%" height="100%">
@@ -53,12 +52,12 @@ export default function LivingConditionsPanel() {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ height: "420px" }}>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ minHeight: "420px" }}>
         <div className="flex items-start justify-between mb-2">
           <div>
-            <p className="text-gray-800 font-bold text-sm">Housing Deficits</p>
+            <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Housing Deficits</p><CardExplanation indicator="housing" /></div>
             <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-              Population, housing demand, supply and deficit.
+              Estimated shortfall in dwelling units, in millions; 2010 ≈2.8M, 2021 ≈1.8M (pp. 32–33).
             </p>
           </div>
           <span className="rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: "#FFF1F2", color: "#DC2626" }}>
@@ -68,45 +67,31 @@ export default function LivingConditionsPanel() {
         <div className="h-[335px]">
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={housingDeficitData} margin={{ top: 16, right: 18, left: -12, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="housingSupply" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8FD14F" stopOpacity={0.9} />
-                    <stop offset="100%" stopColor="#8FD14F" stopOpacity={0.65} />
-                  </linearGradient>
-                  <linearGradient id="housingDemand" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#FB7185" stopOpacity={0.78} />
-                    <stop offset="100%" stopColor="#FB7185" stopOpacity={0.48} />
-                  </linearGradient>
-                </defs>
+              <BarChart data={housingDeficitData} margin={{ top: 24, right: 18, left: 0, bottom: 0 }}>
                 <CartesianGrid stroke="#EEF2F7" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="year" tick={{ fontSize: 10, fill: "#64748B", fontWeight: 700 }} tickLine={false} axisLine={false} />
-                <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "#94A3B8" }} tickLine={false} axisLine={false} />
-                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "#00A3FF" }} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }} />
-                <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
-                <Area yAxisId="right" type="monotone" dataKey="supply" name="Housing Supply" stroke="#8FD14F" fill="url(#housingSupply)" strokeWidth={2} />
-                <Area yAxisId="right" type="monotone" dataKey="demand" name="Housing Demand" stroke="#0EA5E9" fill="url(#housingDemand)" strokeWidth={2} />
-                <Line yAxisId="left" type="monotone" dataKey="population" name="Population" stroke="#082B73" strokeWidth={3} dot={{ r: 4, fill: "#fff", stroke: "#082B73", strokeWidth: 3 }} />
-                <Line yAxisId="right" type="monotone" dataKey="deficit" name="Housing Deficit" stroke="#EF4444" strokeWidth={2.5} dot={{ r: 4, fill: "#fff", stroke: "#EF4444", strokeWidth: 2.5 }} />
-              </AreaChart>
+                <XAxis dataKey="year" />
+                <YAxis domain={[0, 3.2]} unit="M" />
+                <Tooltip formatter={(v) => [`${v} million dwelling units`, "Estimated deficit"]} />
+                <Bar dataKey="deficit" name="Estimated housing deficit" fill="#EF4444" radius={[5, 5, 0, 0]}>
+                  <LabelList dataKey="deficit" position="top" formatter={(v: unknown) => `${v}M`} />
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           )}
         </div>
       </div>
-
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
         <p className="text-gray-800 font-bold text-sm mb-3">Utilities</p>
         <div className="grid grid-cols-3 gap-4">
           <UtilityBars data={electricityAccessData} color="#F6B800" title="Access to electricity" />
           <UtilityBars data={drinkingWaterData} color="#12AEE3" title="Improved drinking water" />
           <div className="rounded-xl border border-slate-100 p-4 flex flex-col justify-center" style={{ background: "#FBFCFE" }}>
-            <p className="text-sm font-bold" style={{ color: "#238313" }}>Use of improved household toilet</p>
+            <div className="min-w-0"><p className="text-sm font-bold" style={{ color: "#238313" }}>Use of improved household toilet</p><CardExplanation indicator="toilet" /></div>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {improvedToiletUseData.map((item) => (
                 <div key={item.year} className="rounded-xl bg-white border border-slate-100 p-3 text-center">
                   <p className="text-2xl font-light" style={{ color: "#111827" }}>{item.year}</p>
-                  <p className="mt-2 text-4xl font-black leading-none" style={{ color: "#238313" }}>{item.value}%</p>
+                  <p className="mt-2 text-4xl font-black leading-none" style={{ color: "#238313" }}>{item.value}%</p><CardExplanation indicator="toilet" />
                 </div>
               ))}
             </div>

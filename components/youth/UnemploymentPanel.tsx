@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useEffect, useState } from "react";
 import { BookOpen, X } from "lucide-react";
 import {
@@ -37,7 +40,6 @@ export default function UnemploymentPanel() {
   const [mounted, setMounted] = useState(false);
   const [quarter, setQuarter] = useState<Quarter>("Q2");
   const [bracket, setBracket] = useState<Bracket>("15-24");
-  const [showWriteUp, setShowWriteUp] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -55,18 +57,7 @@ export default function UnemploymentPanel() {
             <p className="text-xs font-bold" style={{ color: "#DB2988" }}>
               Youth Unemployment Rate by Region — 2025
             </p>
-            <button
-              onClick={() => setShowWriteUp((v) => !v)}
-              className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md flex-shrink-0 transition-colors"
-              style={{
-                background: showWriteUp ? "#EFF6FF" : "#F8FAFC",
-                color: showWriteUp ? "#1D4ED8" : "#94A3B8",
-                border: "1px solid #E5E7EB",
-              }}
-            >
-              {showWriteUp ? <X size={11} /> : <BookOpen size={11} />}
-              {showWriteUp ? "Close" : "Write-up"}
-            </button>
+            <CardExplanation indicator="unemployment" />
           </div>
           <p className="text-xs" style={{ color: "#6B7280" }}>
             National average shown as dashed line
@@ -108,21 +99,8 @@ export default function UnemploymentPanel() {
         </div>
       </div>
 
-      {showWriteUp && (
-        <div
-          className="mb-4 p-3 rounded-lg text-xs leading-relaxed"
-          style={{ background: "#EFF6FF", color: "#1E40AF" }}
-        >
-          Youth unemployment in Ghana is high and geographically uneven. At the national level,{" "}
-          <strong>30.5% of young people aged 15–24</strong> were unemployed in Q2 2025, rising to{" "}
-          <strong>34.4% in Q3</strong>. The burden is concentrated in urbanised southern regions:
-          Greater Accra recorded the highest rate at <strong>49.3% (Q3 2025)</strong>, followed by
-          Western (46.8%) and Ashanti (41.2%). In contrast, northern regions report lower measured
-          unemployment, partly because youth in those areas are more likely to engage in subsistence
-          agriculture which counts as employment. Regions above the national average are highlighted
-          — policy attention should prioritise urban youth employment pathways.
-        </div>
-      )}
+
+
 
       <div style={{ height: 420 }}>
         {mounted && (

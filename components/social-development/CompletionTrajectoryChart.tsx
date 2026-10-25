@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -25,12 +27,11 @@ export default function CompletionTrajectoryChart() {
             Completion Rates{" "}
             <span className="text-gray-400 font-normal">(Primary and JHS)</span>
           </p>
-          <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-            Tracks progression through the education pipeline.
-          </p>
+          <CardExplanation indicator="completion" />
+
         </div>
         <span className="rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: "#F0FDFA", color: "#0F766E" }}>
-          JHS 86.4%
+          JHS 88.4%
         </span>
       </div>
 

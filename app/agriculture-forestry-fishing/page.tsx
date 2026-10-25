@@ -461,6 +461,7 @@ export default function AgricultureForestryFishingPage() {
           </div>
 
         </div>
+        <div className="px-6 pb-8"></div>
       </main>
     </DashboardShell>
   );

@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useState, useEffect, useRef } from "react";
 import {
   LineChart,
@@ -16,7 +19,6 @@ import { lifeExpectancyTrend, lifeExpectancyByAge } from "@/data/populationData"
 interface EstimateResult {
   cohort: string;
   additionalYears: number;
-  projectedAge: number;
   sex: "Male" | "Female";
   inputAge: number;
 }
@@ -49,80 +51,25 @@ function buildResult(age: number, sex: "Male" | "Female"): EstimateResult {
   return {
     cohort: row.age,
     additionalYears,
-    projectedAge: Math.round(age + additionalYears),
     sex,
     inputAge: age,
   };
 }
 
 function StatFeedback({ result }: { result: EstimateResult }) {
-  const { cohort, additionalYears, projectedAge, sex, inputAge } = result;
-  const sexAdj = sex === "Male" ? "males" : "females";
-  const pronoun = sex === "Male" ? "he" : "she";
-  const upper = Math.round(projectedAge + 4);
-  const lower = Math.round(projectedAge - 4);
-  const peerAdj = sex === "Male" ? "male" : "female";
-
-  return (
-    <div className="space-y-2 text-xs" style={{ color: "#374151" }}>
-      <p>
-        Based on Ghana&apos;s{" "}
-        <span className="font-semibold">2021 abridged life table</span>, a{" "}
-        <span className="font-semibold" style={{ color: "#1B2A4A" }}>
-          {sex.toLowerCase()} aged {inputAge}
-        </span>{" "}
-        falls within the{" "}
-        <span className="font-semibold" style={{ color: "#16A34A" }}>
-          {cohort}
-        </span>{" "}
-        age cohort.
-      </p>
-      <p>
-        A {peerAdj} who survives to this age is{" "}
-        <span className="font-semibold">statistically expected</span> to live an additional{" "}
-        <span className="font-bold text-sm" style={{ color: "#16A34A" }}>
-          {additionalYears} years
-        </span>
-        , placing{" "}
-        <span className="font-semibold">median projected longevity</span> at approximately{" "}
-        <span className="font-bold text-sm" style={{ color: "#1B2A4A" }}>
-          {projectedAge} years
-        </span>{" "}
-        of age.
-      </p>
-      <p style={{ color: "#6B7280" }}>
-        By definition, 50% of {sexAdj} in this cohort are likely to live{" "}
-        <span className="font-semibold">beyond age {projectedAge}</span>, while the remaining 50%
-        will not reach this threshold. The interquartile survival range for this group is
-        broadly estimated at{" "}
-        <span className="font-semibold">
-          {lower}–{upper} years
-        </span>
-        .
-      </p>
-      <p style={{ color: "#6B7280" }}>
-        Conditional on {pronoun} reaching age {inputAge},{" "}
-        {pronoun === "he" ? "his" : "her"} probability of surviving to age{" "}
-        <span className="font-semibold">{Math.round(projectedAge - 5)}</span> exceeds{" "}
-        <span className="font-semibold">50%</span> under current Ghanaian mortality patterns.
-        These estimates assume no change in prevailing age-specific death rates and are
-        derived from national averages — individual outcomes depend on health status,
-        socioeconomic factors, and access to healthcare.
-      </p>
-    </div>
-  );
+  const { cohort, additionalYears, sex, inputAge } = result;
+  return <div className="space-y-3 text-xs leading-relaxed text-slate-600">
+    <p>Age {inputAge} belongs to the <strong className="text-slate-800">{cohort}</strong> age group in the displayed 2021 life table.</p>
+    <p>For <strong>{sex.toLowerCase()}s</strong> in this age group, the table reports <strong className="text-emerald-700">{additionalYears} additional years</strong> of life on average under the measured mortality conditions.</p>
+    <p>Life expectancy is a population average. The source does not provide an individual lifespan prediction, a median survival age or percentile ranges for this lookup.</p>
+    <p className="text-slate-500">Source: Ghana in Numbers 2025, Figure 3.10, p. 22. The lookup uses a grouped age band rather than an exact-age estimate.</p>
+  </div>;
 }
 
-const explainContent = {
-  what: `This chart shows the average number of years a baby born in Ghana is expected to live, if the health conditions of that era remained constant. Each dot is a different decade or census year, showing how survival has changed over time.`,
-  story: `In 1960, a Ghanaian baby was expected to live just 40.3 years — a reflection of high childhood disease, limited healthcare, and poor nutrition. Over the decades, vaccines, clean water, hospitals, and better food have pushed that figure to 65.1 years by 2021. That is nearly 25 extra years of life gained in six decades.`,
-  why: `Life expectancy is one of the most powerful summaries of a country's health system. A rising figure means fewer children are dying young and adults are surviving longer. It also signals to planners that the country will need more elderly care, pensions, and long-term health services in coming decades.`,
-};
 
 export default function LifeExpectancyChart() {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const [explainOpen, setExplainOpen] = useState(false);
   const [age, setAge] = useState("");
   const [sex, setSex] = useState<"Male" | "Female">("Male");
   const [result, setResult] = useState<EstimateResult | null>(null);
@@ -131,12 +78,6 @@ export default function LifeExpectancyChart() {
 
   useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    if (!explainOpen) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setExplainOpen(false); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [explainOpen]);
 
   useEffect(() => {
     if (!open) return;
@@ -176,6 +117,7 @@ export default function LifeExpectancyChart() {
             Life Expectancy at Birth{" "}
             <span className="text-gray-400 font-normal">(1960–2021)</span>
           </p>
+
           <p className="text-xs mt-0.5" style={{ color: "#9CA3AF" }}>
             Improvements in survival and longevity over time
           </p>
@@ -192,20 +134,9 @@ export default function LifeExpectancyChart() {
               borderColor: open ? "#1B2A4A" : "#BBF7D0",
             }}
           >
-            My estimate
+            Age-group lookup
           </button>
-          <button
-            onClick={() => setExplainOpen((v) => !v)}
-            className="text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
-            style={{
-              background: explainOpen ? "#1B2A4A" : "#EFF6FF",
-              color: explainOpen ? "#ffffff" : "#2563EB",
-              border: "1px solid",
-              borderColor: explainOpen ? "#1B2A4A" : "#BFDBFE",
-            }}
-          >
-            Explain
-          </button>
+          <CardExplanation indicator="life" />
         </div>
       </div>
 
@@ -219,7 +150,7 @@ export default function LifeExpectancyChart() {
           {!result ? (
             <form onSubmit={handleSubmit} className="space-y-3">
               <p className="text-xs font-bold" style={{ color: "#1B2A4A" }}>
-                Personal Life Expectancy Estimate
+                Life Expectancy by Age Group
               </p>
               <p className="text-xs" style={{ color: "#9CA3AF" }}>
                 Based on Ghana&apos;s 2021 abridged life table (GSS).
@@ -279,7 +210,7 @@ export default function LifeExpectancyChart() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-bold" style={{ color: "#1B2A4A" }}>
-                  Statistical Estimate
+                  Life-table Group Average
                 </p>
                 <button
                   onClick={() => setResult(null)}
@@ -349,32 +280,7 @@ export default function LifeExpectancyChart() {
       </div>
     </div>
 
-    {explainOpen && (
-      <>
-        <div className="fixed inset-0 z-30" onClick={() => setExplainOpen(false)} />
-        <div className="fixed z-40 rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-          style={{ top: "60px", right: "16px", width: "320px", maxHeight: "calc(100vh - 76px)", background: "#ffffff" }}>
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100" style={{ background: "#F8FAFF" }}>
-            <p className="text-sm font-bold" style={{ color: "#1B2A4A" }}>What is this chart telling me?</p>
-            <button onClick={() => setExplainOpen(false)} className="w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold" style={{ background: "#E2E8F0", color: "#64748B" }}>✕</button>
-          </div>
-          <div className="overflow-y-auto p-4 space-y-3" style={{ maxHeight: "calc(100vh - 140px)" }}>
-            <div className="rounded-lg p-3" style={{ background: "#EFF6FF" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#1D4ED8" }}>📊 What it measures</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explainContent.what}</p>
-            </div>
-            <div className="rounded-lg p-3" style={{ background: "#F0FDF4" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#15803D" }}>📖 The story in this chart</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explainContent.story}</p>
-            </div>
-            <div className="rounded-lg p-3" style={{ background: "#FFFBEB" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#B45309" }}>💡 Why does it matter?</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explainContent.why}</p>
-            </div>
-          </div>
-        </div>
-      </>
-    )}
+
   </>
   );
 }

@@ -1,6 +1,9 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
+import { ReferenceTable } from "@/components/shared/ReferenceSection";
 import {
   LabelList,
   Line,
@@ -27,10 +30,10 @@ export default function HumanDevelopmentPanel() {
       {/* SDG 1 — Poverty */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
         <p className="text-xs font-bold text-center mb-0.5" style={{ color: "#9B1C1C" }}>
-          SDG 1, Indicator 1.1 – Poverty
-        </p>
+          SDG 1, Indicator 1.2.2 – Multidimensional Poverty
+        </p><CardExplanation indicator="poverty" />
         <p className="text-xs text-center mb-4" style={{ color: "#6B7280" }}>
-          The proportion of the population that are Multidimensionally poor
+          Share of the population experiencing multidimensional poverty; 2025 is the Q1–Q3 average.
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {povertyData.map((d) => (
@@ -41,6 +44,7 @@ export default function HumanDevelopmentPanel() {
             >
               <span className="text-white font-black text-3xl">{d.value}%</span>
               <span className="text-white/70 text-sm font-medium">{d.year}</span>
+              <CardExplanation indicator="poverty" />
             </div>
           ))}
         </div>
@@ -50,14 +54,14 @@ export default function HumanDevelopmentPanel() {
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
         <p className="text-xs font-bold text-center mb-0.5" style={{ color: "#9B1C1C" }}>
           SDG 2, Indicator 2.1.2 – Food Insecurity (FIES)
-        </p>
+        </p><CardExplanation indicator="food" />
         <p className="text-xs text-center mb-3" style={{ color: "#6B7280" }}>
-          Food Insecure Population (Millions)
+          Food Insecurity Prevalence (%) · 2025: Q1–Q3 average, about 13.0 million people
         </p>
         <div style={{ height: 170 }}>
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={foodInsecurityData} margin={{ top: 20, right: 20, left: -32, bottom: 4 }}>
+              <LineChart data={foodInsecurityData} margin={{ top: 20, right: 24, left: 16, bottom: 4 }}>
                 <XAxis
                   dataKey="year"
                   tick={{ fontSize: 11, fill: "#6B7280" }}
@@ -66,7 +70,7 @@ export default function HumanDevelopmentPanel() {
                 />
                 <YAxis hide domain={["auto", "auto"]} />
                 <Tooltip
-                  formatter={(v: unknown) => [`${v}M`, "Food Insecure Population"]}
+                  formatter={(v: unknown) => [`${v}%`, "Food insecurity prevalence"]}
                   contentStyle={{ fontSize: 11, borderRadius: 8, border: "1px solid #E5E7EB" }}
                 />
                 <Line
@@ -80,7 +84,7 @@ export default function HumanDevelopmentPanel() {
                   <LabelList
                     dataKey="value"
                     position="top"
-                    formatter={(v: unknown) => `${v}`}
+                    formatter={(v: unknown) => `${v}%`}
                     style={{ fontSize: 12, fontWeight: 700, fill: "#DC2626" }}
                   />
                 </Line>
@@ -90,47 +94,52 @@ export default function HumanDevelopmentPanel() {
         </div>
       </div>
 
+      <div className="rounded-xl border border-gray-100 bg-white p-4">
+        <div className="min-w-0"><h3 className="text-sm font-bold text-slate-800 mb-3">Infant Mortality (SDG 3.2.1)</h3><CardExplanation indicator="infant" /></div>
+        <ReferenceTable headings={["GDHS year", "Deaths per 1,000 live births"]} rows={[[2003,64],[2008,50],[2014,41],[2022,28]]} />
+        <p className="text-xs text-slate-500 mt-2">Source: Figure 8.4, p. 103. Infant deaths occur before the first birthday; neonatal deaths occur within the first 28 days.</p>
+      </div>
       {/* SDG 3 — Mortality */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Maternal + Under-Five */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
           <p className="text-xs font-bold text-center mb-4" style={{ color: "#9B1C1C" }}>
-            SDG 3, Indicator 3.1.1 – Maternal &amp; Child Mortality
+            SDG 3 – Maternal Mortality (3.1.1) &amp; Child Mortality (3.2.1)
           </p>
           <div className="space-y-4">
             {/* Maternal Mortality */}
             <div>
-              <p className="text-xs font-bold mb-2" style={{ color: "#DC2626" }}>
+              <div className="min-w-0"><p className="text-xs font-bold mb-2" style={{ color: "#DC2626" }}>
                 Maternal Mortality Ratio
-              </p>
+              </p><CardExplanation indicator="maternal" /></div>
               <div className="flex items-center gap-4">
                 <span className="text-7xl leading-none flex-shrink-0" aria-hidden>🤰</span>
-                <div className="flex items-end gap-6">
+                <div className="flex flex-wrap items-end gap-3">
                   {maternalMortality.map((d) => (
                     <div key={d.year} className="flex flex-col items-center gap-0.5">
                       <span className="text-xs font-medium" style={{ color: "#94A3B8" }}>{d.year}</span>
-                      <span className="font-black text-4xl" style={{ color: "#DC2626" }}>{d.value}</span>
+                      <span className="font-black text-3xl" style={{ color: "#DC2626" }}>{d.value}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <p className="text-[11px] mt-1" style={{ color: "#94A3B8" }}>Per 100,000 live births</p>
+              <p className="text-[11px] mt-1" style={{ color: "#94A3B8" }}>Per 100,000 live births. 2007/2017: GMMR; 2010/2021: PHC. Sources and methods differ.</p>
             </div>
 
             <div className="border-t border-gray-100" />
 
             {/* Under-Five Mortality */}
             <div>
-              <p className="text-xs font-bold mb-2" style={{ color: "#DC2626" }}>
+              <div className="min-w-0"><p className="text-xs font-bold mb-2" style={{ color: "#DC2626" }}>
                 Under Five Mortality Rate
-              </p>
+              </p><CardExplanation indicator="underFive" /></div>
               <div className="flex items-center gap-4">
                 <span className="text-7xl leading-none flex-shrink-0" aria-hidden>👶</span>
-                <div className="flex items-end gap-6">
+                <div className="flex flex-wrap items-end gap-3">
                   {underFiveMortality.map((d) => (
                     <div key={d.year} className="flex flex-col items-center gap-0.5">
                       <span className="text-xs font-medium" style={{ color: "#94A3B8" }}>{d.year}</span>
-                      <span className="font-black text-4xl" style={{ color: "#DC2626" }}>{d.value}</span>
+                      <span className="font-black text-3xl" style={{ color: "#DC2626" }}>{d.value}</span>
                     </div>
                   ))}
                 </div>
@@ -144,7 +153,7 @@ export default function HumanDevelopmentPanel() {
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
           <div className="flex flex-col items-center gap-1 mb-1">
             <span className="text-7xl leading-none" aria-hidden>🍼</span>
-            <p className="text-xs font-bold" style={{ color: "#DC2626" }}>Neonatal mortality rate</p>
+            <div className="min-w-0"><p className="text-xs font-bold" style={{ color: "#DC2626" }}>Neonatal mortality rate</p><CardExplanation indicator="neonatal" /></div>
           </div>
           <p className="text-[11px] text-center mb-3" style={{ color: "#94A3B8" }}>
             Per 1,000 live births
@@ -152,7 +161,7 @@ export default function HumanDevelopmentPanel() {
           <div style={{ height: 200 }}>
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={neonatalMortality} margin={{ top: 20, right: 20, left: -32, bottom: 4 }}>
+                <LineChart data={neonatalMortality} margin={{ top: 20, right: 24, left: 16, bottom: 4 }}>
                   <XAxis
                     dataKey="survey"
                     tick={{ fontSize: 9, fill: "#6B7280" }}

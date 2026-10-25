@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, Home, Search, Share2, HelpCircle, ChevronDown } from "lucide-react";
+import { Menu, Home, Search, Share2, HelpCircle, ChevronDown, Sparkles } from "lucide-react";
 import SearchModal from "./SearchModal";
+import { useAssistant } from "@/components/assistant/AssistantProvider";
 
 export default function TopBar({ onMenuClick }: { onMenuClick?: () => void }) {
   const [searchOpen, setSearchOpen] = useState(false);
+  const assistant = useAssistant();
 
   // Cmd+K / Ctrl+K global shortcut
   useEffect(() => {
@@ -66,6 +68,8 @@ export default function TopBar({ onMenuClick }: { onMenuClick?: () => void }) {
           <button className="hidden sm:flex w-8 h-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
             <Share2 size={15} />
           </button>
+
+          <button type="button" onClick={assistant.open} aria-label="Ask Ghana in Numbers AI assistant" className="flex items-center gap-1.5 rounded-lg border border-teal-100 bg-teal-50 px-2.5 py-1.5 text-xs font-semibold text-teal-700 hover:bg-teal-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"><Sparkles size={15} /><span className="hidden sm:inline">Ask AI</span></button>
 
           <button
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-white transition-colors"

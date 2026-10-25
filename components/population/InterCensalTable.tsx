@@ -1,11 +1,12 @@
+import CardExplanation from "@/components/shared/CardExplanation";
 import { intercensalGrowth } from "@/data/populationData";
 
 export default function InterCensalTable() {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col h-full">
-      <p className="text-gray-800 font-bold text-sm mb-3 flex-shrink-0">
+      <div className="min-w-0"><p className="text-gray-800 font-bold text-sm mb-3 flex-shrink-0">
         Intercensal Growth
-      </p>
+      </p><CardExplanation indicator="growth" /></div>
       <div className="flex-1 overflow-auto">
         <table className="w-full text-sm border-collapse">
           <thead>

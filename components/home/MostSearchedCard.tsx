@@ -4,7 +4,7 @@ import { mostSearchedIndicators } from "@/data/dummy";
 export default function MostSearchedCard() {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-      <p className="text-gray-800 font-semibold text-sm mb-4">Most Searched Indicators</p>
+      <p className="text-gray-800 font-semibold text-sm mb-4">Selected National Indicators</p>
       <div className="space-y-3">
         {mostSearchedIndicators.map((item) => (
           <div key={item.rank} className="flex items-center gap-3">
@@ -26,9 +26,8 @@ export default function MostSearchedCard() {
 
       <div className="mt-3 pt-3 border-t border-gray-100">
         <p className="text-[11px] leading-relaxed" style={{ color: "#9CA3AF" }}>
-          Inflation leads public interest for the{" "}
-          <span className="font-semibold text-gray-600">6th consecutive month</span>,
-          reflecting heightened public attention to cost-of-living trends.
+          Reference periods differ by indicator. Source: Ghana in Numbers 2025,
+          Table 2.1. Unemployment is measured as a share of the labour force.
         </p>
       </div>
     </div>

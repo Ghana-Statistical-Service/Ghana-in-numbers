@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   buildPathD,
@@ -30,19 +33,17 @@ export default function ChoroplethMap() {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [regionsData,   setRegionsData]   = useState<FeatureCollection | null>(null);
-  const [districtsData, setDistrictsData] = useState<FeatureCollection | null>(null);
-  const [mode, setMode] = useState<"Regions" | "Districts">("Regions");
 
   const [cpiData,  setCpiData]  = useState<Record<string, Record<string, number>>>({});
   const [projData, setProjData] = useState<Record<string, Record<string, number>>>({});
   const [cpiMonths,  setCpiMonths]  = useState<string[]>([]);
   const [projYears,  setProjYears]  = useState<string[]>([]);
 
-  const [selectedIndicator, setSelectedIndicator] = useState("Inflation (Year on Year)");
+  const [selectedIndicator, setSelectedIndicator] = useState("Projected Population");
   const [showIndDd,     setShowIndDd]     = useState(false);
-  const [selectedMonth,   setSelectedMonth]   = useState("2026M03");
-  const [selectedCpiYear, setSelectedCpiYear] = useState("2026");
-  const [selectedYear,    setSelectedYear]    = useState("2026");
+  const [selectedMonth,   setSelectedMonth]   = useState("2025M12");
+  const [selectedCpiYear, setSelectedCpiYear] = useState("2025");
+  const [selectedYear,    setSelectedYear]    = useState("2025");
 
   const [hovered,    setHovered]    = useState<{ name: string; value: number } | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
@@ -53,13 +54,11 @@ export default function ChoroplethMap() {
     let active = true;
     Promise.all([
       fetch("/map/Regions.gh.json").then(r => r.json()),
-      fetch("/map/District.gh.json").then(r => r.json()),
       fetch("/data/cpiData.json").then(r => r.json()),
       fetch("/data/projectionData.json").then(r => r.json()),
-    ]).then(([reg, dis, cpi, proj]) => {
+    ]).then(([reg, cpi, proj]) => {
       if (!active) return;
       setRegionsData(reg as FeatureCollection);
-      setDistrictsData(dis as FeatureCollection);
 
       // CPI: month → regionName → value
       const cpiMap: Record<string, Record<string, number>> = {};
@@ -75,8 +74,9 @@ export default function ChoroplethMap() {
       const months = Object.keys(cpiMap).sort().reverse();
       setCpiMonths(months);
       if (months.length) {
-        setSelectedMonth(months[0]);
-        setSelectedCpiYear(months[0].split("M")[0]);
+        const referenceMonth = months.includes("2025M12") ? "2025M12" : months[0];
+        setSelectedMonth(referenceMonth);
+        setSelectedCpiYear(referenceMonth.split("M")[0]);
       }
 
       // Projections: year → regionName → value
@@ -97,9 +97,8 @@ export default function ChoroplethMap() {
   }, []);
 
   const activeFeatures = useMemo(() => {
-    const src = mode === "Regions" ? regionsData : districtsData;
-    return (src?.features ?? []).filter(f => isValidGeometry(f.geometry));
-  }, [mode, regionsData, districtsData]);
+    return (regionsData?.features ?? []).filter(f => isValidGeometry(f.geometry));
+  }, [regionsData]);
 
   const paths = useMemo(() => {
     if (!activeFeatures.length) return [];
@@ -140,7 +139,7 @@ export default function ChoroplethMap() {
     };
 
     return { valueByName: map, getColor: colorFn };
-  }, [paths, mode, selectedIndicator, selectedMonth, selectedYear, cpiData, projData]);
+  }, [paths, selectedIndicator, selectedMonth, selectedYear, cpiData, projData]);
 
   const nationalDisplay = useMemo(() => {
     if (selectedIndicator === "Inflation (Year on Year)") {
@@ -211,6 +210,7 @@ export default function ChoroplethMap() {
         </div>
       </div>
 
+      <div className="px-4"><CardExplanation indicator={selectedIndicator === "Projected Population" ? "population" : "inflation"} /></div>
       {/* Map area */}
       <div className="relative flex-1 min-h-0">
 
@@ -323,7 +323,7 @@ export default function ChoroplethMap() {
         )}
       </div>
 
-      {/* Footer: legend + mode toggle */}
+      {/* Footer: regional legend */}
       <div className="flex items-center justify-between px-4 py-2.5 border-t border-slate-100 flex-shrink-0">
         <div className="flex items-center gap-2 text-[10px] text-slate-500">
           <span>Low</span>
@@ -335,24 +335,7 @@ export default function ChoroplethMap() {
           <span>High</span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase text-slate-400 font-semibold tracking-wide">View</span>
-          <div className="flex items-center rounded-full bg-slate-100 p-0.5">
-            {(["Regions", "Districts"] as const).map(v => (
-              <button
-                key={v}
-                onClick={() => setMode(v)}
-                className="rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors"
-                style={{
-                  background: mode === v ? "var(--primary)" : "transparent",
-                  color:      mode === v ? "#fff"           : "#94A3B8",
-                }}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-        </div>
+        <span className="text-[10px] font-semibold text-slate-500">16 regions</span>
       </div>
     </div>
   );

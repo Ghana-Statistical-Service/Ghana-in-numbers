@@ -1,3 +1,4 @@
+import { ReferenceSection, ReferenceTable } from "@/components/shared/ReferenceSection";
 import DashboardShell from "@/components/layout/DashboardShell";
 import CitiesEnvironmentPanel from "@/components/sdg/CitiesEnvironmentPanel";
 import HumanDevelopmentPanel from "@/components/sdg/HumanDevelopmentPanel";
@@ -44,6 +45,10 @@ export default function ProgressOnSDGsPage() {
             <CitiesEnvironmentPanel />
           </section>
 
+          <ReferenceSection guide="governance" title="Institutions and Inclusive Decision-Making" source="Table 2.1, p. 10; Governance Series Wave 3, pp. 92–93">
+            <ReferenceTable headings={["Indicator", "2024", "2025"]} rows={[["Gave a gift to a public official (%)",18.4,16.8],["Feel they have no say in government decisions (%)",42.4,29.7],["Feel they have no influence on government actions (%)",43.2,33.0]]} />
+            <p className="text-xs text-slate-500">The publication reports bribery incidence under SDG 16. The perception indicators provide additional governance context and are not a composite score of institutional performance.</p>
+          </ReferenceSection>
           {/* Footer */}
           <p className="text-xs text-right" style={{ color: "#94A3B8" }}>
             Source: Ghana Statistical Service — Ghana in Numbers 2025

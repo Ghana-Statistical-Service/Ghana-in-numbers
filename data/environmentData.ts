@@ -2,38 +2,60 @@
 // Forest reserves table is represented as chart-ready regional series.
 
 export const environmentKPIs = [
-  { label: "Highest Forest Reserve", value: "15.2", unit: "%", note: "Ashanti, 2021", color: "#00723F" },
-  { label: "Carbon Retention", value: "344.0", unit: "Mt", note: "Grassland total", color: "#C85017" },
-  { label: "Peak Rainfall", value: "211.8", unit: "mm", note: "June 2024", color: "#12AEE3" },
-  { label: "Peak Temperature", value: "31.0", unit: "°C", note: "March 2024", color: "#CC0000" },
-  { label: "Lowest Rainfall", value: "3.8", unit: "mm", note: "December 2024", color: "#64748B" },
+  {
+    "label": "Forest Reserve Area",
+    "value": "24,133.53",
+    "unit": "km²",
+    "note": "Reported regions, Dec 2025",
+    "color": "#00723F"
+  },
+  {
+    "label": "Grassland Carbon",
+    "value": "344.0",
+    "unit": "Mt C",
+    "note": "Stored carbon, 2021",
+    "color": "#C85017"
+  },
+  {
+    "label": "Peak Rainfall",
+    "value": "216.7",
+    "unit": "mm",
+    "note": "June 2025",
+    "color": "#12AEE3"
+  },
+  {
+    "label": "Peak Temperature",
+    "value": "30.4",
+    "unit": "°C",
+    "note": "March 2025",
+    "color": "#CC0000"
+  },
+  {
+    "label": "Lowest Rainfall",
+    "value": "11.1",
+    "unit": "mm",
+    "note": "January 2025",
+    "color": "#64748B"
+  }
 ];
 
-export const forestReserveYears = ["1990", "2000", "2010", "2011", "2012", "2015", "2021"];
-
-export const forestReserveData = [
-  { region: "Ahafo",        y1990: 6.9,  y2000: 6.7,  y2010: 6.7,  y2011: 6.4,  y2012: 5.9,  y2015: 3.5,  y2021: 3.5  },
-  { region: "Ashanti",      y1990: 17.1, y2000: 16.6, y2010: 15.0, y2011: 14.7, y2012: 16.0, y2015: 15.2, y2021: 15.2 },
-  { region: "Bono",         y1990: 7.4,  y2000: 6.9,  y2010: 6.2,  y2011: 6.5,  y2012: 5.5,  y2015: 5.4,  y2021: 5.4  },
-  { region: "Bono East",    y1990: 7.5,  y2000: 8.3,  y2010: 10.2, y2011: 6.6,  y2012: 9.8,  y2015: 6.7,  y2021: 6.7  },
-  { region: "Central",      y1990: 4.4,  y2000: 4.3,  y2010: 4.2,  y2011: 4.1,  y2012: 3.7,  y2015: 3.6,  y2021: 3.6  },
-  { region: "Eastern",      y1990: 7.2,  y2000: 6.5,  y2010: 4.2,  y2011: 6.4,  y2012: 6.1,  y2015: 9.5,  y2021: 9.5  },
-  { region: "Greater Accra",y1990: 0.1,  y2000: 0.0,  y2010: 0.1,  y2011: 0.1,  y2012: 0.2,  y2015: 0.4,  y2021: 0.4  },
-  { region: "Northern",     y1990: 1.1,  y2000: 1.4,  y2010: 1.8,  y2011: 1.9,  y2012: 2.4,  y2015: 6.9,  y2021: 6.9  },
-  { region: "North East",   y1990: 0.2,  y2000: 0.3,  y2010: 0.2,  y2011: 0.3,  y2012: 0.7,  y2015: 2.4,  y2021: 2.3  },
-  { region: "Oti",          y1990: 3.0,  y2000: 2.8,  y2010: 3.1,  y2011: 2.9,  y2012: 3.5,  y2015: 7.0,  y2021: 7.0  },
-  { region: "Savannah",     y1990: 6.5,  y2000: 6.9,  y2010: 10.3, y2011: 11.8, y2012: 9.7,  y2015: 14.9, y2021: 14.9 },
-  { region: "Upper East",   y1990: 0.8,  y2000: 1.4,  y2010: 1.0,  y2011: 1.8,  y2012: 2.6,  y2015: 2.1,  y2021: 2.1  },
-  { region: "Upper West",   y1990: 0.9,  y2000: 1.3,  y2010: 1.3,  y2011: 2.2,  y2012: 3.0,  y2015: 4.3,  y2021: 4.3  },
-  { region: "Volta",        y1990: 0.3,  y2000: 0.4,  y2010: 0.4,  y2011: 0.4,  y2012: 0.5,  y2015: 3.3,  y2021: 3.3  },
-  { region: "Western",      y1990: 17.0, y2000: 16.8, y2010: 16.5, y2011: 15.9, y2012: 14.3, y2015: 8.3,  y2021: 8.4  },
-  { region: "Western North",y1990: 19.6, y2000: 19.2, y2010: 18.7, y2011: 18.0, y2012: 15.9, y2015: 6.5,  y2021: 6.5  },
+// Figure 7.1, December 2025. Missing regions are not zero.
+// Exact values from prose; remaining regions rounded as labelled in the chart.
+export const forestReserveArea2025 = [
+  { region: "Western", area: 7131.36 },
+  { region: "Ashanti", area: 3880.29 },
+  { region: "Northern", area: 3649.85 },
+  { region: "Eastern", area: 1787.55 },
+  { region: "Upper East", area: 1558.07 },
+  { region: "Bono", area: 1492.77 },
+  { region: "Central", area: 1247.34 },
+  { region: "Upper West", area: 1117.57 },
+  { region: "Ahafo", area: 997 },
+  { region: "Volta", area: 761 },
+  { region: "Bono East", area: 473 },
+  { region: "Greater Accra", area: 37.38 },
 ];
-
-export const forestReserveTop2021 = forestReserveData
-  .map((item) => ({ region: item.region, value: item.y2021, change: item.y2021 - item.y1990 }))
-  .sort((a, b) => b.value - a.value)
-  .slice(0, 8);
+export const forestReserveTotal2025 = 24133.53;
 
 export const carbonRetentionData = [
   { landCover: "Mangrove", nonSoil: 0.9, soil: 0.2 },
@@ -49,32 +71,104 @@ export const carbonRetentionData = [
   { landCover: "Bare", nonSoil: 0.0, soil: 0.0 },
 ];
 
-export const monthlyRainfall2024 = [
-  { month: "Jan", value: 16.8, historic: 18 },
-  { month: "Feb", value: 20.8, historic: 22 },
-  { month: "Mar", value: 77.1, historic: 72 },
-  { month: "Apr", value: 117.3, historic: 110 },
-  { month: "May", value: 167.1, historic: 158 },
-  { month: "Jun", value: 211.8, historic: 185 },
-  { month: "Jul", value: 92.0, historic: 125 },
-  { month: "Aug", value: 69.5, historic: 105 },
-  { month: "Sep", value: 115.4, historic: 140 },
-  { month: "Oct", value: 197.7, historic: 175 },
-  { month: "Nov", value: 30.7, historic: 55 },
-  { month: "Dec", value: 3.8, historic: 18 },
+export const monthlyRainfall2025 = [
+  {
+    "month": "Jan",
+    "value": 11.1
+  },
+  {
+    "month": "Feb",
+    "value": 37.9
+  },
+  {
+    "month": "Mar",
+    "value": 69.9
+  },
+  {
+    "month": "Apr",
+    "value": 95.9
+  },
+  {
+    "month": "May",
+    "value": 163.5
+  },
+  {
+    "month": "Jun",
+    "value": 216.7
+  },
+  {
+    "month": "Jul",
+    "value": 67.2
+  },
+  {
+    "month": "Aug",
+    "value": 71.9
+  },
+  {
+    "month": "Sep",
+    "value": 148.9
+  },
+  {
+    "month": "Oct",
+    "value": 185.1
+  },
+  {
+    "month": "Nov",
+    "value": 66.6
+  },
+  {
+    "month": "Dec",
+    "value": 57.3
+  }
 ];
 
-export const monthlyTemperature2024 = [
-  { month: "Jan", value: 29.1, historic: 28.2 },
-  { month: "Feb", value: 30.4, historic: 29.2 },
-  { month: "Mar", value: 31.0, historic: 29.7 },
-  { month: "Apr", value: 30.5, historic: 29.6 },
-  { month: "May", value: 29.8, historic: 29.1 },
-  { month: "Jun", value: 28.0, historic: 27.9 },
-  { month: "Jul", value: 26.8, historic: 26.7 },
-  { month: "Aug", value: 26.2, historic: 26.1 },
-  { month: "Sep", value: 27.1, historic: 26.8 },
-  { month: "Oct", value: 27.7, historic: 27.4 },
-  { month: "Nov", value: 28.6, historic: 27.9 },
-  { month: "Dec", value: 28.6, historic: 27.6 },
+export const monthlyTemperature2025 = [
+  {
+    "month": "Jan",
+    "value": 29.3
+  },
+  {
+    "month": "Feb",
+    "value": 30
+  },
+  {
+    "month": "Mar",
+    "value": 30.4
+  },
+  {
+    "month": "Apr",
+    "value": 29.8
+  },
+  {
+    "month": "May",
+    "value": 28.8
+  },
+  {
+    "month": "Jun",
+    "value": 27.6
+  },
+  {
+    "month": "Jul",
+    "value": 26
+  },
+  {
+    "month": "Aug",
+    "value": 25.4
+  },
+  {
+    "month": "Sep",
+    "value": 26.6
+  },
+  {
+    "month": "Oct",
+    "value": 27.5
+  },
+  {
+    "month": "Nov",
+    "value": 28.4
+  },
+  {
+    "month": "Dec",
+    "value": 28.5
+  }
 ];

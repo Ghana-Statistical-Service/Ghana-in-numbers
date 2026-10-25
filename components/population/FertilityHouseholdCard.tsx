@@ -1,3 +1,4 @@
+import CardExplanation from "@/components/shared/CardExplanation";
 import { fertilityData, householdSizeData } from "@/data/populationData";
 
 interface TimelineItem { year: string; value: number }
@@ -39,9 +40,9 @@ export default function FertilityHouseholdCard() {
         {/* Fertility */}
         <div className="p-4 flex flex-col gap-3">
           <div>
-            <p className="text-gray-800 font-bold text-sm">Fertility Rate</p>
+            <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Fertility Rate</p><CardExplanation indicator="fertility" /></div>
             <p className="text-xs mt-0.5" style={{ color: "#9CA3AF" }}>
-              Avg. Children Ever Born per Woman
+              Expected children per woman at prevailing age-specific fertility rates
             </p>
           </div>
           <div className="flex items-end gap-2 flex-1">
@@ -60,7 +61,7 @@ export default function FertilityHouseholdCard() {
         {/* Household size */}
         <div className="p-4 flex flex-col gap-3">
           <div>
-            <p className="text-gray-800 font-bold text-sm">Average Household Size</p>
+            <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Average Household Size</p><CardExplanation indicator="household" /></div>
             <p className="text-xs mt-0.5" style={{ color: "#9CA3AF" }}>
               Persons per household
             </p>

@@ -1,3 +1,4 @@
+import CardExplanation from "@/components/shared/CardExplanation";
 import { childMarriageData, gbvPrevalenceData } from "@/data/socialDevelopmentData";
 import { ShieldAlert, HeartCrack, Brain, UserRoundCheck } from "lucide-react";
 
@@ -27,6 +28,7 @@ export default function ProtectionPanel() {
                 <Icon size={24} />
               </div>
               <p className="text-sm font-bold" style={{ color: "#1B2A4A" }}>{item.type}</p>
+              <CardExplanation indicator={index === 0 ? "physical" : index === 1 ? "sexual" : "psychological"} />
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-xs font-semibold" style={{ color: "#94A3B8" }}>2016</p>
@@ -44,9 +46,9 @@ export default function ProtectionPanel() {
 
       <div className="mt-4 rounded-xl border border-slate-100 p-4 flex items-center justify-between gap-4" style={{ background: "linear-gradient(90deg, #FFF1F2 0%, #FFFFFF 100%)" }}>
         <div>
-          <p className="text-sm font-bold" style={{ color: "#1B2A4A" }}>{childMarriageData.label}</p>
+          <p className="text-sm font-bold" style={{ color: "#1B2A4A" }}>{childMarriageData.label}</p><CardExplanation indicator="childMarriage" />
           <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-            Change between 2010 and 2021.
+            Census indicator, 2010 and 2021; not the SDG share of women aged 20–24 married before 18.
           </p>
         </div>
         <div className="flex items-center gap-5">

@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Area,
@@ -32,9 +34,10 @@ export function LabourPanel() {
 
   return (
     <div className="space-y-4">
+      <p className="text-xs text-slate-600">2025 figures are Q1–Q3 averages. Unemployment is a share of the labour force; NEET is a share of the entire age group. Source: pp. 58–59.</p>
       <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr", height: "340px" }}>
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-          <p className="text-gray-800 font-bold text-sm">Labour Market Participation</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Labour Market Participation</p><CardExplanation indicator="participation" /></div>
           <div className="flex-1 min-h-0">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
@@ -53,7 +56,7 @@ export function LabourPanel() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-          <p className="text-gray-800 font-bold text-sm">Unemployment Rate</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Unemployment Rate</p><CardExplanation indicator="unemployment" /></div>
           <div className="flex-1 min-h-0">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
@@ -73,8 +76,8 @@ export function LabourPanel() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ height: "310px" }}>
-        <p className="text-gray-800 font-bold text-sm">Youth Not in Education, Employment and Training (NEET)</p>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ minHeight: "310px" }}>
+        <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Youth Not in Employment, Education or Training (NEET)</p><CardExplanation indicator="neet" /></div>
         <div className="h-[250px]">
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
@@ -102,7 +105,7 @@ export function AgriculturePanel() {
   return (
     <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr", height: "430px" }}>
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-        <p className="text-gray-800 font-bold text-sm">Annual Fish Production</p>
+        <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Fish Production (hundred thousand metric tonnes)</p><CardExplanation indicator="fish" /></div>
         <div className="flex-1 min-h-0">
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
@@ -122,7 +125,7 @@ export function AgriculturePanel() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-        <p className="text-gray-800 font-bold text-sm">Crop Production</p>
+        <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Major Crop Production (million metric tonnes)</p><CardExplanation indicator="crops" /></div>
         <div className="flex-1 min-h-0">
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
@@ -135,9 +138,8 @@ export function AgriculturePanel() {
                 <Bar dataKey="maize" name="Maize" stackId="a" fill="#F97316" />
                 <Bar dataKey="cassava" name="Cassava" stackId="a" fill="#0F6B80" />
                 <Bar dataKey="yam" name="Yam" stackId="a" fill="#2E6B1F" />
-                <Bar dataKey="cocoyam" name="Cocoyam" stackId="a" fill="#F28C5B" />
+                <Bar dataKey="rice" name="Rice" stackId="a" fill="#8BC34A" />
                 <Bar dataKey="plantain" name="Plantain" stackId="a" fill="#35BCE8" />
-                <Bar dataKey="other" name="Other crops" stackId="a" fill="#8BC34A" />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -154,25 +156,25 @@ export function TourismPanel() {
         <div className="rounded-xl border border-slate-100 p-4 flex items-center gap-4" style={{ background: "#FBFCFE" }}>
           <UsersRound size={42} style={{ color: "#6B3FA0" }} />
           <div>
-            <p className="text-sm font-bold" style={{ color: "#111827" }}>Same-day & Overnight visitors</p>
-            <p className="text-4xl font-black" style={{ color: "#7A2E0A" }}>16.76 Million</p>
+            <p className="text-sm font-bold" style={{ color: "#111827" }}>Domestic, inbound & outbound flows (2023)</p>
+            <p className="text-4xl font-black" style={{ color: "#7A2E0A" }}>16.76 Million</p><CardExplanation indicator="tourism" />
           </div>
         </div>
         <div className="rounded-xl border border-slate-100 p-4 flex items-center gap-4" style={{ background: "#FBFCFE" }}>
           <WalletCards size={42} style={{ color: "#00A651" }} />
           <div>
-            <p className="text-sm font-bold" style={{ color: "#111827" }}>Total expenditure</p>
-            <p className="text-4xl font-black" style={{ color: "#00A651" }}>GHC 22.01 Billion</p>
+            <p className="text-sm font-bold" style={{ color: "#111827" }}>Domestic & inbound expenditure</p>
+            <p className="text-4xl font-black" style={{ color: "#00A651" }}>GH¢22.01 Billion</p><CardExplanation indicator="tourismSpending" />
           </div>
         </div>
       </div>
 
-      <p className="text-center mt-5 mb-3 text-gray-800 font-bold text-sm">Main purpose of visit</p>
+      <p className="text-center mt-5 mb-3 text-gray-800 font-bold text-sm">Main purpose of domestic travel</p>
       <div className="grid grid-cols-3 gap-3">
         {tourismPurposeData.map((item) => (
           <div key={item.purpose} className="rounded-xl border border-slate-100 p-3 text-center" style={{ background: "#FBFCFE" }}>
             <p className="text-2xl font-black" style={{ color: item.color }}>{item.share}%</p>
-            <p className="text-xs font-bold" style={{ color: "#111827" }}>{item.purpose}</p>
+            <p className="text-xs font-bold" style={{ color: "#111827" }}>{item.purpose}</p><CardExplanation indicator="purpose" />
           </div>
         ))}
       </div>
@@ -184,11 +186,11 @@ export function TourismPanel() {
           return (
             <div key={item.type} className="rounded-xl border border-slate-100 p-4" style={{ background: "#FBFCFE" }}>
               <div className="flex items-center justify-between">
-                <p className="text-lg font-black" style={{ color: "#111827" }}>{item.type}</p>
+                <p className="text-lg font-black" style={{ color: "#111827" }}>{item.type}</p><CardExplanation indicator={item.type === "Domestic" ? "domestic" : item.type === "Inbound" ? "inbound" : "outbound"} />
                 <Icon size={28} style={{ color: item.type === "Domestic" ? "#7A2E0A" : item.type === "Outbound" ? "#EF4444" : "#00A651" }} />
               </div>
               <p className="mt-3 text-xl font-black" style={{ color: "#111827" }}>{item.visitors}</p>
-              <p className="text-sm" style={{ color: "#64748B" }}>visitors</p>
+              <p className="text-sm" style={{ color: "#64748B" }}>same-day and overnight flows</p>
               <p className="mt-2 text-lg font-black" style={{ color: "#111827" }}>{item.expenditure}</p>
               <p className="text-sm" style={{ color: "#64748B" }}>spent</p>
               <div className="mt-3 border-t border-dashed border-slate-300 pt-3">

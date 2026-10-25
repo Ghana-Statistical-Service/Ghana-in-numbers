@@ -1,32 +1,137 @@
 // Population and Society data — Ghana In Numbers 2025 (GSS)
 
+// Figure 3.1, p. 12: annual values transcribed from the labelled chart, in millions.
 export const populationSize = [
-  { year: "2000", value: 18.9 },
-  { year: "2001", value: 19.3 },
-  { year: "2002", value: 19.8 },
-  { year: "2003", value: 20.4 },
-  { year: "2004", value: 21.1 },
-  { year: "2005", value: 21.8 },
-  { year: "2006", value: 22.6 },
-  { year: "2007", value: 23.3 },
-  { year: "2008", value: 23.8 },
-  { year: "2009", value: 24.3 },
-  { year: "2010", value: 24.7 },
-  { year: "2011", value: 25.2 },
-  { year: "2012", value: 25.8 },
-  { year: "2013", value: 26.4 },
-  { year: "2014", value: 26.9 },
-  { year: "2015", value: 27.5 },
-  { year: "2016", value: 28.0 },
-  { year: "2017", value: 28.6 },
-  { year: "2018", value: 29.2 },
-  { year: "2019", value: 29.7 },
-  { year: "2020", value: 30.3 },
-  { year: "2021", value: 30.8 },
-  { year: "2022", value: 31.5 },
-  { year: "2023", value: 32.3 },
-  { year: "2024", value: 33.0 },
-  { year: "2025*", value: 33.7 },
+  {
+    "year": "2000",
+    "value": 18.9,
+    "kind": "census"
+  },
+  {
+    "year": "2001",
+    "value": 19.3,
+    "kind": "estimate"
+  },
+  {
+    "year": "2002",
+    "value": 19.8,
+    "kind": "estimate"
+  },
+  {
+    "year": "2003",
+    "value": 20.4,
+    "kind": "estimate"
+  },
+  {
+    "year": "2004",
+    "value": 21.1,
+    "kind": "estimate"
+  },
+  {
+    "year": "2005",
+    "value": 21.8,
+    "kind": "estimate"
+  },
+  {
+    "year": "2006",
+    "value": 22.6,
+    "kind": "estimate"
+  },
+  {
+    "year": "2007",
+    "value": 23.3,
+    "kind": "estimate"
+  },
+  {
+    "year": "2008",
+    "value": 23.8,
+    "kind": "estimate"
+  },
+  {
+    "year": "2009",
+    "value": 24.3,
+    "kind": "estimate"
+  },
+  {
+    "year": "2010",
+    "value": 24.7,
+    "kind": "census"
+  },
+  {
+    "year": "2011",
+    "value": 25.2,
+    "kind": "estimate"
+  },
+  {
+    "year": "2012",
+    "value": 25.8,
+    "kind": "estimate"
+  },
+  {
+    "year": "2013",
+    "value": 26.4,
+    "kind": "estimate"
+  },
+  {
+    "year": "2014",
+    "value": 26.9,
+    "kind": "estimate"
+  },
+  {
+    "year": "2015",
+    "value": 27.5,
+    "kind": "estimate"
+  },
+  {
+    "year": "2016",
+    "value": 28,
+    "kind": "estimate"
+  },
+  {
+    "year": "2017",
+    "value": 28.6,
+    "kind": "estimate"
+  },
+  {
+    "year": "2018",
+    "value": 29.2,
+    "kind": "estimate"
+  },
+  {
+    "year": "2019",
+    "value": 29.7,
+    "kind": "estimate"
+  },
+  {
+    "year": "2020",
+    "value": 30.3,
+    "kind": "estimate"
+  },
+  {
+    "year": "2021",
+    "value": 30.8,
+    "kind": "census"
+  },
+  {
+    "year": "2022",
+    "value": 31.5,
+    "kind": "projection"
+  },
+  {
+    "year": "2023",
+    "value": 32.3,
+    "kind": "projection"
+  },
+  {
+    "year": "2024",
+    "value": 33,
+    "kind": "projection"
+  },
+  {
+    "year": "2025",
+    "value": 33.7,
+    "kind": "projection"
+  }
 ];
 
 export const intercensalGrowth = [
@@ -153,16 +258,28 @@ export const fertilityData = [
 ];
 
 export const householdSizeData = [
-  { year: "1984", value: 4.9 },
-  { year: "1993", value: 5.1 },
-  { year: "2014", value: 4.4 },
-  { year: "2022", value: 3.6 },
+  {
+    "year": "1984",
+    "value": 4.9
+  },
+  {
+    "year": "2000",
+    "value": 5.1
+  },
+  {
+    "year": "2010",
+    "value": 4.4
+  },
+  {
+    "year": "2021",
+    "value": 3.6
+  }
 ];
 
 export const populationKPIs = [
   {
     label: "Total Population",
-    value: "34.4",
+    value: "33.7",
     unit: "M",
     note: "2025 Projected",
     stripes: [{ color: "#17B8A6", pct: 100 }],
@@ -196,3 +313,5 @@ export const populationKPIs = [
     stripes: [{ color: "#DB2988", pct: 100 }],
   },
 ];
+
+export const sexComposition2025 = [{ sex: "Male", value: 49.3 }, { sex: "Female", value: 50.7 }];

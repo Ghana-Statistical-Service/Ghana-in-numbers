@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -22,10 +24,10 @@ export default function HealthWellbeingPanel() {
 
   return (
     <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col" style={{ height: "360px" }}>
-        <p className="text-gray-800 font-bold text-sm">Health Insurance Coverage</p>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col" style={{ minHeight: "360px" }}>
+        <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Health Insurance Coverage</p><CardExplanation indicator="health" /></div>
         <p className="text-xs mt-0.5 mb-2" style={{ color: "#94A3B8" }}>
-          Historical coverage values from the supplied reference.
+          Active NHIS membership as a share of the population, 2010–2025.
         </p>
         <div className="flex-1 min-h-0">
           {mounted && (
@@ -44,8 +46,8 @@ export default function HealthWellbeingPanel() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col" style={{ height: "360px" }}>
-        <p className="text-gray-800 font-bold text-sm">Teenage Motherhood (15-19)</p>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col" style={{ minHeight: "360px" }}>
+        <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Teenage Motherhood (15-19)</p><CardExplanation indicator="teenage" /></div>
         <p className="text-xs mt-0.5 mb-2" style={{ color: "#94A3B8" }}>
           Rural, national and urban trends.
         </p>

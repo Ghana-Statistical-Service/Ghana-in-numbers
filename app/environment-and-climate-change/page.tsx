@@ -28,7 +28,7 @@ export default function EnvironmentAndClimateChangePage() {
             <div className="hidden xl:flex items-center gap-2 rounded-full border border-white bg-white/70 px-3 py-1.5 shadow-sm">
               <span className="h-2 w-2 rounded-full" style={{ background: "#00A651" }} />
               <span className="text-xs font-semibold" style={{ color: "#475569" }}>
-                Forest reserve table redesigned as chart
+                Forestry Commission and GMet · 2025
               </span>
             </div>
           </div>
@@ -39,7 +39,7 @@ export default function EnvironmentAndClimateChangePage() {
             <div>
               <p className="text-lg font-bold" style={{ color: "#00A651" }}>Forest reserves and carbon retention</p>
               <p className="text-xs" style={{ color: "#94A3B8" }}>
-                Protected forest share by region and carbon retained across land-cover classes.
+                Reported forest reserve area by region and carbon retained across land-cover classes.
               </p>
             </div>
             <ForestCarbonPanel />
@@ -49,7 +49,7 @@ export default function EnvironmentAndClimateChangePage() {
             <div>
               <p className="text-lg font-bold" style={{ color: "#00A651" }}>Rainfall and temperature</p>
               <p className="text-xs" style={{ color: "#94A3B8" }}>
-                Monthly 2024 patterns compared with the 2020-2023 reference period.
+                Monthly rainfall and temperature patterns in 2025.
               </p>
             </div>
             <ClimateMonthlyPanel />

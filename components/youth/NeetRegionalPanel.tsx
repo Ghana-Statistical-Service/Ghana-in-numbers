@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useState } from "react";
 import {
   Bar,
@@ -26,21 +29,15 @@ const GOLD      = "#F59E0B";
 const DARK_AMBER = "#92400E";
 
 const WRITEUPS: Record<NeetDim, string> = {
-  regional:
-    "Nationally, 21.5% of youth aged 15–24 and 19.5% aged 15–35 are NEET. Western Region leads with 29.3% (15–24), followed by Central (26.6%) and Ashanti (24.8%). Oti records the lowest at 11.1%, suggesting that measured NEET does not always map onto actual wellbeing — informal or subsistence activity may absorb youth below measurement thresholds in some regions.",
-  urban:
-    "Urban youth face higher NEET than might be expected: 21.8% nationally for the 15–24 group. Western urban youth (28.4%) and Central (25.5%) top the list. Greater Accra's 23.0% reflects the paradox of migration — youth moving to cities in search of work but failing to find formal employment or training.",
-  rural:
-    "Rural 15–24 NEET stands at 21.1% nationally, with Western rural youth at 30.3% — the highest in any rural–dimension combination. This likely reflects limited secondary and vocational schooling outside urban centres, compounding limited formal job opportunities in rural areas.",
-  male:
-    "Male youth are less likely to be NEET (19.2% nationally for 15–24) than their female counterparts. However, regional variation is wide: Western males (25.2%) are nearly three times more NEET than Oti males (9.5%). The pattern suggests geography and agricultural opportunities play a larger role than gender alone for male youth.",
-  female:
-    "Female youth face the steepest exclusion: 23.7% nationally (15–24). The gender gap is most pronounced in Western Region (33.2% female vs 25.2% male) and Central (30.7% female vs 22.4% male). Early marriage, childcare responsibilities, and cultural barriers to female education and labour-force participation all contribute.",
+  "regional": "Q3 2025: 21.5% of all people aged 15–24 and 19.5% aged 15–35 were neither employed nor enrolled in education or training. For ages 15–24, Western recorded 29.3%, Central 26.6% and Ashanti 24.8%; Oti recorded 11.1%. NEET and unemployment have different denominators and should not be equated.",
+  "urban": "Q3 2025: urban NEET rates were 21.8% for ages 15–24 and 20.6% for ages 15–35. Among urban people aged 15–24, Western recorded 28.4%, Central 25.5% and Greater Accra 23.0%. These regional comparisons do not establish the reasons for disengagement.",
+  "rural": "Q3 2025: rural NEET rates were 21.1% for ages 15–24 and 18.0% for ages 15–35. Western recorded the highest rural rate for ages 15–24 at 30.3%, followed by Central at 28.2% and Volta at 27.0%. Rates describe the whole age group, including people outside the labour force.",
+  "male": "Q3 2025: male NEET rates were 19.2% for ages 15–24 and 16.5% for ages 15–35. For ages 15–24, Western recorded 25.2%, Central 22.4% and Oti 9.5%. These data describe sex and regional differences without isolating their causes.",
+  "female": "Q3 2025: female NEET rates were 23.7% for ages 15–24 and 21.9% for ages 15–35. For ages 15–24, Western recorded 33.2% and Central 30.7%, compared with 25.2% and 22.4% among males in those regions. The publication reports that women made up more than 60% of NEET people aged 15–35."
 };
 
 export default function NeetRegionalPanel() {
   const [dim, setDim]           = useState<NeetDim>("regional");
-  const [showWriteUp, setShowWriteUp] = useState(false);
 
   const data = neetRegionalData[dim].map((d) => ({
     ...d,
@@ -61,28 +58,11 @@ export default function NeetRegionalPanel() {
             <span style={{ color: DARK_AMBER }}>■</span> 15–24 (Intl)
           </p>
         </div>
-        <button
-          onClick={() => setShowWriteUp((v) => !v)}
-          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full transition-colors flex-shrink-0"
-          style={{
-            background: showWriteUp ? "#FEF3C7" : "#FFFBEB",
-            color: "#92400E",
-            border: "1px solid #FDE68A",
-          }}
-        >
-          {showWriteUp ? <X size={12} /> : <BookOpen size={12} />}
-          {showWriteUp ? "Close" : "Analysis"}
-        </button>
+        <CardExplanation indicator="neet" />
       </div>
 
-      {showWriteUp && (
-        <div
-          className="mb-4 rounded-xl p-4 text-sm leading-relaxed"
-          style={{ background: "#FFFBEB", border: "1px solid #FDE68A", color: "#78350F" }}
-        >
-          {WRITEUPS[dim]}
-        </div>
-      )}
+
+
 
       {/* Dimension tabs */}
       <div className="flex flex-wrap gap-2 mb-5">

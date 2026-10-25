@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -16,7 +18,7 @@ import { enrolmentRateData } from "@/data/socialDevelopmentData";
 const seriesMeta = [
   { level: "primary", label: "Primary", color: "#F26B2A" },
   { level: "jhs", label: "JHS", color: "#0F5D7E" },
-  { level: "shs", label: "SHS", color: "#276B3A" },
+  { level: "kg", label: "KG", color: "#276B3A" },
 ] as const;
 
 type Mode = "net" | "gross";
@@ -31,7 +33,7 @@ export default function LearningOpportunityChart() {
       year: row.year,
       primary: mode === "net" ? row.primaryNet : row.primaryGross,
       jhs: mode === "net" ? row.jhsNet : row.jhsGross,
-      shs: mode === "net" ? row.shsNet : row.shsGross,
+      kg: mode === "net" ? row.kgNet : row.kgGross,
     }));
   }, [mode]);
 
@@ -41,11 +43,10 @@ export default function LearningOpportunityChart() {
         <div>
           <p className="text-gray-800 font-bold text-sm">
             School Enrolment Rates{" "}
-            <span className="text-gray-400 font-normal">(Primary, JHS, SHS)</span>
+            <span className="text-gray-400 font-normal">(KG, Primary, JHS)</span>
           </p>
-          <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-            Toggle between net and gross enrolment rates.
-          </p>
+          <CardExplanation indicator="enrolment" />
+
         </div>
         <div className="flex rounded-full bg-slate-100 p-0.5">
           {(["net", "gross"] as const).map((item) => (

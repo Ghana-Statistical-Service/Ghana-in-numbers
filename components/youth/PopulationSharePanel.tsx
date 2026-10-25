@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useEffect, useState } from "react";
 import { BookOpen, X } from "lucide-react";
 import {
@@ -17,53 +20,28 @@ import { populationShareData } from "@/data/youthBulgeData";
 
 const LINES = [
   { key: "children",  label: "Children 0–14",         color: "#94A3B8" },
-  { key: "youth1524", label: "Youth 15–24 (GH)",       color: "#F97316" },
+  { key: "youth1524", label: "Youth 15–24 (international)",       color: "#F97316" },
   { key: "youth1535", label: "Youth 15–35 (AU def.)",  color: "#7C3AED" },
 ];
 
 export default function PopulationSharePanel() {
   const [mounted, setMounted] = useState(false);
-  const [showWriteUp, setShowWriteUp] = useState(false);
   useEffect(() => setMounted(true), []);
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
       <div className="flex items-start justify-between gap-3 mb-0.5">
         <p className="text-xs font-bold" style={{ color: "#7C3AED" }}>
-          Age-Group Share of Total Population (%) — 2000–2025
+          Age-Group Share of Total Population (%) — Documented Endpoints
         </p>
-        <button
-          onClick={() => setShowWriteUp((v) => !v)}
-          className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md flex-shrink-0 transition-colors"
-          style={{
-            background: showWriteUp ? "#EFF6FF" : "#F8FAFC",
-            color: showWriteUp ? "#1D4ED8" : "#94A3B8",
-            border: "1px solid #E5E7EB",
-          }}
-        >
-          {showWriteUp ? <X size={11} /> : <BookOpen size={11} />}
-          {showWriteUp ? "Close" : "Write-up"}
-        </button>
+        <CardExplanation indicator="youth" />
       </div>
       <p className="text-xs mb-3" style={{ color: "#6B7280" }}>
-        Children (0–14) declining as youth cohorts remain large — the classic bulge dynamic
+        2000 and 2025 observations; the 15–24 share is 16% in 2025 (p. 108).
       </p>
 
-      {showWriteUp && (
-        <div
-          className="mb-4 p-3 rounded-lg text-xs leading-relaxed"
-          style={{ background: "#EFF6FF", color: "#1E40AF" }}
-        >
-          Ghana&apos;s population is undergoing a structural demographic shift. The share of children (0–14)
-          has fallen from <strong>41.8% in 2000</strong> to <strong>33.2% in 2025</strong>, reflecting
-          declining fertility rates. However, the youth cohort (15–35, African Union definition) remains
-          large at around <strong>30%</strong> of the population — a level sustained for over two decades.
-          This prolonged youth bulge represents both a potential demographic dividend and a risk: if
-          investments in education, skills, and employment are not made urgently, the large cohort of
-          young people entering the labour market each year will not find productive work. The window to
-          capture the dividend is narrowing.
-        </div>
-      )}
+
+
 
       <div style={{ height: 260 }}>
         {mounted && (

@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useEffect, useState } from "react";
 import { BookOpen, X } from "lucide-react";
 import {
@@ -32,7 +35,6 @@ const kpis = [
 
 export default function AgriculturePanel() {
   const [mounted, setMounted] = useState(false);
-  const [showWriteUp, setShowWriteUp] = useState(false);
   useEffect(() => setMounted(true), []);
 
   return (
@@ -42,43 +44,15 @@ export default function AgriculturePanel() {
         <p className="text-xs font-bold" style={{ color: "#15803D" }}>
           Agriculture, Forestry &amp; Fishing — Youth Engagement (2010 vs 2021)
         </p>
-        <button
-          onClick={() => setShowWriteUp((v) => !v)}
-          className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md flex-shrink-0 transition-colors"
-          style={{
-            background: showWriteUp ? "#EFF6FF" : "#F8FAFC",
-            color: showWriteUp ? "#1D4ED8" : "#94A3B8",
-            border: "1px solid #E5E7EB",
-          }}
-        >
-          {showWriteUp ? <X size={11} /> : <BookOpen size={11} />}
-          {showWriteUp ? "Close" : "Write-up"}
-        </button>
+        <CardExplanation indicator="youthAgriculture" />
       </div>
       <p className="text-xs mb-4" style={{ color: "#6B7280" }}>
         A structural shift away from agriculture — youth participation halved in a decade
       </p>
 
       {/* Write-up */}
-      {showWriteUp && (
-        <div
-          className="mb-4 p-3 rounded-lg text-xs leading-relaxed"
-          style={{ background: "#EFF6FF", color: "#1E40AF" }}
-        >
-          Agriculture, forestry and fishing remain important sources of employment for young people
-          in Ghana, although recent census data suggest a noticeable decline in youth participation
-          over the last decade. The number of youths aged <strong>15–24</strong> working in
-          agriculture fell from <strong>865,855 (2010)</strong> to <strong>381,476 (2021)</strong> —
-          a drop of more than <strong>50 percent</strong>. For the broader <strong>15–35</strong>{" "}
-          group the decline was from <strong>2,025,551</strong> to <strong>1,222,885</strong>.
-          Sex-disaggregated data reveal <strong>male dominance</strong> in both periods, but the
-          female share contracted more sharply, especially among 15–24-year-olds (−64%). These
-          trends reflect structural shifts driven by urbanisation, migration, and changing
-          perceptions of agriculture as a career path. Policies that make agriculture more
-          attractive — through mechanisation, agribusiness development, and access to finance —
-          will be critical for reversing youth disengagement from the sector.
-        </div>
-      )}
+
+
 
       {/* KPI drop cards */}
       <div className="grid grid-cols-2 gap-3 mb-5">

@@ -74,9 +74,9 @@ export default function GovStatMessageModal() {
 
           <hr className="mb-5" style={{ borderColor: "#E2E8F0" }} />
 
-          {/* Photo + first paragraphs */}
-          <div className="flex flex-col sm:flex-row gap-5 mb-4">
-            <div className="flex-shrink-0 flex justify-center sm:block">
+          {/* Let the message flow into the space below the portrait. */}
+          <div className="flow-root space-y-3 text-sm leading-relaxed" style={{ color: "#374151" }}>
+            <div className="mb-4 flex justify-center sm:float-left sm:mr-6 sm:mb-3 sm:block">
               <Image
                 src="/gs.jpg"
                 alt="Dr. Alhassan Iddrisu, Government Statistician"
@@ -86,57 +86,38 @@ export default function GovStatMessageModal() {
                 style={{ objectPosition: "center top" }}
               />
             </div>
-            <div className="space-y-3 text-sm leading-relaxed" style={{ color: "#374151" }}>
-              <p>
-                Ghana&apos;s development story is becoming more complex, and the demand for clear,
-                reliable, and timely data has never been greater.
-              </p>
-              <p>
-                At the Ghana Statistical Service, we recognise that producing data is no longer
-                enough. The real value of statistics lies in how well they are used, how clearly
-                they are understood, how quickly they are available, and how effectively they
-                inform decisions.
-              </p>
-              <p>
-                This understanding is shaping how the Service operates. We are repositioning the
-                Ghana Statistical Service to become a world class, more agile, more responsive,
-                and more innovative in the way we produce and communicate data. This includes
-                strengthening our systems, improving timeliness, and making data more accessible
-                to all users.
-              </p>
-            </div>
-          </div>
-
-          {/* Remaining paragraphs */}
-          <div className="space-y-3 text-sm leading-relaxed" style={{ color: "#374151" }}>
             <p>
-              Ghana in Numbers is part of this shift. It reflects a new approach, one that brings
-              together key national data and presents it in a way that is straightforward,
-              connected, and relevant. The aim is not simply to present information, but to make
-              it easier to see patterns, understand change, and support action.
+              Ghana in Numbers presents official statistics to advance understanding of Ghana&apos;s
+              development and support informed decision-making. This dashboard brings the
+              publication&apos;s evidence into an accessible format, enabling policymakers,
+              businesses, researchers, students, and the wider public to examine key national
+              indicators, understand trends, and assess their implications.
             </p>
             <p>
-              The data presented in this publication points to a country that is moving, but not
-              always in a balanced way. Population growth, urbanisation, and a large youth
-              population are reshaping demand across the economy. At the same time, the pace at
-              which opportunities are expanding does not fully match these changes.
+              The evidence records important gains in health, economic activity, and
+              macroeconomic stability. It also highlights persistent challenges, including
+              youth disengagement from employment, education and training, widespread informal
+              employment, and food insecurity. Presenting these developments together supports
+              a balanced assessment of national progress and the areas requiring sustained
+              attention.
             </p>
             <p>
-              This is where data becomes critical. Clear evidence allows us to see where progress
-              is taking place, where gaps remain, and where attention is needed most. It enables
-              better planning, more targeted interventions, and stronger accountability.
+              Our objective is to make statistics useful to every reader. By bringing together
+              the figures, their trends, and their significance, Ghana in Numbers provides a
+              common basis for public discussion, policy formulation, planning, and accountability.
             </p>
             <p>
-              For this reason, strengthening the role of data in decision-making remains a central
-              priority for the Ghana Statistical Service. We will continue to invest in systems
-              that improve data quality and timeliness. We will deepen collaboration across the
-              National Statistical System and we will leverage technology to ensure that data is
-              not only available, but also usable.
+              This initiative reflects the Ghana Statistical Service&apos;s commitment to more
+              timely publication, wider access to official data through StatsBank and other
+              digital platforms, and a stronger National Statistical System. The value of our
+              work lies in the extent to which reliable evidence informs decisions and action.
             </p>
             <p>
-              Ghana in Numbers represents one step in that broader transformation. It provides a
-              reference point for understanding Ghana&apos;s development and supports a more informed
-              national conversation about the choices ahead.
+              As this first edition develops, we will continue to acknowledge limitations in
+              the available evidence and welcome feedback to guide future improvements.
+              I invite all users to engage critically with the statistics and apply them
+              responsibly. The enduring contribution of Ghana in Numbers will be measured
+              by the decisions it improves and the development outcomes it supports.
             </p>
           </div>
 

@@ -4,23 +4,23 @@
 export const socialDevelopmentKPIs = [
   {
     label: "Primary NER",
-    value: "79.4",
+    value: "83.2",
     unit: "%",
     note: "Net enrolment, 2023/24",
     accent: "#F26B2A",
   },
   {
     label: "JHS GER",
-    value: "115.5",
+    value: "95.5",
     unit: "%",
     note: "Gross enrolment, 2023/24",
     accent: "#0F5D7E",
   },
   {
     label: "Health Insurance",
-    value: "88.2",
+    value: "66.2",
     unit: "%",
-    note: "Coverage, 2025",
+    note: "Active membership, 2025",
     accent: "#5EC5E8",
   },
   {
@@ -41,50 +41,50 @@ export const socialDevelopmentKPIs = [
 
 export const enrolmentRateData = [
   {
-    year: "2019/20",
-    primaryNet: 80.3,
-    jhsNet: 71.4,
-    shsNet: 45.8,
-    primaryGross: 98.3,
-    jhsGross: 111.0,
-    shsGross: 83.2,
+    "year": "2019/20",
+    "kgNet": 71.4,
+    "primaryNet": 80.3,
+    "jhsNet": 45.8,
+    "kgGross": 111,
+    "primaryGross": 98.3,
+    "jhsGross": 83.2
   },
   {
-    year: "2020/21",
-    primaryNet: 78.7,
-    jhsNet: 89.3,
-    shsNet: 44.9,
-    primaryGross: 99.3,
-    jhsGross: 106.0,
-    shsGross: 84.4,
+    "year": "2020/21",
+    "kgNet": 89.3,
+    "primaryNet": 78.9,
+    "jhsNet": 44.9,
+    "kgGross": 106,
+    "primaryGross": 99.3,
+    "jhsGross": 84.6
   },
   {
-    year: "2021/22",
-    primaryNet: 78.99,
-    jhsNet: 85.2,
-    shsNet: 44.27,
-    primaryGross: 107.4,
-    jhsGross: 123.4,
-    shsGross: 88.0,
+    "year": "2021/22",
+    "kgNet": 85.2,
+    "primaryNet": 79,
+    "jhsNet": 44.3,
+    "kgGross": 123.4,
+    "primaryGross": 107.4,
+    "jhsGross": 88
   },
   {
-    year: "2022/23",
-    primaryNet: 79.42,
-    jhsNet: 85.22,
-    shsNet: 58.76,
-    primaryGross: 107.1,
-    jhsGross: 122.1,
-    shsGross: 88.4,
+    "year": "2022/23",
+    "kgNet": 85.2,
+    "primaryNet": 79.4,
+    "jhsNet": 58.8,
+    "kgGross": 122.1,
+    "primaryGross": 107.1,
+    "jhsGross": 88.4
   },
   {
-    year: "2023/24",
-    primaryNet: 79.42,
-    jhsNet: 85.22,
-    shsNet: 58.76,
-    primaryGross: 103.6,
-    jhsGross: 115.5,
-    shsGross: 95.5,
-  },
+    "year": "2023/24",
+    "kgNet": 78,
+    "primaryNet": 83.2,
+    "jhsNet": 59.3,
+    "kgGross": 115.5,
+    "primaryGross": 103.6,
+    "jhsGross": 95.5
+  }
 ];
 
 export const completionRateData = [
@@ -110,16 +110,70 @@ export const pupilTeacherRatioData = [
 ];
 
 export const healthInsuranceCoverageData = [
-  { year: "2006", value: 8.5 },
-  { year: "2008", value: 16.6 },
-  { year: "2010", value: 68.8 },
-  { year: "2013", value: 67.6 },
-  { year: "2017", value: 77.7 },
-  { year: "2021", value: 68.7 },
-  { year: "2022", value: 79.7 },
-  { year: "2023", value: 85.6 },
-  { year: "2024", value: 88.1 },
-  { year: "2025", value: 88.2 },
+  {
+    "year": "2010",
+    "value": 30
+  },
+  {
+    "year": "2011",
+    "value": 43.1
+  },
+  {
+    "year": "2012",
+    "value": 48
+  },
+  {
+    "year": "2013",
+    "value": 52.3
+  },
+  {
+    "year": "2014",
+    "value": 55.8
+  },
+  {
+    "year": "2015",
+    "value": 58.8
+  },
+  {
+    "year": "2016",
+    "value": 55.4
+  },
+  {
+    "year": "2017",
+    "value": 50.4
+  },
+  {
+    "year": "2018",
+    "value": 48.3
+  },
+  {
+    "year": "2019",
+    "value": 52
+  },
+  {
+    "year": "2020",
+    "value": 52.7
+  },
+  {
+    "year": "2021",
+    "value": 54.4
+  },
+  {
+    "year": "2022",
+    "value": 54.4
+  },
+  {
+    "year": "2023",
+    "value": 55.3
+  },
+  {
+    "year": "2024",
+    "value": 55.9
+  },
+  {
+    "year": "2025",
+    "value": 66.2
+  }
 ];
 
 export const teenageMotherhoodData = [
@@ -131,11 +185,14 @@ export const teenageMotherhoodData = [
 ];
 
 export const housingDeficitData = [
-  { year: "1970", population: 8.6, demand: 1.65, supply: 2.3, deficit: 0.65 },
-  { year: "1984", population: 12.3, demand: 2.4, supply: 3.0, deficit: 1.05 },
-  { year: "2000", population: 18.9, demand: 3.7, supply: 5.4, deficit: 1.6 },
-  { year: "2010", population: 23.3, demand: 8.7, supply: 14.2, deficit: 1.7 },
-  { year: "2021", population: 30.83, demand: 11.81, supply: 25.0, deficit: 1.81 },
+  {
+    "year": "2010",
+    "deficit": 2.8
+  },
+  {
+    "year": "2021",
+    "deficit": 1.81
+  }
 ];
 
 export const electricityAccessData = [

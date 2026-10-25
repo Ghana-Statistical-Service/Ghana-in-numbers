@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -13,7 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import { coastalDebrisData, urbanSlums } from "@/data/sdgData";
-import GhanaSlumMap from "./GhanaSlumMap";
+import Image from "next/image";
 
 export default function CitiesEnvironmentPanel() {
   const [mounted, setMounted] = useState(false);
@@ -25,11 +27,12 @@ export default function CitiesEnvironmentPanel() {
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
         <p className="text-xs font-bold mb-0.5" style={{ color: "#1D4ED8" }}>
           SDG 11, Indicator 11.1.1 – Urban population in slums or informal settlements
-        </p>
+        </p><CardExplanation indicator="slums" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
           {/* Real SVG map */}
           <div className="min-h-[320px] flex flex-col">
-            <GhanaSlumMap />
+            <Image src="/report/slums-2021.png" alt="Settlement-level map of slums and informal settlements from Figure 8.5, 2021 PHC" width={624} height={751} className="w-full h-auto object-contain" />
+            <p className="text-xs text-slate-500 mt-2">2021 PHC · Slums and Informal Settlements Thematic Report (2025), Figure 8.5.</p>
           </div>
 
           {/* Stat block */}
@@ -63,8 +66,8 @@ export default function CitiesEnvironmentPanel() {
       {/* SDG 14 — Coastal Eutrophication */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
         <p className="text-xs font-bold mb-0.5" style={{ color: "#1D4ED8" }}>
-          SDG 14, Indicator 14.1.1 – Coastal eutrophication and plastic debris density
-        </p>
+          SDG 14, Indicator 14.1.1 – Plastic debris density
+        </p><CardExplanation indicator="plastic" />
         <div style={{ height: 260 }}>
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
@@ -81,7 +84,7 @@ export default function CitiesEnvironmentPanel() {
                 />
                 <YAxis
                   label={{
-                    value: "Millions",
+                    value: "Million items / km²",
                     angle: -90,
                     position: "insideLeft",
                     offset: -8,
@@ -92,7 +95,7 @@ export default function CitiesEnvironmentPanel() {
                   axisLine={false}
                 />
                 <Tooltip
-                  formatter={(v: unknown) => [`${v}M`, "Plastic debris / eutrophication"]}
+                  formatter={(v: unknown) => [`${v} million items/km²`, "Plastic debris density"]}
                   contentStyle={{ fontSize: 11, borderRadius: 8, border: "1px solid #E5E7EB" }}
                 />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>

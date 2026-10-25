@@ -4,7 +4,7 @@ export default function WhatsChangedCard() {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col gap-3">
       <p className="text-gray-500 font-semibold text-xs uppercase tracking-wider">
-        This Month&apos;s Headline
+        From the Publication
       </p>
 
       <div className="flex items-start gap-3">
@@ -15,16 +15,14 @@ export default function WhatsChangedCard() {
           <TrendingDown size={17} style={{ color: "#16A34A" }} />
         </div>
         <p className="font-bold leading-snug" style={{ fontSize: "1.05rem", color: "#1B2A4A" }}>
-          Ghana&apos;s Inflation Falls to a 3-Year Low
+          Inflation Slows to 5.4% at End-2025
         </p>
       </div>
 
       <p className="text-gray-500 text-xs leading-relaxed">
-        Year-on-year inflation eased to{" "}
-        <span className="font-semibold text-gray-700">3.2%</span> in March 2026,
-        down from <span className="font-semibold text-red-500">25.1%</span> in April 2024 —
-        a 22-month sustained disinflation of{" "}
-        <span className="font-semibold text-green-600">−21.9 percentage points</span>.
+        Year-on-year inflation fell from 54.1% in December 2022 to 5.4% in
+        December 2025, a reduction of 48.7 percentage points. Prices continued
+        to rise, but at a slower pace. The annual average for 2025 was 14.6%.
       </p>
 
       <div className="flex justify-end">
@@ -32,7 +30,7 @@ export default function WhatsChangedCard() {
           className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full"
           style={{ background: "#DCFCE7", color: "#15803D" }}
         >
-          ▼ −21.9 pp since Apr 2024
+          ▼ −48.7 pp since Dec 2022
         </span>
       </div>
     </div>

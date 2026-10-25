@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -11,6 +13,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { ReferenceTable } from "@/components/shared/ReferenceSection";
 import { Gift, Vote } from "lucide-react";
 import { giftsToOfficialsData, noInfluenceData, noSayData, rightToVoteKnowledge } from "@/data/governanceData";
 
@@ -20,11 +23,16 @@ export default function AccountabilityTrustPanel() {
 
   return (
     <div className="space-y-4">
+      <div className="rounded-xl border border-gray-100 bg-white p-4">
+        <div className="min-w-0"><h3 className="font-bold text-sm text-slate-800">Direct Requests for Gifts by Public Officials</h3><CardExplanation indicator="requests" /></div>
+        <p className="text-xs text-slate-500 mt-1 mb-3">Figure 6.3, Governance Series Wave 3, p. 92. Direct requests and gifts actually given are distinct indicators.</p>
+        <ReferenceTable headings={["Period", "Reported direct requests (%)"]} rows={[["January–June 2025",38.6],["July–December 2025",50.5]]} />
+      </div>
       <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr", height: "340px" }}>
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
           <div className="flex items-start justify-between gap-4 mb-2">
             <div>
-              <p className="text-gray-800 font-bold text-sm">Giving Gifts to Public Officials</p>
+              <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Giving Gifts to Public Officials</p><CardExplanation indicator="gifts" /></div>
               <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
                 Reported share giving gifts to public officials.
               </p>
@@ -55,7 +63,7 @@ export default function AccountabilityTrustPanel() {
             <div className="mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-2xl" style={{ background: "#ECFDF5", color: "#009B4E" }}>
               <Vote size={44} />
             </div>
-            <p className="text-gray-800 font-bold text-sm">{rightToVoteKnowledge.label}</p>
+            <p className="text-gray-800 font-bold text-sm">{rightToVoteKnowledge.label}</p><CardExplanation indicator="vote" />
             <p className="mt-2 font-black leading-none" style={{ fontSize: "4.25rem", color: "#285F18" }}>
               {rightToVoteKnowledge.value}%
             </p>
@@ -72,7 +80,7 @@ export default function AccountabilityTrustPanel() {
         </div>
         <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr" }}>
           <div className="rounded-xl border border-slate-100 p-3" style={{ background: "#FBFCFE", height: "260px" }}>
-            <p className="text-2xl font-light mb-1" style={{ color: "#111827" }}>No say</p>
+            <div className="min-w-0"><p className="text-2xl font-light mb-1" style={{ color: "#111827" }}>No say</p><CardExplanation indicator="noSay" /></div>
             {mounted && (
               <ResponsiveContainer width="100%" height="82%">
                 <BarChart data={noSayData} margin={{ top: 20, right: 8, left: -16, bottom: 0 }}>
@@ -89,7 +97,7 @@ export default function AccountabilityTrustPanel() {
           </div>
 
           <div className="rounded-xl border border-slate-100 p-3" style={{ background: "#FBFCFE", height: "260px" }}>
-            <p className="text-2xl font-light mb-1" style={{ color: "#111827" }}>No influence</p>
+            <div className="min-w-0"><p className="text-2xl font-light mb-1" style={{ color: "#111827" }}>No influence</p><CardExplanation indicator="noInfluence" /></div>
             {mounted && (
               <ResponsiveContainer width="100%" height="82%">
                 <BarChart data={noInfluenceData} margin={{ top: 20, right: 8, left: -16, bottom: 0 }}>

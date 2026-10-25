@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useEffect, useState } from "react";
 import { BookOpen, X } from "lucide-react";
 import {
@@ -17,7 +20,6 @@ import { neetData } from "@/data/youthBulgeData";
 
 export default function NeetPanel() {
   const [mounted, setMounted] = useState(false);
-  const [showWriteUp, setShowWriteUp] = useState(false);
   useEffect(() => setMounted(true), []);
 
   return (
@@ -26,38 +28,14 @@ export default function NeetPanel() {
         <p className="text-xs font-bold" style={{ color: "#382873" }}>
           NEET Rate — Not in Education, Employment or Training (%)
         </p>
-        <button
-          onClick={() => setShowWriteUp((v) => !v)}
-          className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md flex-shrink-0 transition-colors"
-          style={{
-            background: showWriteUp ? "#EFF6FF" : "#F8FAFC",
-            color: showWriteUp ? "#1D4ED8" : "#94A3B8",
-            border: "1px solid #E5E7EB",
-          }}
-        >
-          {showWriteUp ? <X size={11} /> : <BookOpen size={11} />}
-          {showWriteUp ? "Close" : "Write-up"}
-        </button>
+        <CardExplanation indicator="neet" />
       </div>
       <p className="text-xs mb-3" style={{ color: "#6B7280" }}>
         Female and urban youth face the highest rates of disengagement
       </p>
 
-      {showWriteUp && (
-        <div
-          className="mb-4 p-3 rounded-lg text-xs leading-relaxed"
-          style={{ background: "#EFF6FF", color: "#1E40AF" }}
-        >
-          The NEET indicator — young people <strong>Not in Education, Employment or Training</strong> —
-          captures those most at risk of long-term economic exclusion. Nationally,{" "}
-          <strong>21.5% of youth aged 15–24</strong> and <strong>19.5% of those aged 15–35</strong> are
-          NEET. Females face a significantly higher rate (23.7%, ages 15–24) than males (19.2%),
-          reflecting barriers to both labour force participation and educational continuation among young
-          women. Contrary to expectations, urban youth (21.8%) have a marginally higher NEET rate than
-          rural youth (21.1%), suggesting that urban migration by youth who fail to find work or enrol in
-          training is a growing challenge.
-        </div>
-      )}
+
+
 
       <div style={{ height: 260 }}>
         {mounted && (

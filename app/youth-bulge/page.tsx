@@ -23,7 +23,7 @@ export default function YouthBulgePage() {
           <div
             className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:grid select-none"
             style={{ gridTemplateColumns: "repeat(5, 1fr)", gap: "6px", opacity: 0.9 }}
-            aria-label="1 in 3 youth unemployed"
+            aria-label="1 in 3 youth labour-force participants unemployed"
           >
             {Array.from({ length: 20 }).map((_, i) => (
               <span
@@ -39,7 +39,7 @@ export default function YouthBulgePage() {
             className="absolute right-6 bottom-6 hidden lg:block text-[11px] font-bold"
             style={{ color: "#DB2988", background: "rgba(255,255,255,0.10)", padding: "4px 10px", borderRadius: 99 }}
           >
-            1 in 3 young Ghanaians is unemployed
+            1 in 3 youth labour-force participants is unemployed
           </div>
 
           {/* Badge */}
@@ -170,11 +170,11 @@ export default function YouthBulgePage() {
               </p>
               <p className="text-xs leading-relaxed mb-3" style={{ color: "#1D4ED8" }}>
                 Used by the UN, ILO, and most global labour-force surveys. Ghana&apos;s 15–24 cohort
-                has remained remarkably stable at <strong>~18%</strong> of the population —
-                peaking at 18.9% in 2008, settling at 17.8% in 2025.
+                averaged about <strong>18%</strong> of the population over the period —
+                peaking at 18.9% in 2008, easing to 16% in 2025.
               </p>
               <div className="flex items-baseline gap-2">
-                <p className="text-2xl font-black" style={{ color: "#2563EB" }}>~18%</p>
+                <p className="text-2xl font-black" style={{ color: "#2563EB" }}>16%</p>
                 <p className="text-xs font-semibold" style={{ color: "#93C5FD" }}>share in 2025</p>
               </div>
             </div>
@@ -268,8 +268,7 @@ export default function YouthBulgePage() {
                 </p>
                 <p className="text-sm leading-relaxed mb-3" style={{ color: "#374151" }}>
                   Ghana&apos;s youth (15–35) make up nearly <strong>30% of the population</strong> — the
-                  largest youth generation ever recorded, according to the{" "}
-                  <strong>2021 Population and Housing Census</strong>. The share of children (0–14) is
+                  approximate share described for 2025 in the publication. The share of children (0–14) is
                   falling as this bulge of working-age youth expands.
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>
@@ -285,13 +284,13 @@ export default function YouthBulgePage() {
               >
                 <span className="text-4xl">📊</span>
                 <p className="text-2xl font-black leading-snug" style={{ color: "#831843" }}>
-                  &ldquo;The largest youth cohort in Ghana&apos;s recorded history.&rdquo;
+                  A large young population creates an opportunity for productive employment.
                 </p>
                 <p className="text-xs font-semibold" style={{ color: "#DB2988" }}>
-                  — 2021 Population and Housing Census · Ghana Statistical Service
+                  Ghana in Numbers 2025 · Youth bulge chapter
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {["38.2% aged 15–35 (AU def.)", "Fertility declining", "PHC 2021"].map((tag) => (
+                  {["~30% aged 15–35 (2025)", "Fertility declining", "2025 demographic overview"].map((tag) => (
                     <span
                       key={tag}
                       className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
@@ -319,10 +318,9 @@ export default function YouthBulgePage() {
                 <p className="text-xs leading-relaxed" style={{ color: "#78350F" }}>
                   Since 2019, youth proportions have started a gradual decline (now ~30%). But{" "}
                   <strong>absolute numbers remain large</strong> — the cohort is still growing in
-                  headcount even as its population share falls. The{" "}
+                  absolute size even as its population share falls. The{" "}
                   <strong>pressure ratio</strong> (youth 15–35 / children 0–14) stands at{" "}
-                  <strong>~0.83</strong> — structurally high, meaning the economy must absorb far
-                  more working-age entrants than new dependants each year.
+                  <strong>~0.90 in 2025</strong> — calculated from the approximate shares of 30.0% and 33.2%. This compares population groups, not annual labour-market entrants.
                 </p>
               </div>
             </div>
@@ -370,9 +368,9 @@ export default function YouthBulgePage() {
                   Youth unemployment (ages 15–24) · National
                 </p>
                 <p className="text-sm leading-relaxed mb-3" style={{ color: "#374151" }}>
-                  Nearly <strong>1 in 3 young Ghanaians aged 15–24</strong> is unemployed. The burden
+                  About <strong>1 in 3 labour-force participants aged 15–24</strong> is unemployed. The burden
                   falls heaviest on urbanised southern regions — <strong>Greater Accra hit 49.3%</strong>{" "}
-                  in Q3 2025, followed by Western (46.8%) and Ashanti (41.2%).
+                  in Q3 2025, followed by Central (48.9%), Western (46.8%) and Ashanti (41.2%).
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>
                   Northern regions show lower measured unemployment, partly because subsistence
@@ -385,7 +383,7 @@ export default function YouthBulgePage() {
                 <div
                   className="grid gap-2 w-full max-w-xs mx-auto"
                   style={{ gridTemplateColumns: "repeat(5, 1fr)" }}
-                  aria-label="1 in 3 youth unemployed"
+                  aria-label="1 in 3 youth labour-force participants unemployed"
                 >
                   {Array.from({ length: 15 }).map((_, i) => (
                     <span
@@ -398,7 +396,7 @@ export default function YouthBulgePage() {
                   ))}
                 </div>
                 <p className="text-xs font-bold text-center" style={{ color: "#DC2626" }}>
-                  1 in 3 youth aged 15–24 is unemployed
+                  1 in 3 labour-force participants aged 15–24 is unemployed
                 </p>
                 <div
                   className="rounded-xl p-4 w-full"
@@ -409,7 +407,7 @@ export default function YouthBulgePage() {
                   </p>
                   <p className="text-3xl font-black text-center" style={{ color: "#DC2626" }}>49.3%</p>
                   <p className="text-[10px] text-center mt-1" style={{ color: "#B91C1C" }}>
-                    Youth aged 15–24 unemployed
+                    Labour force aged 15–24 unemployed
                   </p>
                 </div>
               </div>
@@ -661,7 +659,6 @@ export default function YouthBulgePage() {
                 </div>
               </div>
             </div>
-
             <p className="text-xs text-right mt-4" style={{ color: "#94A3B8" }}>
               Source: Ghana Statistical Service — Labour Force Survey Q2/Q3 2025 · PHC 2021 · Ghana in Numbers 2025
             </p>

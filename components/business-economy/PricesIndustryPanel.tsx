@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useRef, useState } from "react";
 import {
   Bar,
@@ -17,7 +19,6 @@ import { BrickWall, Bus, Factory, Hotel, Pickaxe, Waves, Wifi, Zap } from "lucid
 import {
   foodNonFoodInflationData,
   iipSectorData,
-  localImportedInflationData,
   ppiSectorData,
 } from "@/data/businessEconomyData";
 
@@ -76,9 +77,9 @@ export default function PricesIndustryPanel() {
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
           <div className="flex items-start justify-between mb-2">
             <div>
-              <p className="text-gray-800 font-bold text-sm">Annual Inflation (2014–2025)</p>
+              <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Monthly Consumer Inflation (2014–2025)</p><CardExplanation indicator="inflation" /></div>
               <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-                Year-on-year &amp; Month-on-month · {selectedYear}
+                Year-on-year · {selectedYear}
               </p>
               <div className="flex items-center gap-1.5 mt-1.5">
                 <select
@@ -92,7 +93,7 @@ export default function PricesIndustryPanel() {
               </div>
             </div>
             <span className="rounded-lg px-3 py-2 text-white text-center flex-shrink-0 ml-2" style={{ background: "#8B3A16" }}>
-              <span className="block text-[11px] font-bold">Annual Average</span>
+              <span className="block text-[11px] font-bold">2025 annual average</span>
               <span className="block text-xl font-black">14.6%</span>
             </span>
           </div>
@@ -106,14 +107,12 @@ export default function PricesIndustryPanel() {
                     <CartesianGrid stroke="#F1E6E0" strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#64748B" }} tickLine={false} axisLine={false} />
                     <YAxis yAxisId="yoy" tickFormatter={(v) => `${v}%`} tick={{ fontSize: 10, fill: "#9A3412" }} tickLine={false} axisLine={false} />
-                    <YAxis yAxisId="mom" orientation="right" tickFormatter={(v) => `${v}%`} tick={{ fontSize: 10, fill: "#E59291" }} tickLine={false} axisLine={false} />
                     <Tooltip
                       formatter={(v: unknown, name: unknown) => [`${v}%`, name as string]}
                       contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }}
                     />
                     <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
-                    <Line yAxisId="yoy" key={`yoy-${selectedYear}`} type="monotone" dataKey="yoy" name="Year-on-year" stroke="#9A3412" strokeWidth={2.5} dot={{ r: 2.5, fill: "#fff", stroke: "#9A3412", strokeWidth: 2 }} activeDot={{ r: 4, fill: "#9A3412" }} connectNulls />
-                    <Line yAxisId="mom" key={`mom-${selectedYear}`} type="monotone" dataKey="mom" name="Month-on-month" stroke="#E59291" strokeWidth={2} dot={{ r: 2.5, fill: "#fff", stroke: "#E59291", strokeWidth: 1.5 }} activeDot={{ r: 4, fill: "#E59291" }} connectNulls />
+                    <Line yAxisId="yoy" key={`yoy-${selectedYear}`} type="linear" dataKey="yoy" name="Year-on-year" stroke="#9A3412" strokeWidth={2.5} dot={{ r: 2.5, fill: "#fff", stroke: "#9A3412", strokeWidth: 2 }} activeDot={{ r: 4, fill: "#9A3412" }} connectNulls />
                   </LineChart>
                 </ResponsiveContainer>
               )
@@ -122,7 +121,7 @@ export default function PricesIndustryPanel() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-          <p className="text-gray-800 font-bold text-sm">Food, Non-food, Local and Imported Inflation</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Food and Non-food Inflation: Selected Observations</p><CardExplanation indicator="foodInflation" /></div>
           <div className="flex-1 min-h-0 mt-2">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
@@ -132,45 +131,19 @@ export default function PricesIndustryPanel() {
                   <YAxis tickFormatter={(v) => `${v}%`} tick={{ fontSize: 10, fill: "#94A3B8" }} tickLine={false} axisLine={false} />
                   <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }} />
                   <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
-                  <Line type="monotone" dataKey="food" name="Food" stroke="#00A651" strokeWidth={2.5} dot={false} />
-                  <Line type="monotone" dataKey="nonFood" name="Non-food" stroke="#6B2B24" strokeWidth={2.5} dot={false} />
+                  <Line type="linear" dataKey="food" name="Food" stroke="#00A651" strokeWidth={2.5} dot={false} />
+                  <Line type="linear" dataKey="nonFood" name="Non-food" stroke="#6B2B24" strokeWidth={2.5} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             )}
           </div>
-          <p className="text-xs font-semibold mt-3 mb-0" style={{ color: "#64748B" }}>Local and Imported Inflation</p>
-          <div className="flex-1 min-h-0 mt-1">
-            {mounted && (
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={localImportedInflationData} margin={{ top: 14, right: 12, left: -16, bottom: 0 }}>
-                  <CartesianGrid stroke="#EEF2F7" strokeDasharray="3 3" vertical={false} />
-                  <XAxis
-                    dataKey="year"
-                    tick={{ fontSize: 10, fill: "#64748B" }}
-                    tickLine={false}
-                    axisLine={false}
-                    ticks={["2022", "2023", "2024", "2025"]}
-                  />
-                  <YAxis
-                    tickFormatter={(v) => `${v}%`}
-                    tick={{ fontSize: 10, fill: "#94A3B8" }}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }} />
-                  <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
-                  <Line type="monotone" dataKey="import" name="Import" stroke="#E59291" strokeWidth={2.5} dot={false} />
-                  <Line type="monotone" dataKey="local" name="Local" stroke="#6B8E2E" strokeWidth={2.5} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </div>
+          <p className="text-xs text-slate-500 mt-3">Food inflation reached 61.0% in January 2023 versus 47.9% for non-food. By December 2025 these rates were 4.9% and 5.8%. These are dated observations, not annual averages. The publication’s local/imported inflation chart has no labelled numeric series.</p>
         </div>
       </div>
 
       <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr" }}>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ height: "360px" }}>
-          <p className="text-gray-800 font-bold text-sm mb-2">Index Industrial Production by Sector</p>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ minHeight: "360px" }}>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm mb-2">Industrial Production Growth by Sector (year-end, %)</p><CardExplanation indicator="iip" /></div>
           <div className="h-[300px]">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
@@ -190,7 +163,7 @@ export default function PricesIndustryPanel() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-          <p className="text-gray-800 font-bold text-sm mb-3">Producer Price Index by Sector</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm mb-3">Producer Price Inflation, End-2025 (%)</p><CardExplanation indicator="ppi" /></div>
           <div className="grid grid-cols-2 gap-2">
             {ppiSectorData.map((item) => {
               const Icon = ppiIcons[item.icon as keyof typeof ppiIcons];
@@ -200,7 +173,7 @@ export default function PricesIndustryPanel() {
                     <Icon size={22} style={{ color: item.color }} />
                     <p className="text-xl font-black" style={{ color: "#111827" }}>{item.value}%</p>
                   </div>
-                  <p className="mt-1 text-[11px] font-bold leading-tight" style={{ color: "#1B2A4A" }}>{item.sector}</p>
+                  <p className="mt-1 text-[11px] font-bold leading-tight" style={{ color: "#1B2A4A" }}>{item.sector}</p><CardExplanation indicator="ppi" />
                 </div>
               );
             })}

@@ -23,6 +23,9 @@ export const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const pages: SearchItem[] = [
+  { id: "page-stories", title: "Data Stories", category: "Pages", href: "/data-story", keywords: ["Mangoase", "water", "hackathon", "disability", "Afigya Kwabre North"] },
+  { id: "page-youth", title: "Youth Bulge", category: "Pages", href: "/youth-bulge", keywords: ["youth", "NEET", "skills", "employment"] },
+  { id: "page-sdgs", title: "Progress on SDGs", category: "Pages", href: "/progress-on-sdgs", keywords: ["poverty", "food insecurity", "mortality", "slums", "plastic debris"] },
   {
     id: "page-home",
     title: "Overview Dashboard",
@@ -35,7 +38,7 @@ const pages: SearchItem[] = [
     title: "Business & Economy",
     category: "Pages",
     href: "/business-and-economy",
-    keywords: ["gdp", "economy", "trade", "inflation", "sector", "growth"],
+    keywords: ["gdp", "economy", "trade", "inflation", "sector", "growth", "enterprises", "fiscal", "finance", "credit", "informal trade"],
   },
   {
     id: "page-population",

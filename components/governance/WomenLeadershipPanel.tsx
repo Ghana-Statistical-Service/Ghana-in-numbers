@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -8,6 +10,8 @@ import {
   Cell,
   LabelList,
   Legend,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -21,10 +25,10 @@ export default function WomenLeadershipPanel() {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ height: "390px" }}>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ minHeight: "390px" }}>
         <div className="flex items-start justify-between gap-4 mb-2">
           <div>
-            <p className="text-gray-800 font-bold text-sm">Women Representation in Parliament</p>
+            <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Women Representation in Parliament</p><CardExplanation indicator="parliament" /></div>
             <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
               Share of seats held by women across parliamentary terms.
             </p>
@@ -71,9 +75,9 @@ export default function WomenLeadershipPanel() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ height: "430px" }}>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ minHeight: "430px" }}>
         <div className="mb-2">
-          <p className="text-gray-800 font-bold text-sm">Percentage of Women Judges</p>
+          <p className="text-gray-800 font-bold text-sm">Percentage of Women Judges</p><CardExplanation indicator="judges" />
           <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
             Supreme Court, Court of Appeal and High Court representation.
           </p>
@@ -82,22 +86,16 @@ export default function WomenLeadershipPanel() {
         <div className="h-[360px]">
           {mounted && (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={womenJudgesData} margin={{ top: 24, right: 12, left: -16, bottom: 0 }}>
+              <LineChart data={womenJudgesData} margin={{ top: 24, right: 12, left: 0, bottom: 0 }}>
                 <CartesianGrid stroke="#EEF2F7" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="year" tick={{ fontSize: 9, fill: "#64748B", fontWeight: 700 }} tickLine={false} axisLine={false} interval={0} />
-                <YAxis hide domain={[0, 140]} />
-                <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }} />
-                <Legend verticalAlign="top" height={24} iconType="square" wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="supreme" name="Supreme Court" stackId="a" fill="#CC0000">
-                  <LabelList dataKey="supreme" position="center" formatter={(v: unknown) => `${v}%`} style={{ fontSize: 8, fill: "#fff", fontWeight: 800 }} />
-                </Bar>
-                <Bar dataKey="appeal" name="Court of Appeal" stackId="a" fill="#010101">
-                  <LabelList dataKey="appeal" position="center" formatter={(v: unknown) => `${v}%`} style={{ fontSize: 8, fill: "#fff", fontWeight: 800 }} />
-                </Bar>
-                <Bar dataKey="high" name="High Court" stackId="a" fill="#12AEE3" radius={[4, 4, 0, 0]}>
-                  <LabelList dataKey="high" position="center" formatter={(v: unknown) => `${v}%`} style={{ fontSize: 8, fill: "#fff", fontWeight: 800 }} />
-                </Bar>
-              </BarChart>
+                <XAxis dataKey="year" tick={{ fontSize: 9 }} interval={0} />
+                <YAxis domain={[0, 60]} tickFormatter={(v) => `${v}%`} tick={{ fontSize: 10 }} width={35} />
+                <Tooltip formatter={(v, n) => [`${v}%`, n]} />
+                <Legend verticalAlign="top" height={24} wrapperStyle={{ fontSize: 11 }} />
+                <Line dataKey="supreme" name="Supreme Court" stroke="#CC0000" strokeWidth={2.5} dot={{ r: 3 }} />
+                <Line dataKey="appeal" name="Court of Appeal" stroke="#010101" strokeWidth={2.5} dot={{ r: 3 }} />
+                <Line dataKey="high" name="High Court" stroke="#12AEE3" strokeWidth={2.5} dot={{ r: 3 }} />
+              </LineChart>
             </ResponsiveContainer>
           )}
         </div>

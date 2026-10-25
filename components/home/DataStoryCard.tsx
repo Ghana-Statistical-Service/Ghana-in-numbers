@@ -40,23 +40,23 @@ export default function DataStoryCard() {
           Ghana&apos;s Youth Dividend
         </p>
         <p className="text-white/70 text-xs leading-relaxed mb-3">
-          <span className="text-white font-semibold">37%</span> of Ghana&apos;s 34.4 million
-          citizens are aged 15–35 — a demographic powerhouse driving growth,
-          innovation, and national transformation.
+          <span className="text-white font-semibold">~30%</span> of Ghana&apos;s projected 33.7 million
+          citizens are aged 15–35 — a demographic opportunity requiring investment in skills,
+          employment, and productivity.
         </p>
-        <button
+        <a href="/youth-bulge"
           className="flex items-center gap-1.5 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
           style={{ background: "var(--primary)" }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "var(--primary-400)";
+            (e.currentTarget as HTMLAnchorElement).style.background = "var(--primary-400)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "var(--primary)";
+            (e.currentTarget as HTMLAnchorElement).style.background = "var(--primary)";
           }}
         >
           Explore Data Story
           <ChevronDown size={12} />
-        </button>
+        </a>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
+import CardExplanation from "@/components/shared/CardExplanation";
 import { socialDevelopmentKPIs } from "@/data/socialDevelopmentData";
 
 export default function SocialDevelopmentKPIStrip() {
   return (
-    <div className="grid grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
       {socialDevelopmentKPIs.map((item) => (
         <div
           key={item.label}
@@ -23,6 +24,7 @@ export default function SocialDevelopmentKPIStrip() {
             <p className="mt-1 text-[11px] leading-tight" style={{ color: "#94A3B8" }}>
               {item.note}
             </p>
+            <CardExplanation label={item.label} />
           </div>
           <div className="flex items-center justify-between gap-2 border-t border-slate-100 px-3 py-1.5">
             <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">

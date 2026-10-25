@@ -1,11 +1,14 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
   CartesianGrid,
   Cell,
+  ComposedChart,
   LabelList,
   Legend,
   Line,
@@ -33,9 +36,9 @@ export default function GDPStructurePanel() {
       <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr", height: "380px" }}>
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
           <div className="mb-2">
-            <p className="text-gray-800 font-bold text-sm">Overall GDP (Nominal)</p>
+            <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Overall GDP (Nominal)</p><CardExplanation indicator="nominalGdp" /></div>
             <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-              Overall GDP and non-oil nominal GDP in billion Ghana cedis.
+              Nominal GDP in billion Ghana cedis. 2024 revised; 2025 provisional.
             </p>
           </div>
           <div className="flex-1 min-h-0">
@@ -48,7 +51,6 @@ export default function GDPStructurePanel() {
                   <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }} />
                   <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
                   <Line type="monotone" dataKey="overall" name="Overall GDP" stroke="#00A3FF" strokeWidth={3} dot={{ r: 3, fill: "#fff", stroke: "#00A3FF", strokeWidth: 2.5 }} />
-                  <Line type="monotone" dataKey="nonOil" name="Non-oil" stroke="#111827" strokeWidth={2.5} strokeDasharray="5 5" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             )}
@@ -56,7 +58,7 @@ export default function GDPStructurePanel() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-          <p className="text-gray-800 font-bold text-sm">Sectoral Share of Nominal GDP, 2025</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Sectoral Share of Nominal GDP, 2025</p><CardExplanation indicator="sector" /></div>
           <div className="flex-1 min-h-0">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
@@ -75,7 +77,7 @@ export default function GDPStructurePanel() {
 
       <div className="grid gap-4" style={{ gridTemplateColumns: "2fr 3fr", height: "360px" }}>
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-          <p className="text-gray-800 font-bold text-sm">Nominal GDP per Capita</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Nominal GDP per Capita</p><CardExplanation indicator="perCapita" /></div>
           <div className="flex-1 min-h-0">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
@@ -93,11 +95,11 @@ export default function GDPStructurePanel() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col">
-          <p className="text-gray-800 font-bold text-sm">Real GDP and Growth Rate</p>
+          <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Real GDP and Growth Rate</p><CardExplanation indicator="realGdp" /></div>
           <div className="flex-1 min-h-0">
             {mounted && (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={realGdpData} margin={{ top: 20, right: 18, left: -12, bottom: 0 }}>
+                <ComposedChart data={realGdpData} margin={{ top: 20, right: 18, left: -12, bottom: 0 }}>
                   <CartesianGrid stroke="#EEF2F7" strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="year" tick={{ fontSize: 10, fill: "#64748B", fontWeight: 700 }} tickLine={false} axisLine={false} />
                   <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "#94A3B8" }} tickLine={false} axisLine={false} />
@@ -105,9 +107,8 @@ export default function GDPStructurePanel() {
                   <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #E5E7EB" }} />
                   <Legend verticalAlign="top" height={24} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
                   <Bar yAxisId="right" dataKey="growth" name="Real GDP growth rate" fill="#CFFAD1" radius={[3, 3, 0, 0]} />
-                  <Line yAxisId="left" type="monotone" dataKey="real" name="Real GDP" stroke="#006FC9" strokeWidth={3} dot={{ r: 4, fill: "#fff", stroke: "#006FC9", strokeWidth: 2.5 }} />
-                  <Line yAxisId="left" type="monotone" dataKey="nonOil" name="Non-oil" stroke="#111827" strokeWidth={2.5} strokeDasharray="5 5" dot={false} />
-                </LineChart>
+                  <Line yAxisId="left" type="monotone" dataKey="real" name="Real GDP (GH¢ bn, 2013 prices)" stroke="#006FC9" strokeWidth={3} dot={{ r: 4, fill: "#fff", stroke: "#006FC9", strokeWidth: 2.5 }} />
+                </ComposedChart>
               </ResponsiveContainer>
             )}
           </div>

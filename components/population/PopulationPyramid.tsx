@@ -1,5 +1,8 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
+
 import { useState, useEffect, useMemo } from "react";
 import {
   BarChart,
@@ -16,11 +19,6 @@ import { pyramidData } from "@/data/populationData";
 const YEARS = ["2010", "2021", "2025"] as const;
 type Year = typeof YEARS[number];
 
-const explanation = {
-  what: `This chart shows how many males and females there are in each age group of Ghana's population. Blue bars extend left for males; pink bars extend right for females. Each horizontal band is a 5-year age group, from newborns at the bottom to 80+ at the top.`,
-  story: `In 2010, the pyramid had a very wide base — lots of young children — tapering sharply at the top. By 2025, the base is narrowing gradually while the middle is filling out, meaning fewer children relative to working-age adults. This is called a "demographic transition" and is common as countries develop.`,
-  why: `The shape of the pyramid tells planners what services a country will need. A wide base means pressure on schools and maternity wards now, and the workforce in 20 years. A widening middle means more workers today — potentially a "demographic dividend" — but also future pressure on pensions and elderly care.`,
-};
 
 interface TooltipPayloadItem {
   dataKey: string;
@@ -45,15 +43,8 @@ function PyramidTooltip({ active, payload, label }: { active?: boolean; payload?
 export default function PopulationPyramid() {
   const [mounted, setMounted] = useState(false);
   const [selectedYear, setSelectedYear] = useState<Year>("2025");
-  const [open, setOpen] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [open]);
 
   const chartData = useMemo(() => {
     return pyramidData[selectedYear].map((d) => ({
@@ -85,20 +76,10 @@ export default function PopulationPyramid() {
               {y}
             </button>
           ))}
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
-            style={{
-              background: open ? "#1B2A4A" : "#EFF6FF",
-              color: open ? "#ffffff" : "#2563EB",
-              border: "1px solid",
-              borderColor: open ? "#1B2A4A" : "#BFDBFE",
-            }}
-          >
-            Explain
-          </button>
+          <CardExplanation indicator="pyramid" />
         </div>
       </div>
+
 
       {/* Legend */}
       <div className="flex gap-4 mb-2 flex-shrink-0">
@@ -157,32 +138,7 @@ export default function PopulationPyramid() {
       </div>
     </div>
 
-    {open && (
-      <>
-        <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
-        <div className="fixed z-40 rounded-xl shadow-2xl border border-gray-200 overflow-hidden"
-          style={{ top: "60px", right: "16px", width: "320px", maxHeight: "calc(100vh - 76px)", background: "#ffffff" }}>
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100" style={{ background: "#F8FAFF" }}>
-            <p className="text-sm font-bold" style={{ color: "#1B2A4A" }}>What is this chart telling me?</p>
-            <button onClick={() => setOpen(false)} className="w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold" style={{ background: "#E2E8F0", color: "#64748B" }}>✕</button>
-          </div>
-          <div className="overflow-y-auto p-4 space-y-3" style={{ maxHeight: "calc(100vh - 140px)" }}>
-            <div className="rounded-lg p-3" style={{ background: "#EFF6FF" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#1D4ED8" }}>📊 What it measures</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explanation.what}</p>
-            </div>
-            <div className="rounded-lg p-3" style={{ background: "#F0FDF4" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#15803D" }}>📖 The story in this chart</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explanation.story}</p>
-            </div>
-            <div className="rounded-lg p-3" style={{ background: "#FFFBEB" }}>
-              <p className="text-xs font-semibold mb-1.5" style={{ color: "#B45309" }}>💡 Why does it matter?</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#374151" }}>{explanation.why}</p>
-            </div>
-          </div>
-        </div>
-      </>
-    )}
+
     </>
   );
 }

@@ -1,6 +1,5 @@
 import DashboardShell from "@/components/layout/DashboardShell";
 import GovStatMessageModal from "@/components/home/GovStatMessageModal";
-import PromoSplash from "@/components/home/PromoSplash";
 import KPIStrip from "@/components/home/KPIStrip";
 import ChoroplethMap from "@/components/home/ChoroplethMap";
 import InflationSparkline from "@/components/home/InflationSparkline";
@@ -13,7 +12,6 @@ import DataStoryCard from "@/components/home/DataStoryCard";
 export default function Home() {
   return (
     <>
-      <PromoSplash />
       <GovStatMessageModal />
       <DashboardShell>
         <main className="flex-1 overflow-y-auto px-4 md:px-5 pt-4 pb-4 space-y-4">
@@ -29,7 +27,7 @@ export default function Home() {
                   Ghana in Numbers
                 </h1>
                 <p className="text-sm mt-0.5" style={{ color: "#6B7280" }}>
-                  Ghana Statistical Service · Official National Indicators · March 2026
+                  Ghana Statistical Service · Ghana in Numbers 2025 · Reference periods shown by indicator
                 </p>
               </div>
               <KPIStrip />
@@ -45,11 +43,11 @@ export default function Home() {
                   <div className="w-1 h-2 rounded-full" style={{ background: "#006B3F" }} />
                 </div>
                 <p className="text-xs leading-relaxed" style={{ color: "#475569" }}>
-                  <span className="font-bold" style={{ color: "#1B2A4A" }}>Ghana&apos;s 34.4 million people</span>{" "}
+                  <span className="font-bold" style={{ color: "#1B2A4A" }}>Ghana&apos;s projected 33.7 million people (2025)</span>{" "}
                   live in an economy expanding at{" "}
-                  <span className="font-bold" style={{ color: "#2563EB" }}>6.0%</span> — as inflation recedes to a historic low of{" "}
-                  <span className="font-bold" style={{ color: "#16A34A" }}>3.2%</span>,
-                  signalling a decisive shift toward macroeconomic stability and inclusive growth.
+                  <span className="font-bold" style={{ color: "#2563EB" }}>6.0%</span> — with year-on-year inflation of{" "}
+                  <span className="font-bold" style={{ color: "#16A34A" }}>5.4%</span>,
+                  in December 2025. National unemployment averaged 12.8% across Q1–Q3 2025.
                 </p>
               </div>
             </div>
@@ -61,15 +59,15 @@ export default function Home() {
           </div>
 
           {/* Row 2: Map | GDP + Sector stacked */}
-          <div className="grid gap-4 md:grid-cols-[3fr_2fr] md:h-[400px]">
-            <div className="min-h-[320px] md:min-h-0 md:h-full">
+          <div className="grid gap-4 md:grid-cols-[3fr_2fr] md:h-[466px] items-stretch">
+            <div className="h-[360px] min-w-0 md:h-full md:min-h-0">
               <ChoroplethMap />
             </div>
-            <div className="flex flex-col gap-4 md:h-full">
-              <div style={{ flex: 6, minHeight: 0 }}>
+            <div className="grid min-w-0 gap-4 grid-rows-[280px_170px]">
+              <div className="min-h-0 min-w-0">
                 <GDPGrowthChart />
               </div>
-              <div style={{ flex: 4, minHeight: 0, overflow: "hidden" }}>
+              <div className="min-h-0 min-w-0">
                 <SectorBreakdown />
               </div>
             </div>
@@ -81,7 +79,6 @@ export default function Home() {
             <MostSearchedCard />
             <DataStoryCard />
           </div>
-
           <p className="text-xs text-right pb-1" style={{ color: "#9CA3AF" }}>
             Powered by StatsBank | © GSS
           </p>

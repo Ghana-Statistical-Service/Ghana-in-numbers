@@ -1,5 +1,7 @@
 "use client";
 
+import CardExplanation from "@/components/shared/CardExplanation";
+
 import { useEffect, useState } from "react";
 import {
   Bar,
@@ -31,12 +33,12 @@ export default function TradePanel() {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ height: "390px" }}>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4" style={{ minHeight: "390px" }}>
         <div className="flex items-start justify-between gap-4 mb-2">
           <div>
-            <p className="text-gray-800 font-bold text-sm">Total Trade of Goods</p>
+            <div className="min-w-0"><p className="text-gray-800 font-bold text-sm">Total Trade of Goods</p><CardExplanation indicator="trade" /></div>
             <p className="text-xs mt-0.5" style={{ color: "#94A3B8" }}>
-              Exports, imports and trade balance in billions.
+              Merchandise exports, imports and trade balance in billion GH¢ (current prices).
             </p>
           </div>
           <span className="rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: "#ECFDF5", color: "#16A34A" }}>
@@ -64,8 +66,8 @@ export default function TradePanel() {
       <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
         {[{ title: "Top 5 Exports", data: topExports2025, icons: exportIcons, color: "#2E8BFF" }, { title: "Top 5 Imports", data: topImports2025, icons: importIcons, color: "#00A651" }].map((group) => (
           <div key={group.title} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-            <p className="text-gray-800 font-bold text-sm mb-3">{group.title}</p>
-            <div className="grid grid-cols-5 gap-2">
+            <p className="text-gray-800 font-bold text-sm mb-3">{group.title}</p><CardExplanation indicator={group.title === "Top 5 Exports" ? "exports" : "imports"} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {group.data.map((item, index) => {
                 const Icon = group.icons[index];
                 return (
@@ -75,6 +77,7 @@ export default function TradePanel() {
                     </div>
                     <p className="mt-2 text-[11px] font-bold leading-tight" style={{ color: "#1B2A4A" }}>{item.name}</p>
                     <p className="mt-1 text-sm font-black" style={{ color: group.color }}>{item.share}%</p>
+                    <CardExplanation indicator={group.title === "Top 5 Exports" ? "exports" : "imports"} />
                   </div>
                 );
               })}
@@ -84,11 +87,11 @@ export default function TradePanel() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-        <p className="text-gray-800 font-bold text-sm mb-3">Top 10 Trade Partners by Region</p>
+        <div className="min-w-0"><p className="text-gray-800 font-bold text-sm mb-3">Selected Continental Shares of Trade, 2025</p><CardExplanation indicator="partner" /></div>
         <div className="grid grid-cols-4 gap-3">
           {tradePartnerRegions.map((region) => (
             <div key={region.region} className="rounded-xl border border-slate-100 p-3" style={{ background: "#FBFCFE" }}>
-              <p className="text-xs font-bold" style={{ color: "#1B2A4A" }}>{region.region}</p>
+              <p className="text-xs font-bold" style={{ color: "#1B2A4A" }}>{region.region}</p><CardExplanation indicator="partner" />
               <div className="mt-3 space-y-2">
                 <div>
                   <div className="flex justify-between text-[11px] font-semibold" style={{ color: "#64748B" }}><span>Export</span><span>{region.export}%</span></div>
