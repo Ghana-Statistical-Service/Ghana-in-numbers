@@ -345,7 +345,7 @@ export const ppiSectorData = [
 export const labourParticipationData = [
   { year: "2022", labourForce: 67.1, employmentPopulation: 58.3 },
   { year: "2023", labourForce: 71.6, employmentPopulation: 61.2 },
-  { year: "2024", labourForce: 70.1, employmentPopulation: 60.4 },
+  { year: "2024", labourForce: 70.1, employmentPopulation: 60.6 },
   { year: "2025", labourForce: 74.5, employmentPopulation: 65.0 },
 ];
 

@@ -1,71 +1,51 @@
-"use client";
+import { ChartCard } from "@/components/ui/Card";
+import { sectorShare2025 } from "@/data/businessEconomyData";
 
-import CardExplanation from "@/components/shared/CardExplanation";
+const colors = ["#0E8A7E", "#2F6DB5", "#3C2FA3"];
 
-import { useState, useEffect } from "react";
-
-const sectors = [
-  { name: "Agriculture", share: 22.8 },
-  { name: "Industry",    share: 31.3 },
-  { name: "Services",    share: 45.9 },
-];
-
-const MAX = 45.9; // widest bar = 100% of available space
-const BAR_COLOR = "#17B8A6";
-
-
-export default function SectorBreakdown() {
-
-
+/** The three sector shares form a whole (100% of nominal GDP), so a single stacked bar is a valid composition view. */
+export function SectorShareBar({ height = 40 }: { height?: number }) {
   return (
-    <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-3 py-2.5 flex flex-col h-full overflow-hidden">
-
-        {/* Title row */}
-        <div className="flex items-start justify-between flex-shrink-0 mb-1.5">
-          <div>
-            <p className="text-gray-800 font-bold text-xs leading-tight">
-              Sectoral Share of Nominal GDP
-            </p>
-
-            <p style={{ fontSize: "0.65rem", color: "#9CA3AF" }}>2025 · Production Approach</p>
+    <div>
+      <div className="flex overflow-hidden rounded-md" style={{ height }} role="img" aria-label={`Sectoral share of nominal GDP, 2025: ${sectorShare2025.map(s => `${s.name} ${s.value}%`).join(", ")}`}>
+        {sectorShare2025.map((s, i) => (
+          <div key={s.name} style={{ width: `${s.value}%`, background: colors[i] }} className="flex items-center justify-center text-[13px] font-semibold text-white">
+            <span className="tabular">{s.value}%</span>
           </div>
-          <CardExplanation indicator="sector" />
-        </div>
-
-        {/* Bars */}
-        <div className="flex-1 flex flex-col justify-around">
-          {sectors.map((s) => (
-            <div key={s.name} className="flex items-center gap-2">
-              <span
-                className="flex-shrink-0 w-16 font-medium"
-                style={{ fontSize: "0.70rem", color: "#374151" }}
-              >
-                {s.name}
-              </span>
-              <div className="flex-1 h-3.5 rounded-full overflow-hidden" style={{ background: "#F1F5F9" }}>
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{ width: `${(s.share / MAX) * 100}%`, background: BAR_COLOR }}
-                />
-              </div>
-              <span
-                className="flex-shrink-0 font-bold text-right"
-                style={{ fontSize: "0.70rem", color: "#1B2A4A", width: "34px" }}
-              >
-                {s.share}%
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <p className="flex-shrink-0 mt-1" style={{ fontSize: "0.60rem", color: "#9CA3AF" }}>
-          Source: GSS StatsBank
-        </p>
+        ))}
       </div>
+      <ul className="mt-3 grid grid-cols-3 gap-2 text-[13px]">
+        {sectorShare2025.map((s, i) => (
+          <li key={s.name} className="flex items-start gap-2"><span aria-hidden className="mt-1 h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ background: colors[i] }} /><span><span className="block font-medium text-ink">{s.name}</span><span className="tabular text-muted">{s.value}% of GDP</span></span></li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
-      {/* Fixed explain overlay */}
+// IBES I, p. 48: share of establishments by broad sector, 2024 (a count of businesses, not output).
+const establishments = [{ name: "Agriculture", value: 2.2 }, { name: "Industry", value: 21.1 }, { name: "Services", value: 76.7 }];
 
-    </>
+export default function SectorBreakdown({ withEstablishments = false }: { withEstablishments?: boolean }) {
+  return (
+    <ChartCard
+      title="Sectoral share of nominal GDP"
+      subtitle="Production approach, % of GDP"
+      period="2025"
+      explain={{ indicator: "sector" }}
+      notes={withEstablishments ? "Output shares are not employment shares. The second bar counts establishments (fixed-structure businesses), a different measure: farming is mostly outside establishments." : "Output shares, not shares of employment."}
+      source={withEstablishments ? "GSS Annual GDP · p. 37; 2024 IBES I · pp. 48–49" : "GSS Annual GDP; Ghana in Numbers 2025, p. 37"}
+    >
+      <SectorShareBar />
+      {withEstablishments && (
+        <div className="mt-6 border-t border-line pt-4">
+          <p className="mb-2 text-xs font-medium text-muted">For comparison: share of establishments by sector, 2024 (IBES I)</p>
+          <div className="flex h-7 overflow-hidden rounded-md" role="img" aria-label="Share of establishments: agriculture 2.2%, industry 21.1%, services 76.7%">
+            {establishments.map((s, i) => <div key={s.name} style={{ width: `${s.value}%`, background: colors[i], opacity: 0.75 }} className="flex items-center justify-center text-[12px] font-semibold text-white">{s.value > 10 ? `${s.value}%` : ""}</div>)}
+          </div>
+          <p className="tabular mt-2 text-[12.5px] text-body">Agriculture 2.2% · Industry 21.1% · Services 76.7% of establishments</p>
+        </div>
+      )}
+    </ChartCard>
   );
 }

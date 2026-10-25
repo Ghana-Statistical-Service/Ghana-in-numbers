@@ -1,0 +1,146 @@
+"use client";
+
+import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { ChartCard, Stat } from "@/components/ui/Card";
+import { DataDisclosure, DataTable, Legend } from "@/components/ui/Data";
+import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, tick } from "@/components/ui/chart";
+import { labourParticipationData, neetData, tourismPurposeData, unemploymentData } from "@/data/businessEconomyData";
+import { labourLevels2025, tourismPurposes, tourismSplit } from "@/data/publicationAdditions";
+
+const yearLabel = (y: string) => y === "2025" ? "2025 (Q1–Q3 avg)" : y;
+
+function TrendLines({ data, series, max, label, height = 240 }: { data: Record<string, string | number>[]; series: { key: string; label: string; color: string; dashed?: boolean; below?: boolean }[]; max: number; label: string; height?: number }) {
+  return (
+    <ChartFrame height={height} label={label}>
+      <LineChart data={data} margin={{ top: 22, right: 20, left: -8, bottom: 0 }}>
+        <CartesianGrid stroke={C.grid} vertical={false} />
+        <XAxis dataKey="year" {...axisCommon} tick={tick} padding={{ left: 14, right: 14 }} />
+        <YAxis {...axisCommon} tick={tick} domain={[0, max]} tickFormatter={v => `${v}%`} width={48} />
+        <Tooltip content={makeTooltip({ unit: "%", labelFormat: yearLabel })} />
+        {series.map(s => (
+          <Line key={s.key} dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={2.5} strokeDasharray={s.dashed ? "6 4" : undefined} dot={{ r: 3.5, fill: s.color }} isAnimationActive={false}>
+            <LabelList dataKey={s.key} position={s.below ? "bottom" : "top"} offset={8} formatter={(v: unknown) => Number(v).toFixed(1)} style={{ ...labelStyle, fontSize: 12, fill: s.color }} />
+          </Line>
+        ))}
+      </LineChart>
+    </ChartFrame>
+  );
+}
+
+export function ParticipationCard() {
+  const s = [{ key: "labourForce", label: "Labour-force participation", color: C.purple }, { key: "employmentPopulation", label: "Employment-to-population", color: C.teal, below: true }];
+  return (
+    <ChartCard title="Labour-force participation and employment" subtitle="% of the working-age population" period="2022–2025" explain={{ indicator: "participation" }}
+      notes="2025 is the Q1–Q3 average (QLFS); 2022–2024 are annual (AHIES). Participation includes jobseekers; the employment-to-population ratio counts only people in work."
+      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.17, p. 58"
+      footer={<DataDisclosure><DataTable caption="Labour market participation" headings={["Year", "Participation (%)", "Employment-to-population (%)"]} rows={labourParticipationData.map(d => [yearLabel(d.year), d.labourForce, d.employmentPopulation])} decimals={1} minWidth={380} /></DataDisclosure>}>
+      <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
+      <TrendLines data={labourParticipationData} series={s} max={100} label="Labour-force participation rose from 67.1% in 2022 to 74.5% in 2025; employment-to-population rose from 58.3% to 65.0%" />
+    </ChartCard>
+  );
+}
+
+export function UnemploymentCard() {
+  const s = [{ key: "youth1524", label: "Youth 15–24", color: C.amber }, { key: "youth1535", label: "Youth 15–35", color: C.rose }, { key: "national", label: "National", color: C.purple, below: true }];
+  return (
+    <ChartCard title="Unemployment rate" subtitle="% of the labour force in each group" period="2017, 2021–2025" explain={{ indicator: "unemployment" }}
+      notes="A share of each group’s labour force, not of all young people. Years are unevenly spaced (2017, then 2021–2025); 2025 is the Q1–Q3 average."
+      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.18, p. 59"
+      footer={<DataDisclosure><DataTable caption="Unemployment rate by group" headings={["Year", "Youth 15–24 (%)", "Youth 15–35 (%)", "National (%)"]} rows={unemploymentData.map(d => [yearLabel(d.year), d.youth1524, d.youth1535, d.national])} decimals={1} minWidth={420} /></DataDisclosure>}>
+      <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
+      <TrendLines data={unemploymentData} series={s} max={40} label="Unemployment in 2025: 32.4% for ages 15–24, 21.9% for ages 15–35, 12.8% nationally" />
+    </ChartCard>
+  );
+}
+
+export function NeetCard() {
+  const s = [{ key: "youth1524", label: "Youth 15–24", color: C.amber }, { key: "youth1535", label: "Youth 15–35", color: C.rose, below: true }];
+  return (
+    <ChartCard title="Young people not in employment, education or training" subtitle="NEET, % of all people in the age group" period="2022–2025" explain={{ indicator: "neet" }}
+      notes="The denominator is everyone in the age group, unlike unemployment. 2025 is the Q1–Q3 average; the Q3 2025 rate alone was higher (21.5% and 19.5%)."
+      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.19, p. 59"
+      footer={<DataDisclosure><DataTable caption="Youth NEET rate" headings={["Year", "Youth 15–24 (%)", "Youth 15–35 (%)"]} rows={neetData.map(d => [yearLabel(d.year), d.youth1524, d.youth1535])} decimals={1} minWidth={340} /></DataDisclosure>}>
+      <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
+      <TrendLines data={neetData} series={s} max={30} label="Youth NEET rates fell from 22.4% and 21.7% in 2022 to 19.1% and 17.9% in 2025" />
+    </ChartCard>
+  );
+}
+
+export function LabourStats() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-3">
+      <Stat label="Persons employed" value={labourLevels2025.employedMillion.toFixed(1)} unit="million" context="Average Q1–Q3 2025 · Table 2.1" />
+      <Stat label="In vulnerable employment" value={labourLevels2025.vulnerableEmploymentMillion.toFixed(1)} unit="million" context={`${labourLevels2025.vulnerablePeriod} · Table 2.1`} />
+      <Stat label="Informal share of employment" value="Over 70" unit="%" context="All employment, average Q1–Q3 2025" />
+    </div>
+  );
+}
+
+/* ── Tourism ─────────────────────────────────────────────────────────────── */
+
+const flowColor = { Domestic: C.purple, Inbound: C.teal, Outbound: C.amber } as Record<string, string>;
+
+export function TourismCard() {
+  const visitors = tourismSplit.map(t => ({ flow: t.flow, overnight: t.overnight / 1e6, sameDay: t.sameDay / 1e6 }));
+  const spend = tourismSplit.map(t => ({ flow: t.flow, overnight: t.overnightSpend, sameDay: t.sameDaySpend }));
+  return (
+    <ChartCard title="Tourism flows and spending" subtitle="Visitors (million) and expenditure (GH¢ billion), by type of trip" period="2023"
+      explain={{ indicator: "tourism" }}
+      notes={<>Same-day and overnight flows are counted separately and are not unique people. The GH¢22.01 billion headline is domestic plus inbound spending; outbound spending (GH¢3.46 billion) is residents’ spending abroad. Table 2.1 reports inbound overnight spending of GH¢15.18 billion; Table 5.8 and the text give GH¢15.4 billion.</>}
+      source="GSS DOTS and GITS 2023 · Figures 5.20–5.21, Table 5.8, pp. 60, 70"
+      footer={<DataDisclosure><DataTable caption="Tourism flows and expenditure, 2023" headings={["Flow", "Overnight visitors", "Same-day visitors", "Total visitors", "Overnight spend (GH¢ bn)", "Same-day spend (GH¢ bn)", "Total spend (GH¢ bn)"]} rows={tourismSplit.map(t => [t.flow, t.overnight, t.sameDay, t.totalVisitors, t.overnightSpend, t.sameDaySpend, t.totalSpend])} minWidth={760} unitNote="Domestic overnight and same-day counts are printed rounded to 0.1 million. Outbound same-day: 77,500 in Table 5.8, 77,501 in the text." /></DataDisclosure>}>
+      <div className="grid gap-3 sm:grid-cols-3">
+        {tourismSplit.map(t => <Stat key={t.flow} label={`${t.flow} visitors`} value={t.totalVisitors.toLocaleString("en-GB")} context={`GH¢${t.totalSpend.toFixed(2)} billion spent`} />)}
+      </div>
+      <div className="mt-5 grid gap-6 md:grid-cols-2">
+        <div>
+          <p className="mb-1 text-[13.5px] font-semibold text-ink">Visitors, million</p>
+          <Legend className="mb-1" items={[{ label: "Overnight", color: C.purple }, { label: "Same day", color: C.purpleFaint }]} />
+          <ChartFrame height={170} label="Visitors by flow: domestic 15.4 million, inbound 0.9 million, outbound 0.5 million">
+            <BarChart data={visitors} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }} barCategoryGap="28%">
+              <CartesianGrid stroke={C.grid} horizontal={false} />
+              <XAxis type="number" {...axisCommon} tick={tick} domain={[0, 16]} />
+              <YAxis type="category" dataKey="flow" {...axisCommon} tick={{ ...tick, fill: C.ink }} width={74} />
+              <Tooltip cursor={{ fill: "rgba(60,47,163,0.06)" }} content={makeTooltip({ format: v => `${(v * 1e6).toLocaleString("en-GB", { maximumFractionDigits: 0 })}` })} />
+              <Bar dataKey="overnight" name="Overnight" stackId="v" fill={C.purple} isAnimationActive={false} />
+              <Bar dataKey="sameDay" name="Same day" stackId="v" fill={C.purpleFaint} isAnimationActive={false} />
+            </BarChart>
+          </ChartFrame>
+        </div>
+        <div>
+          <p className="mb-1 text-[13.5px] font-semibold text-ink">Expenditure, GH¢ billion</p>
+          <Legend className="mb-1" items={[{ label: "Overnight", color: C.teal }, { label: "Same day", color: C.tealLight }]} />
+          <ChartFrame height={170} label="Expenditure by flow: inbound GH¢15.42 billion, domestic GH¢6.59 billion, outbound GH¢3.46 billion">
+            <BarChart data={spend} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }} barCategoryGap="28%">
+              <CartesianGrid stroke={C.grid} horizontal={false} />
+              <XAxis type="number" {...axisCommon} tick={tick} domain={[0, 16]} />
+              <YAxis type="category" dataKey="flow" {...axisCommon} tick={{ ...tick, fill: C.ink }} width={74} />
+              <Tooltip cursor={{ fill: "rgba(60,47,163,0.06)" }} content={makeTooltip({ format: v => `GH¢${v.toLocaleString("en-GB", { maximumFractionDigits: 3 })} bn` })} />
+              <Bar dataKey="overnight" name="Overnight" stackId="s" fill={C.teal} isAnimationActive={false} />
+              <Bar dataKey="sameDay" name="Same day" stackId="s" fill={C.tealLight} isAnimationActive={false} />
+            </BarChart>
+          </ChartFrame>
+        </div>
+      </div>
+      <div className="mt-5 grid gap-4 border-t border-line pt-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div>
+          <p className="mb-2 text-[13.5px] font-semibold text-ink">Main purpose of domestic trips</p>
+          <ul className="space-y-2">
+            {tourismPurposeData.map(p => (
+              <li key={p.purpose} className="grid grid-cols-[10rem_minmax(0,1fr)_3rem] items-center gap-2 text-[13px]">
+                <span className="text-body">{p.purpose}</span>
+                <span className="h-3 rounded-sm bg-surface-muted"><span className="block h-full rounded-sm" style={{ width: `${(p.share / 50) * 100}%`, background: flowColor.Domestic }} /></span>
+                <span className="tabular text-right font-semibold text-ink">{p.share}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <dl className="space-y-1.5 text-[13px] leading-relaxed">
+          <div><dt className="inline font-semibold text-ink">Domestic: </dt><dd className="inline text-body">{tourismPurposes.domestic}.</dd></div>
+          <div><dt className="inline font-semibold text-ink">Inbound: </dt><dd className="inline text-body">{tourismPurposes.inbound}.</dd></div>
+          <div><dt className="inline font-semibold text-ink">Outbound: </dt><dd className="inline text-body">{tourismPurposes.outbound}.</dd></div>
+        </dl>
+      </div>
+    </ChartCard>
+  );
+}

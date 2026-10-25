@@ -1,19 +1,13 @@
 "use client";
 
-import CardExplanation from "@/components/shared/CardExplanation";
 
 
 import { useState, useEffect, useRef } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LabelList,
-} from "recharts";
+import { CartesianGrid, LabelList, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { ChartCard } from "@/components/ui/Card";
+import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, tick } from "@/components/ui/chart";
+import { tones } from "@/components/ui/Infographic";
+import { LifeBySexPair, LifeTrendData } from "./PopulationSections";
 import { lifeExpectancyTrend, lifeExpectancyByAge } from "@/data/populationData";
 
 interface EstimateResult {
@@ -68,7 +62,7 @@ function StatFeedback({ result }: { result: EstimateResult }) {
 
 
 export default function LifeExpectancyChart() {
-  const [mounted, setMounted] = useState(false);
+  const first = lifeExpectancyTrend[0], last = lifeExpectancyTrend.at(-1)!;
   const [open, setOpen] = useState(false);
   const [age, setAge] = useState("");
   const [sex, setSex] = useState<"Male" | "Female">("Male");
@@ -76,211 +70,78 @@ export default function LifeExpectancyChart() {
   const [error, setError] = useState("");
   const popupRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
-
-
   useEffect(() => {
     if (!open) return;
-    function handleClick(e: MouseEvent) {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
+    function handleClick(e: MouseEvent) { if (popupRef.current && !popupRef.current.contains(e.target as Node)) setOpen(false); }
+    function handleKey(e: KeyboardEvent) { if (e.key === "Escape") setOpen(false); }
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => { document.removeEventListener("mousedown", handleClick); document.removeEventListener("keydown", handleKey); };
   }, [open]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const n = parseInt(age, 10);
-    if (isNaN(n) || n < 0 || n > 110) {
-      setError("Please enter a valid age between 0 and 110.");
-      return;
-    }
+    if (isNaN(n) || n < 0 || n > 110) { setError("Enter a whole-number age between 0 and 110."); return; }
     setError("");
     setResult(buildResult(n, sex));
   }
 
-  function handleOpen() {
-    setOpen((v) => !v);
-    setResult(null);
-    setAge("");
-    setError("");
-  }
-
   return (
-    <>
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col h-full relative">
-      <div className="flex items-start justify-between mb-1 flex-shrink-0">
-        <div>
-          <p className="text-gray-800 font-bold text-sm">
-            Life Expectancy at Birth{" "}
-            <span className="text-gray-400 font-normal">(1960–2021)</span>
-          </p>
-
-          <p className="text-xs mt-0.5" style={{ color: "#9CA3AF" }}>
-            Improvements in survival and longevity over time
-          </p>
-        </div>
-
-        <div className="flex items-center gap-1.5 flex-shrink-0">
-          <button
-            onClick={handleOpen}
-            className="text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
-            style={{
-              background: open ? "#1B2A4A" : "#F0FDF4",
-              color: open ? "#ffffff" : "#15803D",
-              border: "1px solid",
-              borderColor: open ? "#1B2A4A" : "#BBF7D0",
-            }}
-          >
-            Age-group lookup
-          </button>
-          <CardExplanation indicator="life" />
-        </div>
-      </div>
-
-      {/* Popup form */}
-      {open && (
-        <div
-          ref={popupRef}
-          className="absolute right-4 top-12 z-20 rounded-xl shadow-lg border border-gray-200 p-4 w-72"
-          style={{ background: "#ffffff" }}
-        >
-          {!result ? (
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <p className="text-xs font-bold" style={{ color: "#1B2A4A" }}>
-                Life Expectancy by Age Group
-              </p>
-              <p className="text-xs" style={{ color: "#9CA3AF" }}>
-                Based on Ghana&apos;s 2021 abridged life table (GSS).
-              </p>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold" style={{ color: "#374151" }}>
-                  Current age
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={110}
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  placeholder="e.g. 32"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-green-400"
-                  style={{ color: "#1B2A4A" }}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-semibold" style={{ color: "#374151" }}>
-                  Sex
-                </label>
-                <div className="flex gap-2">
-                  {(["Male", "Female"] as const).map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => setSex(s)}
-                      className="flex-1 text-xs py-1.5 rounded-lg font-semibold transition-colors"
-                      style={{
-                        background: sex === s ? "#1B2A4A" : "#F1F5F9",
-                        color: sex === s ? "#ffffff" : "#64748B",
-                      }}
-                    >
-                      {s}
-                    </button>
-                  ))}
+    <ChartCard
+      title="Life expectancy at birth"
+      subtitle="Years"
+      period="1960–2021"
+      explain={{ indicator: "life" }}
+      actions={
+        <div className="relative" ref={popupRef}>
+          <button type="button" aria-expanded={open} aria-controls="life-lookup" onClick={() => { setOpen(v => !v); setResult(null); setAge(""); setError(""); }} className="inline-flex h-8 items-center rounded-md border border-line bg-surface px-2.5 text-[12.5px] font-medium text-body hover:border-brand-line hover:bg-brand-soft hover:text-brand">Age-group lookup</button>
+          {open && (
+            <div id="life-lookup" className="absolute right-0 top-10 z-20 w-[min(18rem,80vw)] rounded-[var(--radius-lg)] border border-line bg-surface p-4 shadow-pop">
+              {!result ? (
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <p className="text-[13px] font-semibold text-ink">Remaining life expectancy, 2021 life table</p>
+                  <div className="space-y-1">
+                    <label htmlFor="life-age" className="text-xs font-medium text-muted">Current age</label>
+                    <input id="life-age" type="number" inputMode="numeric" min={0} max={110} value={age} onChange={e => setAge(e.target.value)} placeholder="e.g. 32" className="h-10 w-full rounded-md border border-line-strong px-3 text-sm text-ink" />
+                  </div>
+                  <fieldset className="space-y-1"><legend className="text-xs font-medium text-muted">Sex</legend>
+                    <div className="flex gap-2">{(["Male", "Female"] as const).map(s => <button key={s} type="button" aria-pressed={sex === s} onClick={() => setSex(s)} className={`h-9 flex-1 rounded-md text-[13px] font-medium ${sex === s ? "bg-brand text-white" : "bg-surface-muted text-body"}`}>{s}</button>)}</div>
+                  </fieldset>
+                  {error && <p role="alert" className="text-xs text-negative">{error}</p>}
+                  <button type="submit" className="h-9 w-full rounded-md bg-brand text-[13px] font-semibold text-white hover:bg-brand-hover">Look up</button>
+                </form>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between"><p className="text-[13px] font-semibold text-ink">Life-table group average</p><button type="button" onClick={() => setResult(null)} className="rounded px-2 py-0.5 text-xs text-brand hover:bg-brand-soft">Back</button></div>
+                  <StatFeedback result={result} />
                 </div>
-              </div>
-
-              {error && (
-                <p className="text-xs" style={{ color: "#DC2626" }}>{error}</p>
               )}
-
-              <button
-                type="submit"
-                className="w-full py-1.5 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
-                style={{ background: "#16A34A" }}
-              >
-                Calculate
-              </button>
-            </form>
-          ) : (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-bold" style={{ color: "#1B2A4A" }}>
-                  Life-table Group Average
-                </p>
-                <button
-                  onClick={() => setResult(null)}
-                  className="text-xs px-2 py-0.5 rounded"
-                  style={{ color: "#9CA3AF", background: "#F1F5F9" }}
-                >
-                  ← Back
-                </button>
-              </div>
-              <StatFeedback result={result} />
             </div>
           )}
         </div>
-      )}
-
-      <div className="flex-1 min-h-0" style={{ minHeight: "160px" }}>
-        {mounted && (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={lifeExpectancyTrend} margin={{ top: 20, right: 16, left: -18, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-              <XAxis
-                dataKey="year"
-                tick={{ fontSize: 9, fill: "#9CA3AF" }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                tickFormatter={(v) => `${v}`}
-                tick={{ fontSize: 9, fill: "#9CA3AF" }}
-                tickLine={false}
-                axisLine={false}
-                domain={[35, 70]}
-                ticks={[40, 50, 60, 70]}
-              />
-              <Tooltip
-                formatter={(value) => [`${value} years`, "Life Expectancy"]}
-                contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #e5e7eb" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#16A34A"
-                strokeWidth={2.5}
-                dot={{ r: 4, fill: "#fff", stroke: "#16A34A", strokeWidth: 2 }}
-                activeDot={{ r: 5, fill: "#16A34A", strokeWidth: 0 }}
-              >
-                <LabelList
-                  dataKey="value"
-                  position="top"
-                  style={{ fontSize: "8px", fill: "#374151", fontWeight: 700 }}
-                />
-              </Line>
-            </LineChart>
-          </ResponsiveContainer>
-        )}
-      </div>
-
-      <div
-        className="flex-shrink-0 mt-2 rounded-lg px-3 py-2"
-        style={{ background: "#F0FDF4" }}
-      >
-        <p className="text-xs" style={{ color: "#15803D" }}>
-          <span className="font-bold">65.1 years</span> in 2021 — up{" "}
-          <span className="font-bold">+24.8 years</span> from 40.3 in 1960.
-          Female life expectancy (66.8 yrs) exceeds male (63.3 yrs).
+      }
+      notes="Survey and census years are unevenly spaced."
+      source="GSS 2021 PHC · Figure 3.9, p. 21"
+      footer={<LifeTrendData />}
+    >
+      <ChartFrame height={250} label="Life expectancy at birth rose from 40.3 years in 1960 to 65.1 years in 2021">
+        <LineChart data={lifeExpectancyTrend} margin={{ top: 24, right: 16, left: -10, bottom: 0 }}>
+          <CartesianGrid stroke={C.grid} vertical={false} />
+          <XAxis dataKey="year" {...axisCommon} tick={tick} padding={{ left: 20, right: 8 }} />
+          <YAxis {...axisCommon} tick={tick} domain={[0, 70]} ticks={[0, 20, 40, 60]} width={34} />
+          <Tooltip content={makeTooltip({ unit: " years" })} />
+          <Line type="linear" dataKey="value" name="Life expectancy" stroke={C.teal} strokeWidth={2.5} dot={{ r: 4, fill: C.teal, stroke: "#fff", strokeWidth: 2 }} isAnimationActive={false}>
+            <LabelList dataKey="value" position="top" offset={9} formatter={(v: unknown) => Number(v).toFixed(1)} style={labelStyle} />
+          </Line>
+        </LineChart>
+      </ChartFrame>
+      <div className="mt-4 grid gap-3 min-[1440px]:grid-cols-[minmax(0,1fr)_minmax(0,15rem)] min-[1440px]:items-center">
+        <p className="rounded-[var(--radius-md)] px-3 py-2.5 text-[13px] leading-relaxed" style={{ background: tones.teal.bg, color: tones.teal.fg }}>
+          <strong className="font-semibold">{last.value.toFixed(1)} years</strong> in {last.year}, up <strong className="font-semibold">{(last.value - first.value).toFixed(1)} years</strong> from {first.value.toFixed(1)} in {first.year}. Women live longer than men.
         </p>
+        <LifeBySexPair />
       </div>
-    </div>
-
-
-  </>
+    </ChartCard>
   );
 }

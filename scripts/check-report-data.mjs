@@ -7,6 +7,7 @@ import * as governance from '../data/governanceData.ts';
 import * as youth from '../data/youthBulgeData.ts';
 import * as sdg from '../data/sdgData.ts';
 import * as additions from '../data/reportAdditions.ts';
+import * as extra from '../data/publicationAdditions.ts';
 import { indicatorExplanations } from '../data/indicatorExplanations.ts';
 import { cardExplanations, kpiExplanationKeys } from '../data/cardExplanations.ts';
 
@@ -62,4 +63,41 @@ assert.equal(environment.forestReserveArea2025.length, 12); // Absent regions mu
 close(environment.forestReserveArea2025.reduce((s,d) => s + d.area, 0), environment.forestReserveTotal2025, 5);
 close(additions.enterpriseTypes.slice(0,3).reduce((s,d) => s + Number(d[1].replaceAll(',','')), 0), 2644358);
 for (const d of additions.informalTrade) close(d[1] - d[2], d[4], 0.02);
+// Series added in the October 2026 redesign.
+assert.equal(economy.labourParticipationData.find(d => d.year === '2024').employmentPopulation, 60.6); // Figure 5.17 label
+for (const y of ['y2010', 'y2021', 'y2025']) close(Object.values(extra.regionalShare).reduce((s, r) => s + r[y], 0), 100, 0.15);
+assert.equal(Object.keys(extra.regionalShare).length, 16);
+for (const [region, f] of Object.entries(extra.internalMigrationFlows)) {
+  const net = Number(additions.netMigration2021.find(([n]) => n === region)[1]);
+  close(f.in - f.out, net, 1000); // Sankey totals reproduce Figure 3.11 net migration
+}
+close(Object.values(extra.internalMigrationFlows).reduce((s, f) => s + f.in, 0), Object.values(extra.internalMigrationFlows).reduce((s, f) => s + f.out, 0), 2);
+for (const i of extra.livestockSeries.total.keys()) close(['poultry', 'goats', 'sheep', 'cattle', 'pigs'].reduce((s, k) => s + extra.livestockSeries[k][i], 0), extra.livestockSeries.total[i], 0.21);
+assert.equal(extra.livestockSeries.years.length, extra.livestockSeries.poultry.length);
+for (const d of extra.fishValue) if (d.aquaculture != null) close(d.marine + d.inland + d.aquaculture, d.total, 0.02);
+assert.ok(extra.fishValue.filter(d => d.aquaculture == null).every(d => Number(d.year) <= 2014)); // unlabelled segments stay missing
+close(extra.fishValue.at(-1).total, 20.44); close(extra.fishValue[0].total, 1.94); // values, matching p. 42 text
+close(extra.fishQuantity[1].marine + extra.fishQuantity[1].inland + extra.fishQuantity[1].aquaculture, extra.fishQuantity[1].total, 1);
+close(extra.tilapiaCatfish.at(-1).tilapia + extra.tilapiaCatfish.at(-1).catfish, 124428, 0.5);
+close(extra.tilapiaCatfish[0].tilapia + extra.tilapiaCatfish[0].catfish, 32512, 0.5);
+for (const i of extra.fiscalNominal.years.keys()) {
+  const r = extra.fiscalNominal.revenue, e = extra.fiscalNominal.expenditure;
+  close(r.tax[i] + r.nonTax[i] + r.socialContributions[i] + r.other[i] + r.grants[i], r.total[i], 2);
+  close(e.compensation[i] + e.interest[i] + e.goodsServices[i] + e.capital[i] + e.grantsToUnits[i] + e.socialBenefits[i] + e.other[i] + e.outstandingClaims[i], e.commitment[i], 2);
+  close(e.commitment[i] - e.arrearsClearance[i], e.cash[i], 2); // cash = commitment − net change in arrears
+  close(r.total[i] - e.commitment[i], extra.fiscalNominal.balance.overallCommitment[i], 2);
+}
+for (const q of extra.informalBalanceByNeighbour) {
+  const published = additions.informalTrade.find(r => r[0] === q.quarter)[4];
+  close((q.burkina + q.coteDIvoire + q.togo) / 1000, published, 0.02);
+}
+close(extra.informalTransport.reduce((s, r) => s + r[1], 0), 38.4, 0.05);
+for (const d of extra.tradeGoodsUsd) close(d.export - d.import, d.balance, 0.11);
+close(extra.carbonStockChange.steps.reduce((s, [, v]) => s + v, extra.carbonStockChange.start), extra.carbonStockChange.end, 0.05);
+for (const d of extra.agricultureSpending) close(d.spend / d.total / (d.gva / d.gdp), d.aoi, 0.0006); // AOI = budget share ÷ (GVA ÷ GDP), Table 5.2 money columns
+close(extra.cropSeries.cassava.at(-1), 28.5); close(extra.cropSeries.rice[0], 0.6);
+assert.equal(extra.neverVoted.length, 16);
+assert.equal(extra.neverVoted.filter(r => r.flag).length, 4);
+close(extra.pbciCombined.find(d => d.month === 'Apr 2025').value, 24.4);
+close(Object.values(extra.populationDensity).find(() => true) && extra.populationDensity['Greater Accra'].y2021, 1681.3);
 console.log('Publication data checks passed: source anchors, units/periods, totals, trade balances, regional coverage and cross-page consistency.');

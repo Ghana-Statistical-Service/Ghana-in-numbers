@@ -1,60 +1,45 @@
-import { ReferenceSection, ReferenceTable } from "@/components/shared/ReferenceSection";
 import DashboardShell from "@/components/layout/DashboardShell";
-import CitiesEnvironmentPanel from "@/components/sdg/CitiesEnvironmentPanel";
-import HumanDevelopmentPanel from "@/components/sdg/HumanDevelopmentPanel";
+import { ChildMortalityCard, FoodInsecurityCard, InstitutionsCard, MaternalCard, PlasticCard, PovertyCard, SlumsCard } from "@/components/sdg/SdgSections";
+import { KpiCard, KpiGrid } from "@/components/ui/Card";
+import { Grid, PageBody, PageHeader, Section, SectionNav } from "@/components/ui/Page";
 
 export default function ProgressOnSDGsPage() {
   return (
     <DashboardShell>
-      <main
-        className="flex-1 overflow-y-auto px-5 pt-4 pb-8"
-        style={{ background: "#EEF1F6" }}
-      >
-        {/* Page header */}
-        <div className="flex items-start justify-between mb-5">
-          <div>
-            <h1 style={{ color: "#1B2A4A", fontSize: "2.1rem", fontWeight: 900, lineHeight: 1.15 }}>
-              Progress on SDGs
-            </h1>
-            <p className="text-sm mt-1" style={{ color: "#6B7280" }}>
-              Ghana Statistical Service · Sustainable Development Goals indicators
-            </p>
-          </div>
-          <span
-            className="hidden sm:inline-flex rounded-full px-3 py-1 text-xs font-bold mt-1"
-            style={{ background: "#EFF6FF", color: "#1D4ED8" }}
-          >
-            SDG Dashboard
-          </span>
-        </div>
+      <PageBody>
+        <PageHeader
+          eyebrow="Chapter 8"
+          title="Progress on the SDGs"
+          description="Selected Sustainable Development Goal indicators: poverty, hunger, maternal and child survival, urban slums, coastal plastics and bribery."
+          meta={[{ label: "Sources", value: "GSS MPI, FIES, GDHS, PHC, SDG Indicator Database" }, { label: "Latest", value: "Q1–Q3 2025 (poverty, food insecurity)" }]}
+        />
 
-        <div className="space-y-6">
-          {/* Section 1 */}
-          <section>
-            <p className="text-lg font-bold mb-3" style={{ color: "#1D4ED8" }}>
-              Human Development and Basic Needs
-            </p>
-            <HumanDevelopmentPanel />
-          </section>
+        <KpiGrid>
+          <KpiCard label="Multidimensionally poor" value="23.0" unit="%" period="Q1–Q3 2025 average" explain={{ indicator: "poverty" }} note="31.2% in 2022" />
+          <KpiCard label="Food insecurity" value="39.8" unit="%" period="Q1–Q3 2025 average" explain={{ indicator: "food" }} note="About 13.0 million people" />
+          <KpiCard label="Maternal mortality ratio" value="301" unit="per 100,000 live births" period="2021 census" explain={{ indicator: "maternal" }} />
+          <KpiCard label="Under-five mortality" value="40" unit="per 1,000 live births" period="2022 GDHS" explain={{ indicator: "underFive" }} note="80 in 2008" />
+          <KpiCard label="Urban residents in slums" value="30.8" unit="%" period="2021 census" explain={{ indicator: "slums" }} />
+        </KpiGrid>
 
-          {/* Section 2 */}
-          <section>
-            <p className="text-lg font-bold mb-3" style={{ color: "#1D4ED8" }}>
-              Cities, Environment and Sustainability
-            </p>
-            <CitiesEnvironmentPanel />
-          </section>
+        <SectionNav items={[{ id: "poverty-food", label: "Poverty and hunger" }, { id: "mortality", label: "Maternal and child health" }, { id: "cities", label: "Cities and coasts" }, { id: "institutions", label: "Institutions" }]} />
 
-          <ReferenceSection guide="governance" title="Institutions and Inclusive Decision-Making" source="Table 2.1, p. 10; Governance Series Wave 3, pp. 92–93">
-            <ReferenceTable headings={["Indicator", "2024", "2025"]} rows={[["Gave a gift to a public official (%)",18.4,16.8],["Feel they have no say in government decisions (%)",42.4,29.7],["Feel they have no influence on government actions (%)",43.2,33.0]]} />
-            <p className="text-xs text-slate-500">The publication reports bribery incidence under SDG 16. The perception indicators provide additional governance context and are not a composite score of institutional performance.</p>
-          </ReferenceSection>
-          {/* Footer */}
-          <p className="text-xs text-right" style={{ color: "#94A3B8" }}>
-            Source: Ghana Statistical Service — Ghana in Numbers 2025
-          </p>
-        </div>
-      </main>
+        <Section id="poverty-food" title="Poverty and food insecurity" description="Poverty fell steadily; hunger rose again in 2025 after three years of decline." source="§8.1 · pp. 101–102">
+          <Grid cols={2}><PovertyCard /><FoodInsecurityCard /></Grid>
+        </Section>
+
+        <Section id="mortality" title="Maternal and child mortality" description="Mothers and young children are far more likely to survive than two decades ago." source="§8.1 · pp. 102–103">
+          <Grid cols={2}><MaternalCard /><ChildMortalityCard /></Grid>
+        </Section>
+
+        <Section id="cities" title="Sustainable cities and coasts" description="Almost a third of urban residents live in slums or informal settlements; coastal plastic remains far above 2016 levels." source="§8.2 · pp. 103–105">
+          <Grid cols="3-2"><SlumsCard /><PlasticCard /></Grid>
+        </Section>
+
+        <Section id="institutions" title="Institutions and inclusive decision-making" description="Bribery incidence fell between 2024 and 2025." source="Table 2.1, p. 10; pp. 92–93">
+          <InstitutionsCard />
+        </Section>
+      </PageBody>
     </DashboardShell>
   );
 }

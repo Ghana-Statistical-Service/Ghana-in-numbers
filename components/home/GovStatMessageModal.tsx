@@ -1,90 +1,48 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 
+/** Shown once per browser on the overview (dismissal remembered in localStorage). A native modal dialog provides focus containment and Escape. */
 export default function GovStatMessageModal() {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    const seen = sessionStorage.getItem("gin-gs-message");
-    if (!seen) setOpen(true);
+    try { if (!localStorage.getItem("gin-gs-message")) setOpen(true); } catch { /* storage unavailable: do not interrupt */ }
   }, []);
 
+  useEffect(() => { if (open) ref.current?.showModal(); }, [open]);
+
   const close = useCallback(() => {
+    ref.current?.close();
     setOpen(false);
-    sessionStorage.setItem("gin-gs-message", "1");
+    try { localStorage.setItem("gin-gs-message", "1"); } catch { /* ignore */ }
   }, []);
 
   if (!open) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: "rgba(15, 23, 42, 0.65)", backdropFilter: "blur(5px)" }}
-      onClick={close}
+    <dialog
+      ref={ref}
+      aria-labelledby="gs-message-title"
+      onCancel={event => { event.preventDefault(); close(); }}
+      onClick={event => { if (event.target === event.currentTarget) close(); }}
+      className="m-auto max-h-[90dvh] w-[min(680px,calc(100vw-24px))] overflow-hidden rounded-[var(--radius-xl)] border-0 bg-surface p-0 text-body shadow-pop"
     >
-      <div
-        className="bg-white rounded-2xl shadow-2xl w-full overflow-hidden relative flex flex-col"
-        style={{ maxWidth: "680px", maxHeight: "90vh" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Ghana flag stripe */}
-        <div className="flex h-1.5 flex-shrink-0">
-          <div className="flex-1" style={{ background: "#CE1126" }} />
-          <div className="flex-1" style={{ background: "#FCD116" }} />
-          <div className="flex-1" style={{ background: "#006B3F" }} />
+      <div className="flex max-h-[90dvh] flex-col">
+        <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-5 sm:px-8">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-brand">Ghana in Numbers 2025</p>
+            <h2 id="gs-message-title" className="mt-1 text-2xl font-semibold leading-tight text-ink">Message from the Government Statistician</h2>
+          </div>
+          <button type="button" onClick={close} aria-label="Close message" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted hover:bg-surface-muted hover:text-ink"><X size={20} /></button>
         </div>
-
-        {/* Close button */}
-        <button
-          onClick={close}
-          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-          style={{ background: "#F1F5F9", color: "#64748B" }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#E2E8F0";
-            (e.currentTarget as HTMLButtonElement).style.color = "#1B2A4A";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#F1F5F9";
-            (e.currentTarget as HTMLButtonElement).style.color = "#64748B";
-          }}
-          aria-label="Close message"
-        >
-          <X size={16} />
-        </button>
-
-        {/* Scrollable body */}
-        <div className="overflow-y-auto px-5 sm:px-8 pt-7 pb-8 scrollbar-thin" style={{ scrollbarColor: "#CBD5E1 transparent" }}>
-
-          {/* Title */}
-          <h2
-            className="font-bold leading-tight mb-1"
-            style={{ fontSize: "1.75rem", color: "#382873" }}
-          >
-            Message from
-          </h2>
-          <h2
-            className="font-bold leading-tight mb-3"
-            style={{ fontSize: "1.75rem", color: "#382873" }}
-          >
-            the Government Statistician
-          </h2>
-
-          <hr className="mb-5" style={{ borderColor: "#E2E8F0" }} />
-
-          {/* Let the message flow into the space below the portrait. */}
-          <div className="flow-root space-y-3 text-sm leading-relaxed" style={{ color: "#374151" }}>
-            <div className="mb-4 flex justify-center sm:float-left sm:mr-6 sm:mb-3 sm:block">
-              <Image
-                src="/gs.jpg"
-                alt="Dr. Alhassan Iddrisu, Government Statistician"
-                width={210}
-                height={260}
-                className="rounded-lg object-cover w-[160px] sm:w-[210px] h-auto"
-                style={{ objectPosition: "center top" }}
-              />
+        <div className="overflow-y-auto px-6 py-6 sm:px-8">
+          <div className="flow-root space-y-3 text-[14.5px] leading-relaxed text-body">
+            <div className="mb-4 flex justify-center sm:float-left sm:mb-3 sm:mr-6 sm:block">
+              <Image src="/gs.jpg" alt="Dr Alhassan Iddrisu, Government Statistician" width={200} height={248} className="h-auto w-[150px] rounded-lg object-cover sm:w-[190px]" style={{ objectPosition: "center top" }} />
             </div>
             <p>
               Ghana in Numbers presents official statistics to advance understanding of Ghana&apos;s
@@ -120,29 +78,15 @@ export default function GovStatMessageModal() {
               by the decisions it improves and the development outcomes it supports.
             </p>
           </div>
-
-          {/* Signatory */}
-          <div className="mt-6 pt-5 border-t" style={{ borderColor: "#E2E8F0" }}>
-            <p className="font-bold text-sm tracking-wide" style={{ color: "#1B2A4A" }}>
-              DR ALHASSAN IDDRISU
-            </p>
-            <p className="text-xs mt-0.5" style={{ color: "#6B7280" }}>
-              Government Statistician, Ghana Statistical Service
-            </p>
-          </div>
-
-          {/* Footer action */}
-          <div className="mt-5 flex justify-end">
-            <button
-              onClick={close}
-              className="px-5 py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
-              style={{ background: "var(--primary)" }}
-            >
-              Enter Dashboard
-            </button>
+          <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-line pt-5">
+            <div>
+              <p className="text-sm font-semibold tracking-wide text-ink">DR ALHASSAN IDDRISU</p>
+              <p className="mt-0.5 text-[13px] text-muted">Government Statistician, Ghana Statistical Service</p>
+            </div>
+            <button type="button" onClick={close} className="h-10 rounded-[var(--radius-md)] bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-hover">Enter dashboard</button>
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

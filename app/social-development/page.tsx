@@ -1,87 +1,73 @@
-import Sidebar from "@/components/layout/Sidebar";
-import TopBar from "@/components/layout/TopBar";
-import CompletionTrajectoryChart from "@/components/social-development/CompletionTrajectoryChart";
-import HealthWellbeingPanel from "@/components/social-development/HealthWellbeingPanel";
-import LearningOpportunityChart from "@/components/social-development/LearningOpportunityChart";
-import LivingConditionsPanel from "@/components/social-development/LivingConditionsPanel";
-import ProtectionPanel from "@/components/social-development/ProtectionPanel";
-import PupilTeacherRatioChart from "@/components/social-development/PupilTeacherRatioChart";
-import SocialDevelopmentKPIStrip from "@/components/social-development/SocialDevelopmentKPIStrip";
+import { BookOpen, House, Lightbulb, School, ShieldPlus } from "lucide-react";
+import DashboardShell from "@/components/layout/DashboardShell";
+import OverviewTopBar from "@/components/home/OverviewTopBar";
+import {
+  ChildMarriageCard, CompletionCard, ElectricityCard, EnrolmentCard, HealthInsuranceCard, HousingCard, LearningGlanceCard, NhisHeadlineCard, TeachersCard,
+  TeenageMotherhoodCard, ToiletCard, ViolenceCard, WaterCard,
+} from "@/components/social-development/SocialSections";
+import { KpiCard, KpiGrid } from "@/components/ui/Card";
+import { Grid, PageBody, PageHeader, Section, SectionNav } from "@/components/ui/Page";
+import { enrolmentRateData, healthInsuranceCoverageData, housingDeficitData, electricityAccessData } from "@/data/socialDevelopmentData";
 
 export default function SocialDevelopmentPage() {
+  const enrol = enrolmentRateData.at(-1)!, prevEnrol = enrolmentRateData.at(-2)!;
+  const nhis = healthInsuranceCoverageData.at(-1)!, housing = housingDeficitData.at(-1)!, power = electricityAccessData.at(-1)!;
   return (
-    <div className="flex h-full overflow-hidden" style={{ background: "#EEF1F6" }}>
-      <Sidebar />
+    <DashboardShell>
+      <OverviewTopBar page="Social Development" />
+      <PageBody>
+        <PageHeader
+          eyebrow="Chapter 4"
+          title="Social Development"
+          description="Schooling, health insurance and adolescent health, housing and basic services, and protection from violence and child marriage."
+          meta={[{ label: "Sources", value: "EMIS, NHIA, GDHS, PHC 2010 and 2021" }, { label: "Latest", value: "2025 (NHIS); 2023/24 (education)" }]}
+        />
 
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopBar />
+        <KpiGrid>
+          <KpiCard icon={BookOpen} label="Primary NER" value={enrol.primaryNet.toFixed(1)} unit="%" period={enrol.year} explain={{ label: "Primary NER" }} note={`Net enrolment; ${prevEnrol.primaryNet.toFixed(1)}% in ${prevEnrol.year}`} />
+          <KpiCard icon={School} label="JHS GER" value={enrol.jhsGross.toFixed(1)} unit="%" period={enrol.year} explain={{ label: "JHS GER" }} note={`Gross enrolment; ${prevEnrol.jhsGross.toFixed(1)}% in ${prevEnrol.year}`} />
+          <KpiCard icon={ShieldPlus} label="Health insurance" value={nhis.value.toFixed(1)} unit="%" period={nhis.year} explain={{ label: "Health Insurance" }} note="Active NHIS membership" />
+          <KpiCard icon={House} label="Housing deficit" value={housing.deficit.toFixed(2)} unit="million units" period={housing.year} qualifier="Estimate" explain={{ label: "Housing Deficit" }} note="2.8 million in 2010" />
+          <KpiCard icon={Lightbulb} label="Electricity access" value={power.value.toFixed(1)} unit="%" period={`${power.year} census`} explain={{ label: "Electricity Access" }} note="Households with access" />
+        </KpiGrid>
 
-        <main className="flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-4">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h1
-                className="font-bold leading-tight"
-                style={{ fontSize: "2.1rem", color: "#1B2A4A" }}
-              >
-                Social Development
-              </h1>
-              <p className="text-sm mt-0.5" style={{ color: "#6B7280" }}>
-                Ghana Statistical Service · Learning, health, living conditions and protection indicators
-              </p>
-            </div>
-            <div className="hidden xl:flex items-center gap-2 rounded-full border border-white bg-white/70 px-3 py-1.5 shadow-sm">
-              <span className="h-2 w-2 rounded-full" style={{ background: "#17B8A6" }} />
-              <span className="text-xs font-semibold" style={{ color: "#475569" }}>
-                Indicators scoped to supplied Ghana in Numbers references
-              </span>
-            </div>
-          </div>
+        <SectionNav items={[{ id: "learning", label: "Learning" }, { id: "health", label: "Health" }, { id: "living-conditions", label: "Living conditions" }, { id: "protection", label: "Inclusion and protection" }]} />
 
-          <SocialDevelopmentKPIStrip />
+        <Section id="learning" accent="green" title="Learning and opportunity" description="Getting children into primary school is no longer the main difficulty; keeping them in school afterwards is." source="§4.1 · pp. 28–29">
+          <LearningGlanceCard />
+          <Grid cols={2} className="mt-4 lg:mt-5">
+            <EnrolmentCard />
+            <CompletionCard />
+          </Grid>
+          <div className="mt-4 lg:mt-5"><TeachersCard /></div>
+        </Section>
 
-          <section className="space-y-3">
-            <div>
-              <p className="text-lg font-bold" style={{ color: "#00A651" }}>Learning and opportunity</p>
-              <p className="text-xs" style={{ color: "#94A3B8" }}>Enrolment, completion and trained teacher ratios.</p>
-            </div>
-            <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr", height: "450px" }}>
-              <LearningOpportunityChart />
-              <CompletionTrajectoryChart />
-            </div>
-            <div style={{ height: "360px" }}>
-              <PupilTeacherRatioChart />
-            </div>
-          </section>
+        <Section id="health" accent="green" title="Health and well-being" description="Insurance coverage more than doubled since 2010; teenage motherhood remains far higher in rural areas." source="§4.2 · pp. 30–31">
+          <Grid cols="1-2">
+            <NhisHeadlineCard />
+            <HealthInsuranceCard />
+          </Grid>
+          <div className="mt-4 lg:mt-5"><TeenageMotherhoodCard /></div>
+        </Section>
 
-          <section className="space-y-3">
-            <div>
-              <p className="text-lg font-bold" style={{ color: "#00A651" }}>Health and well-being</p>
-              <p className="text-xs" style={{ color: "#94A3B8" }}>Health insurance coverage and teenage motherhood.</p>
-            </div>
-            <HealthWellbeingPanel />
-          </section>
+        <Section id="living-conditions" accent="green" title="Living conditions" description="More homes and better basic services, with remaining gaps in electricity and sanitation." source="§4.3 · pp. 32–34">
+          <Grid cols={2}>
+            <HousingCard />
+            <ElectricityCard />
+          </Grid>
+          <Grid cols={2} className="mt-4 lg:mt-5">
+            <WaterCard />
+            <ToiletCard />
+          </Grid>
+        </Section>
 
-          <section className="space-y-3">
-            <div>
-              <p className="text-lg font-bold" style={{ color: "#00A651" }}>Living conditions</p>
-              <p className="text-xs" style={{ color: "#94A3B8" }}>Housing deficits and household utilities.</p>
-            </div>
-            <LivingConditionsPanel />
-          </section>
-
-          <section className="space-y-3">
-            <div>
-              <p className="text-lg font-bold" style={{ color: "#00A651" }}>Inclusion and protection</p>
-              <p className="text-xs" style={{ color: "#94A3B8" }}>Gender-based violence prevalence and child marriage.</p>
-            </div>
-            <ProtectionPanel />
-          </section>
-
-          <p className="text-xs text-right pb-1" style={{ color: "#9CA3AF" }}>
-            Source: Ghana In Numbers 2025 reference indicators | Powered by StatsBank | © GSS
-          </p>
-        </main>
-      </div>
-    </div>
+        <Section id="protection" accent="green" title="Inclusion and protection" description="Reported violence and child marriage fell, but neither has ended." source="§4.4 · pp. 31–34">
+          <Grid cols="3-2">
+            <ViolenceCard />
+            <ChildMarriageCard />
+          </Grid>
+        </Section>
+      </PageBody>
+    </DashboardShell>
   );
 }

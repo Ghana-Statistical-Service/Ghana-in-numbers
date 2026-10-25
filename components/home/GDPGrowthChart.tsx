@@ -1,105 +1,34 @@
 "use client";
 
-import CardExplanation from "@/components/shared/CardExplanation";
-
-
-import { useState, useEffect } from "react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LabelList,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, Tooltip, XAxis, YAxis } from "recharts";
+import { ChartCard } from "@/components/ui/Card";
+import { ChartFrame, C, axisCommon, labelStyle, makeTooltip, tick } from "@/components/ui/chart";
 import { gdpGrowthData as data } from "@/data/dummy";
 
+const status: Record<string, string> = { "2024": "revised", "2025": "provisional" };
 
 export default function GDPGrowthChart() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
-
-
   return (
-    <>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col h-full">
-
-        {/* Header */}
-        <div className="flex items-start justify-between mb-1 flex-shrink-0">
-          <p className="text-gray-800 font-bold text-sm">
-            GDP Growth Rate{" "}
-            <span className="text-gray-400 font-normal">(2017 — 2025, Production)</span>
-          </p>
-          <CardExplanation indicator="gdpGrowth" />
-        </div>
-
-
-        {/* Chart — always visible */}
-        <div className="flex-1 min-h-0" style={{ minHeight: "180px" }}>
-          {mounted && (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <AreaChart data={data} margin={{ top: 20, right: 20, left: -18, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="gdpGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#3B82F6" stopOpacity={0.18} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                <XAxis
-                  dataKey="year"
-                  tick={{ fontSize: 10, fill: "#9CA3AF" }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <YAxis
-                  tickFormatter={(v) => `${v}%`}
-                  tick={{ fontSize: 10, fill: "#9CA3AF" }}
-                  tickLine={false}
-                  axisLine={false}
-                  domain={[-1, 10]}
-                  ticks={[0, 2, 4, 6, 8]}
-                />
-                <Tooltip
-                  formatter={(value) => [`${value}%`, "GDP Growth"]}
-                  contentStyle={{ fontSize: "11px", borderRadius: "8px", border: "1px solid #e5e7eb" }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#3B82F6"
-                  strokeWidth={2.5}
-                  fill="url(#gdpGrad)"
-                  dot={{ r: 4, fill: "#fff", stroke: "#3B82F6", strokeWidth: 2.5 }}
-                  activeDot={{ r: 5, fill: "#3B82F6", strokeWidth: 0 }}
-                >
-                  <LabelList
-                    dataKey="value"
-                    position="top"
-                    formatter={(v) => `${v}%`}
-                    style={{ fontSize: "9px", fill: "#374151", fontWeight: 700 }}
-                  />
-                </Area>
-              </AreaChart>
-            </ResponsiveContainer>
-          )}
-        </div>
-
-        <div className="flex justify-end flex-shrink-0 mt-1">
-          <span
-            className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded"
-            style={{ background: "#F1F5F9", color: "#475569" }}
-          >
-            ▲ +0.2 pp
-          </span>
-        </div>
-      </div>
-
-      {/* Fixed explanation overlay — outside the card, on top of the page */}
-
-    </>
+    <ChartCard
+      title="Real GDP growth"
+      subtitle="Annual change in output at 2013 prices, %"
+      period="2017–2025"
+      explain={{ indicator: "gdpGrowth" }}
+      notes="2024 revised; 2025 provisional (lighter bar). Growth was 6.0% in 2025, 0.2 percentage points above 2024."
+      source="GSS Annual GDP 2013–2025; Ghana in Numbers 2025, p. 38"
+    >
+      <ChartFrame height={220} label="Real GDP growth by year: 2017 8.1%, 2018 6.2%, 2019 6.5%, 2020 0.5%, 2021 5.1%, 2022 3.8%, 2023 3.1%, 2024 5.8% revised, 2025 6.0% provisional">
+        <BarChart data={data} margin={{ top: 22, right: 4, left: -8, bottom: 0 }}>
+          <CartesianGrid stroke={C.grid} vertical={false} />
+          <XAxis dataKey="year" {...axisCommon} tick={tick} />
+          <YAxis {...axisCommon} tick={tick} domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} tickFormatter={v => `${v}%`} width={40} />
+          <Tooltip cursor={{ fill: "rgba(60,47,163,0.06)" }} content={makeTooltip({ unit: "%", labelFormat: l => status[l] ? `${l} (${status[l]})` : l })} />
+          <Bar dataKey="value" name="Real GDP growth" radius={[4, 4, 0, 0]} isAnimationActive={false} maxBarSize={36}>
+            {data.map(d => <Cell key={d.year} fill={d.year === "2025" ? C.purpleLight : C.purple} />)}
+            <LabelList dataKey="value" position="top" formatter={(v: unknown) => `${Number(v).toFixed(1)}`} style={labelStyle} />
+          </Bar>
+        </BarChart>
+      </ChartFrame>
+    </ChartCard>
   );
 }

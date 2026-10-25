@@ -115,3 +115,27 @@ All remaining report tables now open as visual sections. Enterprises show busine
 ## Data assistant integration
 
 Ask AI now opens a global, responsive side panel connected through a server-only OpenAI Responses API route. The catalogue contains 83 publication and cached JSON datasets. Retrieval preserves source periods and units; calculations reference retrieved numeric cells. Citations are built from verified catalogue IDs, and unavailable data is not substituted with an invented forecast. Migration and sex-composition chart data are shared with the catalogue. Request bounds, timeouts, per-process usage limits, same-origin checks and safe error messages are included. Six live statistical questions and a live browser answer passed, alongside local-provider interaction tests, catalogue/calculation tests, publication checks, client-secret scanning and a production build. Public deployment requires server environment configuration and shared durable usage accounting; current in-memory counters are not an account spending cap. See data-assistant.md for configuration and limits.
+
+
+## October 2026 redesign and second document review
+
+A full re-read of the publication and a visual check of every chart page produced the additions and corrections recorded in `coverage-record.md`. New transcriptions live in `data/publicationAdditions.ts` and are covered by `scripts/check-report-data.mjs`.
+
+Corrections:
+
+1. **Employment-to-population ratio, 2024:** 60.4% → **60.6%**, as labelled in Figure 5.17 (verified at 400 dpi). The earlier entry in this audit was not supported by the figure.
+2. **Figure 5.6 unit:** the chart is captioned in hundred thousand tonnes but its labels are GH¢ billion values (totals 1.94 and 20.44 equal the p. 42 value text). The dashboard now shows the full 2010–2025 value series as values and keeps the two printed quantity years separately.
+3. **NEET regional chart label:** the youth page described Q3 2025 QLFS data as "2021 PHC"; corrected.
+4. **Unsupported statements removed** from the youth and agriculture deep dives (see coverage record, Chapter 9 row). Causal language now follows the publication's "possible explanations, not measured causes".
+5. **Dual-axis charts removed:** real GDP level and growth, and merchandise trade values and balance, are separate panels with their own units.
+
+Additions: regional share 2010/2021, density, regional fertility, in/out migration totals, US$ GDP and per capita, full fiscal tables in GH¢ and % of GDP, nominal credit growth, PBCI, PPI 2023–2024, local/imported dated values, enterprise start years, management by sex, regional business conditions, open-space vs mobile, tourism overnight/same-day split, informal trade by neighbour, goods, transport and transporter sex, AOI series, annual crops, livestock, fish values, tilapia/catfish, 2024 gift requests, never-voted by region, carbon stock change, climate monthly averages, DACF survey detail.
+
+New documented conflicts (not resolved by guesswork):
+
+- Table 5.2's printed "GVA share of GDP" column is about one point higher than GVA ÷ GDP from its own money columns; the AOI reproduces from the latter. The 2024 GDP in this table (GH¢1,176.2bn) predates the revised national-accounts figure (GH¢1,182.8bn).
+- Figure 6.6 district-election map: four labels (Bono East 0.5%, Greater Accra 4.0%, Oti 8.5%, Upper West 7.7%) sit in the "above 10%" shading class. Labels are shown and flagged.
+- Figure 5.13: text 51.3% and label 51.9% for local inflation are consistent once dated (Jan 2023 vs end-2022 peak); shown as such.
+- Table 11.1 gives 29.2% for "no say"; the figure, chapter text and Table 2.1 give 29.7%.
+
+Validation for this pass: TypeScript, `scripts/check-report-data.mjs` (extended), `scripts/check-assistant.cjs` (105 datasets), production build, and browser tests with a mocked assistant (48 checks: navigation, search and Ctrl/Cmd+K, switches, Explain, View data, chatbot states, mobile drawer and full-screen chat, no horizontal overflow at 390 px and 820 px).

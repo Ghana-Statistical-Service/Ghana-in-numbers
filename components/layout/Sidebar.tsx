@@ -1,214 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  Users,
-  Users2,
-  GraduationCap,
-  TrendingUp,
-  Landmark,
-  Leaf,
-  Target,
-  BookOpen,
-  Wheat,
-  Sparkles,
-  Star,
-  FileText,
-  Download,
-  Search,
-  ChevronRight,
-  ChevronDown,
-} from "lucide-react";
-import { statOfDay } from "@/data/dummy";
+import { ExternalLink, Search, X } from "lucide-react";
+import { navGroups } from "@/lib/navigation";
 
-const navItems = [
-  {
-    label: "Ghana at a Glance",
-    icon: LayoutDashboard,
-    href: "/",
-    children: [
-      { label: "Population and society",         icon: Users,        href: "/population-and-society" },
-      { label: "Social Development",             icon: GraduationCap,href: "/social-development" },
-      { label: "Business & Economy",             icon: TrendingUp,   href: "/business-and-economy" },
-      { label: "Governance",                     icon: Landmark,     href: "/governance" },
-      { label: "Environment and Climate change", icon: Leaf,         href: "/environment-and-climate-change" },
-      { label: "Progress on SDGs",              icon: Target,       href: "/progress-on-sdgs" },
-    ],
-  },
-  {
-    label: "Thematic Deep Dives",
-    icon: BookOpen,
-    href: "#",
-    children: [
-      { label: "Youth bulge",                    icon: Users2, href: "/youth-bulge" },
-      { label: "Agriculture, Forestry & Fishing", icon: Wheat,     href: "/agriculture-forestry-fishing" },
-      { label: "Data Stories",         icon: Sparkles,  href: "/data-story" },
-    ],
-  },
-];
+type Props = { onSearch: () => void; onNavigate?: () => void; onClose?: () => void; idPrefix?: string };
 
-const bottomItems = [
-  { label: "KPI Watchlist", icon: Star },
-  { label: "Reports", icon: FileText },
-  { label: "Data Downloads", icon: Download },
-];
+export function GssLockup({ compact = false }: { compact?: boolean }) {
+  return (
+    <span className="flex min-w-0 items-center gap-3">
+      {/* The seal is drawn in navy line-work, so it sits on a white disc to keep its contrast on the purple sidebar. */}
+      <span className={`flex shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-white/30 ${compact ? "h-9 w-9 p-[3px]" : "h-11 w-11 p-1"}`}>
+        <Image src="/logo.svg" alt="" width={44} height={43} className="h-full w-full object-contain" priority />
+      </span>
+      <span className="min-w-0 leading-tight">
+        <span className={`block font-semibold tracking-tight text-white ${compact ? "text-[15px]" : "text-base"}`}>Ghana in Numbers</span>
+        <span className="block text-xs text-white/75">Ghana Statistical Service</span>
+      </span>
+    </span>
+  );
+}
 
-export default function Sidebar() {
+export default function Sidebar({ onSearch, onNavigate, onClose, idPrefix = "nav" }: Props) {
   const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [expanded, setExpanded] = useState<Set<string>>(new Set(["Ghana at a Glance"]));
-
-  function toggleExpand(label: string) {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      next.has(label) ? next.delete(label) : next.add(label);
-      return next;
-    });
-  }
+  // Detected after hydration so server and client markup match.
+  const [isMac, setIsMac] = useState(false);
+  useEffect(() => setIsMac(/Mac|iPhone|iPad/.test(navigator.platform)), []);
 
   return (
-    <aside
-      className="flex flex-col h-screen w-64 flex-shrink-0 overflow-hidden"
-      style={{ background: "var(--sidebar-bg)" }}
-    >
-      {/* Logo */}
-      <Link href="/" className="flex items-center gap-3 px-4 py-4 border-b border-white/10 hover:opacity-90 transition-opacity">
-        <div className="w-10 h-10 flex-shrink-0">
-          <Image
-            src="/logo.svg"
-            alt="GSS Logo"
-            width={40}
-            height={40}
-            className="rounded"
-          />
-        </div>
-        <div>
-          <p className="text-white font-bold text-sm leading-tight">Ghana in Numbers</p>
-          <p className="text-white/50 text-xs leading-tight">Official Statistics at Glance</p>
-        </div>
-      </Link>
-
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin px-2 py-3">
-        {navItems.map((parent) => {
-          const ParentIcon = parent.icon;
-          const isOpen = expanded.has(parent.label);
-          return (
-            <div key={parent.label}>
-              <button
-                onClick={() => toggleExpand(parent.label)}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 text-left transition-colors"
-                style={{ color: "rgba(255,255,255,0.65)" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "var(--sidebar-hover)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                }}
-              >
-                <ParentIcon size={16} className="flex-shrink-0" />
-                <span className="flex-1 text-base font-medium">{parent.label}</span>
-                {isOpen
-                  ? <ChevronDown size={14} className="opacity-50" />
-                  : <ChevronRight size={14} className="opacity-50" />}
-              </button>
-
-              {isOpen && parent.children.map((child) => {
-                const ChildIcon = child.icon;
-                const isActive = pathname === child.href && child.href !== "#";
-                return (
-                  <Link
-                    key={child.label}
-                    href={child.href}
-                    className="w-full flex items-center gap-3 pl-8 pr-3 py-1.5 rounded-lg mb-0.5 text-left transition-colors"
-                    style={{
-                      background: isActive ? "var(--sidebar-active)" : "transparent",
-                      color: isActive ? "#ffffff" : "rgba(255,255,255,0.55)",
-                      display: "flex",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "var(--sidebar-hover)";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-                    }}
-                  >
-                    <ChildIcon size={14} className="flex-shrink-0" />
-                    <span className="text-base font-medium">{child.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          );
-        })}
-
-        <div className="my-3 border-t border-white/10" />
-
-        {/* Search */}
-        <div className="px-2 mb-3">
-          <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-            <Search size={14} className="text-white/40 flex-shrink-0" />
-            <input
-              type="text"
-              placeholder="Search indicators..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-white/70 text-xs w-full outline-none placeholder-white/30"
-            />
-          </div>
-        </div>
-
-        <div className="my-2 border-t border-white/10" />
-
-        {/* Bottom items */}
-        {bottomItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.label}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 text-left transition-colors"
-              style={{ color: "rgba(255,255,255,0.65)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "var(--sidebar-hover)";
-                (e.currentTarget as HTMLButtonElement).style.color = "#fff";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.65)";
-              }}
-            >
-              <Icon size={16} className="flex-shrink-0" />
-              <span className="flex-1 text-base font-medium">{item.label}</span>
-              <ChevronRight size={14} className="opacity-50" />
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* Stat of the Day */}
-      <div
-        className="mx-3 mb-3 p-3 rounded-xl"
-        style={{ background: "rgba(255,255,255,0.08)" }}
-      >
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xl">🍜</span>
-          <p className="text-white font-semibold text-sm">Stat of the Day</p>
-        </div>
-        <p className="text-white font-bold text-base">
-          {statOfDay.value}{" "}
-          <span className="text-white/70 font-normal text-xs">{statOfDay.label}</span>
-        </p>
+    <aside aria-label="Site" className="on-dark flex h-full w-[272px] shrink-0 flex-col bg-nav text-white">
+      <div className="flex items-center justify-between gap-2 px-4 pb-4 pt-5">
+        <Link href="/" onClick={onNavigate} aria-label="Ghana in Numbers, overview" className="rounded-lg">
+          <GssLockup />
+        </Link>
+        {onClose && (
+          <button type="button" onClick={onClose} aria-label="Close navigation" className="flex h-10 w-10 items-center justify-center rounded-lg text-white/80 hover:bg-white/10 hover:text-white">
+            <X size={20} />
+          </button>
+        )}
       </div>
 
-      {/* Footer */}
-      <div className="px-4 py-2 border-t border-white/10">
-        <p className="text-white/30 text-xs text-center">
-          Powered by StatsBank | © GSS
-        </p>
+      <div className="px-3 pb-3">
+        <button
+          type="button"
+          onClick={onSearch}
+          className="flex h-10 w-full items-center gap-2.5 rounded-lg bg-white/10 px-3 text-left text-sm text-white/80 ring-1 ring-inset ring-white/15 transition-colors hover:bg-white/15 hover:text-white"
+        >
+          <Search size={16} aria-hidden className="shrink-0" />
+          <span className="flex-1">Search indicators</span>
+          <kbd className="hidden rounded border border-white/20 px-1.5 py-0.5 font-sans text-xs text-white/70 lg:inline">{isMac ? "⌘K" : "Ctrl K"}</kbd>
+        </button>
+      </div>
+
+      <nav aria-label="Main" className="scrollbar-thin flex-1 overflow-y-auto px-3 pb-4">
+        {navGroups.map((group, index) => (
+          <div key={group.label ?? index} className={index ? "mt-5" : ""}>
+            {group.label && <p id={`${idPrefix}-group-${index}`} className="mb-1.5 px-3 text-xs font-semibold uppercase tracking-[0.08em] text-white/60">{group.label}</p>}
+            <ul aria-labelledby={group.label ? `${idPrefix}-group-${index}` : undefined} className="space-y-0.5">
+              {group.items.map(item => {
+                const active = pathname === item.href;
+                const Icon = item.icon;
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={onNavigate}
+                      aria-current={active ? "page" : undefined}
+                      className={`group relative flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${active ? "bg-white text-nav font-semibold shadow-sm" : "text-white/85 hover:bg-white/10 hover:text-white"}`}
+                    >
+                      <Icon size={18} aria-hidden className={`shrink-0 ${active ? "text-brand" : "text-white/70 group-hover:text-white"}`} />
+                      <span className="leading-snug">{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+      <div className="border-t border-white/10 bg-nav-deep/60 px-5 py-4 text-xs leading-relaxed text-white/70">
+        <p>Figures from <span className="text-white">Ghana in Numbers 2025</span>. Reference periods are shown with each indicator.</p>
+        <a href="https://statsghana.gov.gh/" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 rounded text-white/85 underline-offset-2 hover:text-white hover:underline">
+          statsghana.gov.gh <ExternalLink size={12} aria-hidden /><span className="sr-only">(opens in a new tab)</span>
+        </a>
       </div>
     </aside>
   );

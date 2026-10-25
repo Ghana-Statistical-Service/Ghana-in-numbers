@@ -1,37 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import AssistantProvider from "@/components/assistant/AssistantProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Inter is the closest open font to the statsghana.gov.gh stack ("Segoe UI", Inter, "Helvetica Neue").
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Ghana in Numbers | Official Statistics at Glance",
-  description: "Ghana Statistical Service – key national indicators, charts, and regional data at a glance.",
-  icons: {
-    icon: "/favicon.svg",
-  },
+  title: "Ghana in Numbers | Ghana Statistical Service",
+  description: "Official statistics from Ghana in Numbers 2025: population, social development, the economy, governance, environment and the SDGs.",
+  icons: { icon: "/favicon.svg" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#241B5A",
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="h-full overflow-hidden" suppressHydrationWarning><AssistantProvider>{children}</AssistantProvider></body>
+    <html lang="en-GB" className={`${inter.variable} h-full antialiased`}>
+      <body className="h-full overflow-hidden" suppressHydrationWarning>
+        <AssistantProvider>{children}</AssistantProvider>
+      </body>
     </html>
   );
 }

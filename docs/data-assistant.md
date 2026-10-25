@@ -1,6 +1,6 @@
 # Ask Ghana in Numbers
 
-The top-bar **Ask AI** button opens a right-hand chat panel throughout the dashboard. It supports follow-up questions, suggested questions, links to the dashboard sources, stopping a request and starting a new conversation. Desktop and mobile share the same panel.
+A persistent **Ask Ghana in Numbers** launcher sits at the bottom-right of every page. On desktop it opens a 400 px chat window anchored above the launcher; on phones it opens a full-screen sheet that respects safe areas and the on-screen keyboard. Minimising keeps the conversation (and any request in progress); **New conversation** clears it. It supports suggested questions, follow-ups, source citations, stop and retry. It never opens automatically. Page content reserves bottom padding so the launcher does not cover the last chart or table, and the Explain panels and search dialog sit above it in the top layer.
 
 ## Local configuration
 
@@ -19,7 +19,7 @@ The model is configurable. GPT-5.4 Mini was verified as available to the configu
 
 ## How answers are assembled
 
-1. The server identifies candidate indicators from a catalogue of 83 datasets.
+1. The server identifies candidate indicators from a catalogue of 105 datasets, including the series added in the October 2026 redesign (`data/publicationAdditions.ts`).
 2. The model can search the catalogue and read selected records, filtered by year, region or another dimension.
 3. Tool results include the values, units, reference period, publication definitions, interpretation and source.
 4. Calculations use server code and references to numeric cells that were actually retrieved. Differences, percentage-point changes, percentage growth, ratios, percentages and unit conversions are supported. Unread cells, missing values, invalid numbers and zero-denominator ratios are rejected.

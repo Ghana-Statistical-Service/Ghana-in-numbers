@@ -1,65 +1,41 @@
-import ClimateMonthlyPanel from "@/components/environment/ClimateMonthlyPanel";
-import EnvironmentKPIStrip from "@/components/environment/EnvironmentKPIStrip";
-import ForestCarbonPanel from "@/components/environment/ForestCarbonPanel";
-import Sidebar from "@/components/layout/Sidebar";
-import TopBar from "@/components/layout/TopBar";
+import DashboardShell from "@/components/layout/DashboardShell";
+import { CarbonCard, CarbonChangeCard, ForestCard, ForestShareCard, RainfallCard, TemperatureCard } from "@/components/environment/EnvironmentSections";
+import { KpiCard, KpiGrid } from "@/components/ui/Card";
+import { Grid, PageBody, PageHeader, Section, SectionNav } from "@/components/ui/Page";
 
 export default function EnvironmentAndClimateChangePage() {
   return (
-    <div className="flex h-full overflow-hidden" style={{ background: "#EEF1F6" }}>
-      <Sidebar />
+    <DashboardShell>
+      <PageBody>
+        <PageHeader
+          eyebrow="Chapter 7"
+          title="Environment and Climate Change"
+          description="Where Ghana’s forest reserves are, how much carbon its land stores and how that stock changed, and the 2025 pattern of rainfall and temperature."
+          meta={[{ label: "Sources", value: "Forestry Commission, EPA–GSS–FC ecosystem accounts, GMet" }, { label: "Latest", value: "December 2025 (forests); 2021 (carbon)" }]}
+        />
 
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopBar />
+        <KpiGrid>
+          <KpiCard label="Reported forest reserve area" value="24,133.53" unit="km²" period="Dec 2025, 12 regions" explain={{ label: "Forest Reserve Area" }} />
+          <KpiCard label="Total carbon stock" value="1,147.6" unit="Mt C" period="2021" explain={{ indicator: "carbon" }} note="1,367.5 Mt C in 2015" />
+          <KpiCard label="Grassland carbon" value="344.0" unit="Mt C" period="2021" explain={{ label: "Grassland Carbon" }} note="Largest store of any land cover" />
+          <KpiCard label="Wettest month" value="216.7" unit="mm" period="June 2025" explain={{ label: "Peak Rainfall" }} note="Monthly average 99.3 mm" />
+          <KpiCard label="Warmest month" value="30.4" unit="°C" period="March 2025" explain={{ label: "Peak Temperature" }} note="Monthly average 28.2°C" />
+        </KpiGrid>
 
-        <main className="flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-5">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h1
-                className="font-bold leading-tight"
-                style={{ fontSize: "2.1rem", color: "#1B2A4A" }}
-              >
-                Environment and Climate Change
-              </h1>
-              <p className="text-sm mt-0.5" style={{ color: "#6B7280" }}>
-                Ghana Statistical Service · Forest reserves, carbon retention, rainfall and temperature
-              </p>
-            </div>
-            <div className="hidden xl:flex items-center gap-2 rounded-full border border-white bg-white/70 px-3 py-1.5 shadow-sm">
-              <span className="h-2 w-2 rounded-full" style={{ background: "#00A651" }} />
-              <span className="text-xs font-semibold" style={{ color: "#475569" }}>
-                Forestry Commission and GMet · 2025
-              </span>
-            </div>
-          </div>
+        <SectionNav items={[{ id: "forests", label: "Forest reserves" }, { id: "carbon", label: "Carbon" }, { id: "climate", label: "Rainfall and temperature" }]} />
 
-          <EnvironmentKPIStrip />
+        <Section id="forests" title="Forest reserves" description="Three regions hold about 60% of the reported reserve area." source="§7.1 · p. 96">
+          <Grid cols="2-1"><ForestCard /><ForestShareCard /></Grid>
+        </Section>
 
-          <section className="space-y-3">
-            <div>
-              <p className="text-lg font-bold" style={{ color: "#00A651" }}>Forest reserves and carbon retention</p>
-              <p className="text-xs" style={{ color: "#94A3B8" }}>
-                Reported forest reserve area by region and carbon retained across land-cover classes.
-              </p>
-            </div>
-            <ForestCarbonPanel />
-          </section>
+        <Section id="carbon" title="Carbon retention" description="Vegetation and soils hold carbon that would otherwise reach the atmosphere; the stock fell between 2015 and 2021." source="§7.2 · p. 97">
+          <Grid cols={2}><CarbonCard /><CarbonChangeCard /></Grid>
+        </Section>
 
-          <section className="space-y-3">
-            <div>
-              <p className="text-lg font-bold" style={{ color: "#00A651" }}>Rainfall and temperature</p>
-              <p className="text-xs" style={{ color: "#94A3B8" }}>
-                Monthly rainfall and temperature patterns in 2025.
-              </p>
-            </div>
-            <ClimateMonthlyPanel />
-          </section>
-
-          <p className="text-xs text-right pb-1" style={{ color: "#9CA3AF" }}>
-            Source: Ghana In Numbers 2025 reference indicators | Powered by StatsBank | © GSS
-          </p>
-        </main>
-      </div>
-    </div>
+        <Section id="climate" title="Rainfall and temperature" description="Two rainfall peaks and a narrow temperature range shape the farming calendar." source="§7.3–7.4 · pp. 98–99">
+          <Grid cols={2}><RainfallCard /><TemperatureCard /></Grid>
+        </Section>
+      </PageBody>
+    </DashboardShell>
   );
 }

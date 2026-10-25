@@ -37,3 +37,18 @@ export function getCardExplanation(indicator?: string, label?: string) {
     source: entry.source,
   };
 }
+
+/** Combined explanation for a report section that groups several catalogued indicators (e.g. "fiscal"). */
+export function getGroupExplanation(group: string, title: string, indices?: number[]) {
+  const all = indicatorExplanations[group] ?? [];
+  const entries = indices ? indices.map(i => all[i]).filter(Boolean) : all;
+  if (!entries.length) return { title };
+  const many = entries.length > 1;
+  return {
+    title,
+    meaning: entries.map(e => many ? `${e.name}\n${e.meaning}` : e.meaning).join("\n\n"),
+    story: entries.map(e => many ? `${e.name}\n${e.reading}` : e.reading).join("\n\n"),
+    why: entries.map(e => many ? `${e.name}\n${e.why}` : e.why).join("\n\n"),
+    source: [...new Set(entries.map(e => e.source))].join("; "),
+  };
+}

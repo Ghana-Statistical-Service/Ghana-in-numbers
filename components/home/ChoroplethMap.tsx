@@ -1,342 +1,83 @@
 "use client";
 
-import CardExplanation from "@/components/shared/CardExplanation";
+import { useEffect, useMemo, useState } from "react";
+import RegionalMap from "@/components/maps/RegionalMap";
+import { ChartCard } from "@/components/ui/Card";
+import { Segmented } from "@/components/ui/Data";
+import { REGIONS } from "@/data/publicationAdditions";
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthLabel = (code: string) => { const [y, m] = code.split("M"); return `${MONTHS[+m - 1]} ${y}`; };
+type Indicator = "population" | "inflation";
+type Raw = { fetchedAt?: string; response: { data: { key: string[]; values: string[] }[] } };
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  buildPathD,
-  computeBounds,
-  createProjector,
-  FeatureCollection,
-  getFeatureName,
-  isValidGeometry,
-} from "@/lib/geojsonToSvg";
-import { Bookmark, ArrowUpDown, ChevronDown } from "lucide-react";
-
-const VIEW_W = 420;
-const VIEW_H = 520;
-const COLOR_BUCKETS = ["#EAE6F9", "#D2CAF3", "#B1A2E8", "#7E6AD8", "#3C2FA3"];
-
-const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function formatMonth(code: string) {
-  const [y, m] = code.split("M");
-  return `${MONTH_NAMES[+m - 1]} ${y}`;
-}
-
-const indicators = [
-  "Inflation (Year on Year)",
-  "Projected Population",
-];
-
+/**
+ * Regional overview from locally cached StatsBank extracts. These longer series are dated by fetch and are not
+ * replacements for the publication's reference figures shown elsewhere.
+ */
 export default function ChoroplethMap() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState<Indicator>("population");
+  const [cpi, setCpi] = useState<Record<string, Record<string, number>>>({});
+  const [proj, setProj] = useState<Record<string, Record<string, number>>>({});
+  const [fetched, setFetched] = useState<{ cpi?: string; proj?: string }>({});
+  const [month, setMonth] = useState("2025M12");
+  const [year, setYear] = useState("2025");
+  const [failed, setFailed] = useState(false);
 
-  const [regionsData,   setRegionsData]   = useState<FeatureCollection | null>(null);
-
-  const [cpiData,  setCpiData]  = useState<Record<string, Record<string, number>>>({});
-  const [projData, setProjData] = useState<Record<string, Record<string, number>>>({});
-  const [cpiMonths,  setCpiMonths]  = useState<string[]>([]);
-  const [projYears,  setProjYears]  = useState<string[]>([]);
-
-  const [selectedIndicator, setSelectedIndicator] = useState("Projected Population");
-  const [showIndDd,     setShowIndDd]     = useState(false);
-  const [selectedMonth,   setSelectedMonth]   = useState("2025M12");
-  const [selectedCpiYear, setSelectedCpiYear] = useState("2025");
-  const [selectedYear,    setSelectedYear]    = useState("2025");
-
-  const [hovered,    setHovered]    = useState<{ name: string; value: number } | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [selected,   setSelected]   = useState<string | null>(null);
-
-  // Fetch all data in one shot
   useEffect(() => {
-    let active = true;
-    Promise.all([
-      fetch("/map/Regions.gh.json").then(r => r.json()),
-      fetch("/data/cpiData.json").then(r => r.json()),
-      fetch("/data/projectionData.json").then(r => r.json()),
-    ]).then(([reg, cpi, proj]) => {
-      if (!active) return;
-      setRegionsData(reg as FeatureCollection);
-
-      // CPI: month → regionName → value
-      const cpiMap: Record<string, Record<string, number>> = {};
-      (cpi.response.data as any[]).forEach((d) => {
-        const [, month, region] = d.key as string[];
-        const val = parseFloat(d.values[0]);
-        if (!isNaN(val)) {
-          cpiMap[month] ??= {};
-          cpiMap[month][region] = val;
-        }
-      });
-      setCpiData(cpiMap);
-      const months = Object.keys(cpiMap).sort().reverse();
-      setCpiMonths(months);
-      if (months.length) {
-        const referenceMonth = months.includes("2025M12") ? "2025M12" : months[0];
-        setSelectedMonth(referenceMonth);
-        setSelectedCpiYear(referenceMonth.split("M")[0]);
-      }
-
-      // Projections: year → regionName → value
-      const projMap: Record<string, Record<string, number>> = {};
-      (proj.response.data as any[]).forEach((d) => {
-        const [year, region] = d.key as string[];
-        const val = parseInt(d.values[0]);
-        if (!isNaN(val)) {
-          projMap[year] ??= {};
-          projMap[year][region] = val;
-        }
-      });
-      setProjData(projMap);
-      const years = Object.keys(projMap).sort();
-      setProjYears(years);
-    });
-    return () => { active = false; };
+    let live = true;
+    Promise.all([fetch("/data/cpiData.json").then(r => r.json() as Promise<Raw>), fetch("/data/projectionData.json").then(r => r.json() as Promise<Raw>)])
+      .then(([c, p]) => {
+        if (!live) return;
+        const cm: Record<string, Record<string, number>> = {};
+        for (const d of c.response.data) { const [ind, m, region] = d.key; const v = parseFloat(d.values[0]); if (ind.startsWith("Year-on-year") && !Number.isNaN(v)) (cm[m] ??= {})[region] = v; }
+        const pm: Record<string, Record<string, number>> = {};
+        for (const d of p.response.data) { const [y, region] = d.key; const v = parseInt(d.values[0], 10); if (!Number.isNaN(v)) (pm[y] ??= {})[region] = v; }
+        setCpi(cm); setProj(pm); setFetched({ cpi: c.fetchedAt, proj: p.fetchedAt });
+      })
+      .catch(() => live && setFailed(true));
+    return () => { live = false; };
   }, []);
 
-  const activeFeatures = useMemo(() => {
-    return (regionsData?.features ?? []).filter(f => isValidGeometry(f.geometry));
-  }, [regionsData]);
+  const months = useMemo(() => Object.keys(cpi).sort().reverse(), [cpi]);
+  const years = useMemo(() => Object.keys(proj).sort(), [proj]);
+  const source = indicator === "population" ? proj[year] : cpi[month];
+  const data = REGIONS.map(region => ({ region, value: source?.[region] ?? null }));
+  const national = source?.Ghana;
+  const fmtDate = (iso?: string) => iso ? new Date(iso).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "";
 
-  const paths = useMemo(() => {
-    if (!activeFeatures.length) return [];
-    const bounds  = computeBounds(activeFeatures);
-    const project = createProjector(bounds, VIEW_W, VIEW_H, 18);
-    return activeFeatures
-      .map(f => {
-        if (!isValidGeometry(f.geometry)) return null;
-        return { name: getFeatureName(f.properties ?? undefined), d: buildPathD(f.geometry, project) };
-      })
-      .filter((x): x is { name: string; d: string } => Boolean(x));
-  }, [activeFeatures]);
-
-  const { valueByName, getColor } = useMemo(() => {
-    const map = new Map<string, number>();
-    let min = Infinity, max = -Infinity;
-
-    paths.forEach(({ name }) => {
-      let v: number;
-      if (selectedIndicator === "Inflation (Year on Year)") {
-        v = cpiData[selectedMonth]?.[name] ?? NaN;
-      } else {
-        v = projData[selectedYear]?.[name] ?? NaN;
-      }
-      if (Number.isFinite(v)) {
-        map.set(name, v);
-        min = Math.min(min, v);
-        max = Math.max(max, v);
-      }
-    });
-
-    if (!Number.isFinite(min)) { min = 10; max = 15; }
-
-    const colorFn = (v: number) => {
-      if (max === min) return COLOR_BUCKETS[2];
-      const t = (v - min) / (max - min);
-      return COLOR_BUCKETS[Math.min(COLOR_BUCKETS.length - 1, Math.floor(t * COLOR_BUCKETS.length))];
-    };
-
-    return { valueByName: map, getColor: colorFn };
-  }, [paths, selectedIndicator, selectedMonth, selectedYear, cpiData, projData]);
-
-  const nationalDisplay = useMemo(() => {
-    if (selectedIndicator === "Inflation (Year on Year)") {
-      const v = cpiData[selectedMonth]?.["Ghana"];
-      return v != null ? `${v.toFixed(1)}%` : "—";
-    }
-    if (selectedIndicator === "Projected Population") {
-      const v = projData[selectedYear]?.["Ghana"];
-      return v != null ? `${(v / 1_000_000).toFixed(1)}M` : "—";
-    }
-    return "—";
-  }, [selectedIndicator, selectedMonth, selectedYear, cpiData, projData]);
-
-  const handleMouseMove = (evt: React.MouseEvent<HTMLDivElement>) => {
-    if (!hovered) return;
-    const rect = wrapperRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    setTooltipPos({
-      x: Math.min(Math.max(12, evt.clientX - rect.left + 14), rect.width  - 155),
-      y: Math.min(Math.max(12, evt.clientY - rect.top  + 14), rect.height -  65),
-    });
-  };
-
-  const formatTooltipValue = (value: number) => {
-    if (!Number.isFinite(value)) return "N/A";
-    if (selectedIndicator === "Projected Population") return value.toLocaleString();
-    return `${value.toFixed(1)}%`;
-  };
+  const format = indicator === "population" ? (v: number) => v >= 1e6 ? `${(v / 1e6).toFixed(2)}M` : `${Math.round(v / 1000)}k` : (v: number) => `${v.toFixed(1)}%`;
 
   return (
-    <div
-      ref={wrapperRef}
-      className="rounded-2xl border border-slate-100 bg-white flex flex-col h-full overflow-hidden"
-      style={{ boxShadow: "0 12px 30px rgba(15,23,42,0.08)" }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => setHovered(null)}
+    <ChartCard
+      title="Regional picture"
+      subtitle={indicator === "population" ? "Projected population by region" : "Consumer inflation by region, year on year"}
+      period={indicator === "population" ? year : monthLabel(month)}
+      qualifier={indicator === "population" ? <span className="rounded-full bg-caution-bg px-2 py-0.5 text-xs font-semibold text-caution">Projection</span> : undefined}
+      explain={{ indicator: indicator === "population" ? "population" : "inflation" }}
+      actions={
+        <div className="flex flex-wrap items-center gap-2">
+          <Segmented label="Map indicator" size="sm" value={indicator} onChange={setIndicator} options={[{ value: "population", label: "Population" }, { value: "inflation", label: "Inflation" }]} />
+          {indicator === "population" ? (
+            <label className="sr-only" htmlFor="map-year">Projection year</label>
+          ) : <label className="sr-only" htmlFor="map-month">Month</label>}
+          {indicator === "population"
+            ? <select id="map-year" value={year} onChange={e => setYear(e.target.value)} className="h-8 rounded-md border border-line bg-surface px-2 text-[13px] text-body">{years.map(y => <option key={y} value={y}>{y}</option>)}</select>
+            : <select id="map-month" value={month} onChange={e => setMonth(e.target.value)} className="h-8 rounded-md border border-line bg-surface px-2 text-[13px] text-body">{months.map(m => <option key={m} value={m}>{monthLabel(m)}</option>)}</select>}
+        </div>
+      }
+      source={indicator === "population" ? `GSS 2021–2050 population projections, StatsBank extract (${fmtDate(fetched.proj)})` : `GSS Consumer Price Index, StatsBank extract (${fmtDate(fetched.cpi)})`}
+      notes={indicator === "population" ? "Projections for years after the 2021 census. The publication’s 2025 reference figure is 33.7 million." : "Months after December 2025 come from the cached StatsBank series and fall outside the publication’s reference period."}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-b border-slate-100">
-        <p className="font-bold text-gray-800 text-sm">Current Indicator by Region</p>
-        <div className="flex items-center gap-1.5">
-          <button className="text-gray-400 hover:text-gray-600 p-1 transition-colors">
-            <Bookmark size={15} />
-          </button>
-          <div className="relative">
-            <button
-              onClick={() => setShowIndDd(!showIndDd)}
-              className="flex items-center gap-1.5 border border-gray-200 rounded-lg px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
-              <ArrowUpDown size={12} style={{ color: "var(--secondary)" }} />
-              {selectedIndicator}
-              <ChevronDown size={11} className="text-gray-400" />
-            </button>
-            {showIndDd && (
-              <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 min-w-[195px] py-1">
-                {indicators.map(ind => (
-                  <button
-                    key={ind}
-                    onClick={() => { setSelectedIndicator(ind); setShowIndDd(false); }}
-                    className="w-full text-left px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50"
-                  >
-                    {ind}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="px-4"><CardExplanation indicator={selectedIndicator === "Projected Population" ? "population" : "inflation"} /></div>
-      {/* Map area */}
-      <div className="relative flex-1 min-h-0">
-
-        {/* National badge */}
-        <div className="absolute left-4 top-4 z-20 flex h-20 w-20 flex-col items-center justify-center rounded-full border border-white/40 bg-white/35 text-center shadow-sm backdrop-blur-md">
-          <span className="text-lg font-extrabold leading-none text-slate-800">
-            {nationalDisplay}
-          </span>
-          <span className="mt-1 text-[10px] font-semibold leading-tight text-slate-600">
-            National
-          </span>
-        </div>
-
-        {/* Filter panel */}
-        <div className="absolute right-3 top-4 z-20 flex w-36 flex-col items-stretch gap-1.5 rounded-xl border border-slate-200 bg-white/90 p-2 shadow-sm backdrop-blur-sm">
-          {selectedIndicator === "Inflation (Year on Year)" && cpiMonths.length > 0 && (() => {
-            const cpiYears = [...new Set(cpiMonths.map(m => m.split("M")[0]))];
-            const monthsInYear = cpiMonths.filter(m => m.startsWith(selectedCpiYear + "M"));
-            return (
-              <>
-                <select
-                  value={selectedCpiYear}
-                  onChange={e => {
-                    const y = e.target.value;
-                    setSelectedCpiYear(y);
-                    const first = cpiMonths.find(m => m.startsWith(y + "M"));
-                    if (first) setSelectedMonth(first);
-                  }}
-                  className="w-full rounded-full border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-600 outline-none cursor-pointer"
-                >
-                  {cpiYears.map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
-                <select
-                  value={selectedMonth}
-                  onChange={e => setSelectedMonth(e.target.value)}
-                  className="w-full rounded-full border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-600 outline-none cursor-pointer"
-                >
-                  {monthsInYear.map(m => (
-                    <option key={m} value={m}>{MONTH_NAMES[+m.split("M")[1] - 1]}</option>
-                  ))}
-                </select>
-              </>
-            );
-          })()}
-          {selectedIndicator === "Projected Population" && projYears.length > 0 && (
-            <select
-              value={selectedYear}
-              onChange={e => setSelectedYear(e.target.value)}
-              className="w-full rounded-full border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-600 outline-none cursor-pointer"
-            >
-              {projYears.map(y => (
-                <option key={y} value={y}>{y}</option>
-              ))}
-            </select>
-          )}
-        </div>
-
-        {/* SVG map */}
-        {paths.length > 0 ? (
-          <svg
-            viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-            className="h-full w-full"
-            role="img"
-            aria-label="Ghana administrative map"
-          >
-            {paths.map(({ name, d }) => {
-              const value     = valueByName.get(name) ?? NaN;
-              const fill      = Number.isFinite(value) ? getColor(value) : COLOR_BUCKETS[0];
-              const isSelected = selected === name;
-              const isHovered  = hovered?.name === name;
-              return (
-                <path
-                  key={name}
-                  d={d}
-                  fill={fill}
-                  stroke={isSelected ? "#241B5A" : "#E2E8F0"}
-                  strokeWidth={isSelected ? 1.2 : 0.6}
-                  style={{ opacity: isHovered ? 0.85 : 1, cursor: "pointer" }}
-                  className="transition-opacity"
-                  onMouseEnter={() => setHovered({ name, value })}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => setSelected(selected === name ? null : name)}
-                />
-              );
-            })}
-          </svg>
-        ) : (
-          <div className="flex h-full items-center justify-center text-xs text-slate-400">
-            Loading map…
-          </div>
-        )}
-
-        {/* Tooltip */}
-        {hovered && (
-          <div
-            className="pointer-events-none absolute z-50 rounded-xl px-3 py-2 text-white shadow-lg"
-            style={{ left: tooltipPos.x, top: tooltipPos.y, minWidth: "140px", background: "#1B2A4A" }}
-          >
-            <p className="font-bold text-sm flex items-center gap-1.5">
-              <span style={{ color: "var(--secondary)" }}>↑</span>
-              {hovered.name}
-            </p>
-            <p className="text-white/70 text-xs mt-0.5">
-              {selectedIndicator === "Projected Population"
-                ? <>Population: <span className="text-white font-semibold">{formatTooltipValue(hovered.value)}</span></>
-                : <>{selectedIndicator}: <span className="text-white font-semibold">{formatTooltipValue(hovered.value)}</span></>
-              }
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Footer: regional legend */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-t border-slate-100 flex-shrink-0">
-        <div className="flex items-center gap-2 text-[10px] text-slate-500">
-          <span>Low</span>
-          <div className="flex items-center gap-1">
-            {COLOR_BUCKETS.map(color => (
-              <span key={color} className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: color }} />
-            ))}
-          </div>
-          <span>High</span>
-        </div>
-
-        <span className="text-[10px] font-semibold text-slate-500">16 regions</span>
-      </div>
-    </div>
+      {failed ? <p role="alert" className="rounded-md bg-caution-bg px-3 py-6 text-center text-[13px] text-caution">The regional data could not be loaded. Refresh the page to try again.</p> : (
+        <RegionalMap
+          data={data}
+          measure={indicator === "population" ? "Projected population (people)" : "Year-on-year inflation (%)"}
+          format={format}
+          height={380}
+          highlight={national != null ? `Ghana: ${indicator === "population" ? `${(national / 1e6).toFixed(1)} million` : `${national.toFixed(1)}%`}` : undefined}
+        />
+      )}
+    </ChartCard>
   );
 }

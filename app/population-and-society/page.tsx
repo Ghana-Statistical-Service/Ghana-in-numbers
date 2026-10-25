@@ -1,69 +1,95 @@
-import MigrationPanel from "@/components/population/MigrationPanel";
-import Sidebar from "@/components/layout/Sidebar";
-import TopBar from "@/components/layout/TopBar";
-import PopulationKPIStrip from "@/components/population/PopulationKPIStrip";
-import PopulationGrowthChart from "@/components/population/PopulationGrowthChart";
-import InterCensalTable from "@/components/population/InterCensalTable";
-import GenderSplitCard from "@/components/population/GenderSplitCard";
-import PopulationPyramid from "@/components/population/PopulationPyramid";
-import AgeGroupDistribution from "@/components/population/AgeGroupDistribution";
-import UrbanRuralChart from "@/components/population/UrbanRuralChart";
+import DashboardShell from "@/components/layout/DashboardShell";
+import OverviewTopBar from "@/components/home/OverviewTopBar";
 import LifeExpectancyChart from "@/components/population/LifeExpectancyChart";
-import FertilityHouseholdCard from "@/components/population/FertilityHouseholdCard";
+import {
+  AgeGroupCard, EmigrantDestinationsCard, EmigrantsAbroadCard, EmigrationReasonsCard, FertilityCard, HouseholdCard, ImmigrantsCard, IntercensalCard,
+  InternalMigrationCard, LifeByAgeCard, MigrationFlowsCard, MigrationStats, NetMigrationCard, PopulationSizeCard, PyramidCard, RegionalCard, SexSplitCard, UrbanRuralCard,
+} from "@/components/population/PopulationSections";
+import { KpiCard, KpiGrid } from "@/components/ui/Card";
+import { Grid, PageBody, PageHeader, Section, SectionNav } from "@/components/ui/Page";
+
+const stack = "flex min-w-0 flex-col gap-4 lg:gap-5";
 
 export default function PopulationAndSociety() {
   return (
-    <div className="flex h-full overflow-hidden" style={{ background: "#EEF1F6" }}>
-      <Sidebar />
+    <DashboardShell>
+      <OverviewTopBar page="Population and Society" regionalTarget="regional" />
+      <PageBody>
+        <PageHeader
+          eyebrow="Chapter 3"
+          title="Population and Society"
+          description="How many people live in Ghana, how the population is changing in age, place and household, how long people live, and how they move between regions and abroad."
+          meta={[{ label: "Sources", value: "2010 and 2021 PHC, 2021–2050 projections, GDHS" }, { label: "Latest", value: "2025 projection" }]}
+        />
 
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopBar />
+        <KpiGrid>
+          <KpiCard label="Total population" value="33.7" unit="million" period="2025" qualifier="Projection" explain={{ label: "Total Population" }} note="30.8 million at the 2021 census" />
+          <KpiCard label="Growth rate" value="2.1" unit="% a year" period="2010–2021" explain={{ label: "Growth Rate" }} note="2.7% in 1984–2000" />
+          <KpiCard label="Life expectancy" value="65.1" unit="years" period="At birth, 2021" explain={{ label: "Life Expectancy" }} note="Women 66.8, men 63.3 years" />
+          <KpiCard label="Urban population" value="58.7" unit="%" period="2025" qualifier="Projection" explain={{ label: "Urban Population" }} note="19.8 million people" />
+          <KpiCard label="Fertility rate" value="3.9" unit="children per woman" period="2022 GDHS" explain={{ label: "Fertility Rate" }} note="6.4 in 1988" />
+        </KpiGrid>
 
-        <main className="flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-4">
+        <SectionNav items={[
+          { id: "population-size", label: "Size and growth" }, { id: "composition", label: "Age and sex" }, { id: "urbanisation", label: "Urbanisation" },
+          { id: "fertility-households", label: "Fertility and households" }, { id: "life-expectancy", label: "Life expectancy" }, { id: "migration", label: "Regions and migration" },
+        ]} />
 
-          {/* Page header */}
-          <div>
-            <h1
-              className="font-bold leading-tight"
-              style={{ fontSize: "2.1rem", color: "#1B2A4A" }}
-            >
-              Population and Society
-            </h1>
-            <p className="text-sm mt-0.5" style={{ color: "#6B7280" }}>
-              Ghana Statistical Service · Population &amp; Housing Census · 2025 Projections
-            </p>
-          </div>
+        <Section id="population-size" title="A growing population" description="Ghana adds between half a million and 700,000 people a year, though the growth rate has slowed." source="§3.1 · pp. 12–13">
+          <Grid cols="3-2">
+            <PopulationSizeCard />
+            <IntercensalCard />
+          </Grid>
+        </Section>
 
-          {/* Row 1: KPI strip */}
-          <PopulationKPIStrip />
+        <Section id="composition" title="Population composition" description="A youthful population with a small female majority." source="§3.2 · pp. 14–15">
+          <Grid cols={2}>
+            <PyramidCard />
+            <div className={stack}>
+              <SexSplitCard />
+              <AgeGroupCard />
+            </div>
+          </Grid>
+        </Section>
 
-          <PopulationGrowthChart />
-          <div className="grid gap-4 md:grid-cols-2">
-            <InterCensalTable />
-            <GenderSplitCard />
-          </div>
+        <Section id="urbanisation" title="Ghana is becoming more urbanised" description="Close to six in ten people are projected to live in towns and cities in 2025." source="§3.3 · pp. 16–17">
+          <UrbanRuralCard />
+        </Section>
 
-          {/* Row 3: Population pyramid | Age group distribution — fixed 400px */}
-          <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr", minHeight: "460px" }}>
-            <PopulationPyramid />
-            <AgeGroupDistribution />
-          </div>
+        <Section id="fertility-households" title="Fertility and household size" description="Women are having fewer children, and households are getting smaller." source="§3.4–3.5 · pp. 19–20">
+          <Grid cols={2}>
+            <FertilityCard />
+            <HouseholdCard />
+          </Grid>
+        </Section>
 
-          {/* Row 4: Urban-rural | Life expectancy — fixed 320px */}
-          <div className="grid gap-4" style={{ gridTemplateColumns: "3fr 2fr", minHeight: "400px" }}>
-            <UrbanRuralChart />
+        <Section id="life-expectancy" title="Life expectancy" description="Ghanaians are living far longer than in 1960; women outlive men." source="§3.6 · pp. 21–22">
+          <Grid cols={2}>
             <LifeExpectancyChart />
-          </div>
+            <LifeByAgeCard />
+          </Grid>
+        </Section>
 
-          {/* Row 5: Fertility & Household */}
-          <FertilityHouseholdCard />
-          <MigrationPanel />
-
-          <p className="text-xs text-right pb-1" style={{ color: "#9CA3AF" }}>
-            Source: Ghana Statistical Service — Ghana In Numbers 2025 | Powered by StatsBank | © GSS
-          </p>
-        </main>
-      </div>
-    </div>
+        <Section id="migration" title="Migration and population distribution" description="Where people live, which regions gain population through migration, and why Ghanaians move abroad. Migration compares region of birth with region of enumeration at each census." source="§3.3–3.4, §3.7 · pp. 16–26">
+          <div id="regional" className="mb-4 scroll-mt-16 lg:mb-5"><RegionalCard /></div>
+          <MigrationStats />
+          <Grid cols={2}>
+            <NetMigrationCard />
+            <div className={stack}>
+              <InternalMigrationCard />
+              <EmigrantsAbroadCard />
+            </div>
+          </Grid>
+          <Grid cols={2} className="mt-4 lg:mt-5">
+            <div className={stack}>
+              <ImmigrantsCard />
+              <EmigrationReasonsCard />
+            </div>
+            <MigrationFlowsCard />
+          </Grid>
+          <div className="mt-4 lg:mt-5"><EmigrantDestinationsCard /></div>
+        </Section>
+      </PageBody>
+    </DashboardShell>
   );
 }

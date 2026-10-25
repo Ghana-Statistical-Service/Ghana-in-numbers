@@ -142,27 +142,6 @@ export const sectorData = [
   }
 ];
 
-export const mostSearchedIndicators = [
-  {
-    "rank": 1,
-    "name": "Inflation (Dec 2025)",
-    "share": "5.4%",
-    "icon": "bookmark"
-  },
-  {
-    "rank": 2,
-    "name": "GDP growth (2025)",
-    "share": "6.0%",
-    "icon": "bookmark"
-  },
-  {
-    "rank": 3,
-    "name": "Unemployment (Q1–Q3 2025)",
-    "share": "12.8%",
-    "icon": "bookmark"
-  }
-];
-
 // Regional year-on-year CPI inflation (%), GSS StatsBank — March 2026
 export const regionInflationData: Record<string, number> = {
   "Ahafo": 3.3,
@@ -182,6 +161,3 @@ export const regionInflationData: Record<string, number> = {
   "Western": -0.4,
   "Western North": 4.0,
 };
-
-// Sidebar reference indicator, not live analytics.
-export const statOfDay = { value: "66.2%", label: "Active NHIS coverage · 2025" };
