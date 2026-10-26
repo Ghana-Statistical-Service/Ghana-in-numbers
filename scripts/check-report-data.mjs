@@ -10,6 +10,7 @@ import * as additions from '../data/reportAdditions.ts';
 import * as extra from '../data/publicationAdditions.ts';
 import { indicatorExplanations } from '../data/indicatorExplanations.ts';
 import { cardExplanations, kpiExplanationKeys } from '../data/cardExplanations.ts';
+import { weeklyFacts, factOfTheWeek } from '../data/weeklyFacts.ts';
 
 const close = (actual, expected, tolerance = 0.001) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} differs from ${expected}`);
 // Annual chart must preserve census/projection distinctions while covering every year.
@@ -100,4 +101,54 @@ assert.equal(extra.neverVoted.length, 16);
 assert.equal(extra.neverVoted.filter(r => r.flag).length, 4);
 close(extra.pbciCombined.find(d => d.month === 'Apr 2025').value, 24.4);
 close(Object.values(extra.populationDensity).find(() => true) && extra.populationDensity['Greater Accra'].y2021, 1681.3);
+// Sidebar "Did you know?" facts: the headline value, change badge and every figure quoted must match the chart data.
+{
+  const facts = Object.fromEntries(weeklyFacts.map(f => [f.id, f]));
+  assert.equal(Object.keys(facts).length, weeklyFacts.length);
+  const at = (rows, year, field = 'value') => rows.find(d => d.year === year)[field];
+  const one = v => v.toFixed(1);
+  const sign = (from, to) => (to < from ? '−' : '+');
+  const pct = (from, to) => `${sign(from, to)}${one(Math.abs((to - from) / from * 100))}%`;
+  const pts = (from, to) => `${sign(from, to)}${one(Math.abs(to - from))} pts`;
+  const fact = (id, value, change, ...quoted) => {
+    const f = facts[id];
+    assert.equal(f.value, value, id);
+    assert.equal(f.change?.text, change, id);
+    for (const q of quoted) assert.ok(`${f.label} ${f.statement}`.includes(q), `${id} should quote ${q}`);
+    assert.ok(f.label.length <= 50 && f.statement.length <= 62, `${id} text must fit two lines`);
+    assert.ok(f.href.startsWith('/') && f.page && f.label);
+  };
+  fact('maternal-mortality', '301', pct(at(sdg.maternalMortality, '2010'), at(sdg.maternalMortality, '2021')), '485', '2010', '2021');
+  fact('under-five-mortality', '40', pct(at(sdg.underFiveMortality, '2008'), at(sdg.underFiveMortality, '2022')), '80', '2008', '2022');
+  const power = social.electricityAccessData;
+  fact('electricity', one(at(power, '2021')), pts(at(power, '2000'), at(power, '2021')), `${one(at(power, '2000'))}%`, `${one(at(power, '2010'))}%`, '2021');
+  const nhis = social.healthInsuranceCoverageData;
+  fact('health-insurance', one(at(nhis, '2025')), pts(at(nhis, '2010'), at(nhis, '2025')), `${one(at(nhis, '2010'))}%`, '2025');
+  const life = population.lifeExpectancyTrend;
+  fact('life-expectancy', one(at(life, '2021')), `+${one(at(life, '2021') - at(life, '1960'))} yrs`, `${one(at(life, '1960'))} years`, '2021');
+  const birds = year => extra.livestockSeries.poultry[extra.livestockSeries.years.indexOf(year)];
+  fact('poultry', one(birds('2024')), `${one(birds('2024') / birds('1990'))}×`, `${one(birds('1990'))} million`, '2024');
+  const exportShare = name => one(economy.topExports2025.find(d => d.name === name).share);
+  fact('gold-exports', exportShare('Gold bullion'), undefined, `${exportShare('Cocoa beans')}%`, `${exportShare('Crude Petroleum')}%`);
+  const judges = governance.womenJudgesData;
+  fact('women-judges', one(at(judges, '2025', 'high')), pts(at(judges, '2008', 'high'), at(judges, '2025', 'high')), `${one(at(judges, '2008', 'high'))}%`, `${one(at(judges, '2025', 'appeal'))}%`);
+  const tfr = population.fertilityData;
+  fact('fertility', one(at(tfr, '2022')), pct(at(tfr, '1988'), at(tfr, '2022')), one(at(tfr, '1988')), one(at(tfr, '2014')), '2022');
+  const farmed = year => { const d = extra.tilapiaCatfish.find(r => r.year === year); return Math.round(d.tilapia + d.catfish); };
+  fact('fish-farming', farmed('2025').toLocaleString('en-US'), `${one(farmed('2025') / farmed('2013'))}×`, `${farmed('2013').toLocaleString('en-US')} tonnes`, '2025');
+  const allBusinesses = additions.enterpriseTypes.find(r => r[0] === 'All businesses')[1];
+  fact('businesses', one(Number(allBusinesses.replaceAll(',', '')) / 1e6), undefined, allBusinesses);
+  assert.ok(Number.parseFloat(additions.establishmentSize[0][1]) >= 90, 'Nine in ten establishments are micro');
+  const going = name => one(additions.emigrantDestinationsData.find(d => d.name === name).value);
+  fact('emigrant-destinations', going('Europe'), undefined, `${going('Americas')}%`, `${going('ECOWAS')}%`);
+  const density = extra.populationDensity;
+  fact('accra-density', Math.round(density['Greater Accra'].y2021).toLocaleString('en-US'), pct(density['Greater Accra'].y2010, density['Greater Accra'].y2021), Math.round(density['Greater Accra'].y2010).toLocaleString('en-US'), String(Math.round(density.Central.y2021)));
+  const poor = sdg.povertyData;
+  fact('poverty', one(at(poor, '2025')), pts(at(poor, '2022'), at(poor, '2025')), `${one(at(poor, '2022'))}%`, '2022', '2025');
+  // The rotation changes on Mondays and cycles through every fact.
+  assert.equal(factOfTheWeek(Date.UTC(2026, 0, 5)), 0);
+  assert.equal(factOfTheWeek(Date.UTC(2026, 0, 11, 23)), 0);
+  assert.equal(factOfTheWeek(Date.UTC(2026, 0, 12)), 1);
+  assert.equal(factOfTheWeek(Date.UTC(2025, 11, 29)), weeklyFacts.length - 1);
+}
 console.log('Publication data checks passed: source anchors, units/periods, totals, trade balances, regional coverage and cross-page consistency.');

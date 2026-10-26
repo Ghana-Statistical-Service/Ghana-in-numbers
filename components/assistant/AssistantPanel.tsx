@@ -5,22 +5,12 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ArrowUp, ArrowUpRight, ChevronDown, LoaderCircle, MessageSquareText, RotateCcw, Square, SquarePen, X } from "lucide-react";
 import type { AssistantAnswer, AssistantSource } from "@/lib/assistant/service";
+import { starterQuestions } from "@/lib/assistant/questions";
 
 type Message = { id: number; role: "user" | "assistant"; content: string; sources?: AssistantSource[]; suggestions?: string[] };
 
 function emphasis(text: string): ReactNode {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => part.startsWith("**") && part.endsWith("**") ? <strong key={i} className="font-semibold text-ink">{part.slice(2, -2)}</strong> : part);
-}
-
-function starters(path: string) {
-  if (path.includes("business")) return ["What drove GDP expenditure in 2025?", "Compare cash and commitment spending in 2025.", "How did inflation change between 2022 and 2025?"];
-  if (path.includes("youth")) return ["Compare youth unemployment age groups in 2025.", "What does NEET measure?", "Which region had the highest youth NEET rate in Q3 2025?"];
-  if (path.includes("social")) return ["How has active health insurance coverage changed?", "Explain net versus gross school enrolment.", "How many households had access to electricity in 2021?"];
-  if (path.includes("environment")) return ["What were the wettest months of 2025?", "How is carbon retention measured?", "Which regions hold the largest reported forest reserves?"];
-  if (path.includes("governance")) return ["How has women’s representation in Parliament changed?", "Compare women judges across courts in 2025.", "What share of citizens felt they had no say in 2025?"];
-  if (path.includes("sdg")) return ["How has multidimensional poverty changed since 2022?", "What does food insecurity measure?", "How has child mortality changed?"];
-  if (path.includes("agriculture")) return ["How has cassava production changed since 2013?", "What is the Agriculture Orientation Index?", "How many young people worked in agriculture in 2021?"];
-  return ["How has Ghana’s population changed since 2010?", "What was Ghana’s inflation rate in December 2025?", "Compare unemployment among the two youth age groups in 2025."];
 }
 
 export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boolean; onOpen: () => void; onMinimise: () => void }) {
@@ -39,6 +29,8 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
   const sequence = useRef(0);
   const nextId = useRef(0);
   const wasOpen = useRef(false);
+  const followLatest = useRef(true);
+  const savedScroll = useRef(0);
   const last = messages.at(-1);
   const suggestions = last?.role === "assistant" ? last.suggestions ?? [] : [];
 
@@ -58,7 +50,21 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
     }
   }, [open]);
 
-  useEffect(() => { if (open && transcript.current) transcript.current.scrollTop = messages.length > 0 || busy || error ? transcript.current.scrollHeight : 0; }, [messages, busy, error, open]);
+  // A new answer is shown from its start (with the question above it when that fits), so follow-ups are below it.
+  // Questions in progress and errors stay at the bottom. Reopening returns to where the reader left off.
+  useEffect(() => { followLatest.current = true; }, [messages, busy, error]);
+  useEffect(() => {
+    const log = transcript.current;
+    if (!open || !log) return;
+    if (!followLatest.current) { log.scrollTop = savedScroll.current; return; }
+    followLatest.current = false;
+    const answer = !busy && !error ? log.querySelector<HTMLElement>("[data-latest-answer]") : null;
+    if (!answer) { log.scrollTop = messages.length ? log.scrollHeight : 0; return; }
+    const top = (node: Element) => node.getBoundingClientRect().top - log.getBoundingClientRect().top + log.scrollTop;
+    const question = answer.previousElementSibling;
+    const start = question && top(answer) - top(question) < log.clientHeight / 3 ? top(question) : top(answer);
+    log.scrollTop = start - 16;
+  }, [messages, busy, error, open]);
   useEffect(() => () => controller.current?.abort(), []);
 
   // While the reader is scrolling, the closed launcher steps aside so it never sits over a value; it returns when scrolling stops.
@@ -123,7 +129,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
           <button type="button" onClick={onMinimise} aria-label="Close assistant (your conversation is kept)" className="flex h-11 w-11 items-center justify-center rounded-lg text-white/85 hover:bg-white/10 hover:text-white sm:hidden"><X size={22} /></button>
         </header>
 
-        <div ref={transcript} role="log" aria-label="Conversation" aria-busy={busy} aria-live="polite" tabIndex={0} className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-4 py-5">
+        <div ref={transcript} role="log" aria-label="Conversation" aria-busy={busy} aria-live="polite" tabIndex={0} onScroll={event => { savedScroll.current = event.currentTarget.scrollTop; }} className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-4 py-5">
           {messages.length === 0 && (
             <div>
               <p className="text-[15px] font-semibold leading-relaxed text-ink">I am StatsChat, an AI model for official statistics developed by Ghana Statistical Service.</p>
@@ -132,7 +138,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
               <p className="mt-3 text-[13px] font-medium leading-relaxed text-ink">What would you like to know about Ghana?</p>
               <p className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-subtle">Suggested for this page</p>
               <ul className="space-y-2">
-                {starters(path).map(text => (
+                {starterQuestions(path).map(text => (
                   <li key={text}><button type="button" onClick={() => ask(text)} className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-line px-3.5 py-3 text-left text-[13px] leading-snug text-body hover:border-brand-line hover:bg-brand-soft"><span>{text}</span><ArrowUpRight size={15} aria-hidden className="shrink-0 text-brand" /></button></li>
                 ))}
               </ul>
@@ -142,7 +148,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
           {messages.map(message => message.role === "user" ? (
             <article key={message.id} aria-label="Your question" className="ml-10 rounded-2xl rounded-br-md bg-brand px-3.5 py-2.5 text-[14px] leading-relaxed text-white">{message.content}</article>
           ) : (
-            <article key={message.id} aria-label="Assistant answer" className="space-y-3">
+            <article key={message.id} aria-label="Assistant answer" data-latest-answer={message === last || undefined} className="space-y-3">
               <div className="space-y-3 break-words text-[14px] leading-relaxed text-body">{message.content.split(/\n\s*\n/).map((paragraph, index) => <p key={index} className="whitespace-pre-line">{emphasis(paragraph)}</p>)}</div>
               {message.sources && message.sources.length > 0 && (
                 <div className="space-y-1.5">
@@ -191,7 +197,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
               ? <button type="button" onClick={() => { stop(); setError("Request stopped. You can retry your last question."); }} aria-label="Stop generating the answer" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-surface-muted text-ink ring-1 ring-line hover:bg-line"><Square size={14} fill="currentColor" /></button>
               : <button type="submit" disabled={!question.trim()} aria-label="Send question" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-brand text-white hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-line disabled:text-subtle"><ArrowUp size={18} /></button>}
           </div>
-          <p className="mt-2 px-1 text-xs leading-relaxed text-subtle">AI-assisted answers can be wrong. Check the cited source, unit and reference period.{question.length > 1600 && <span className="tabular"> · {question.length}/2,000</span>}</p>
+          <p className="mt-2 px-1 text-xs leading-relaxed text-subtle">StatsChat, the official AI chatbot for the Ghana Statistical Service. All answers are cited within the context of Ghana in Numbers.{question.length > 1600 && <span className="tabular"> · {question.length}/2,000</span>}</p>
         </form>
       </div>
 

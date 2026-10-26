@@ -138,6 +138,15 @@ dialog::backdrop { background: rgba(15, 23, 43, 0.32); }
   from { opacity: 0; transform: translateY(8px) scale(0.99); }
   to { opacity: 1; transform: none; }
 }
+/* Sidebar "Did you know?" card: a slow hover in place, and each new fact rising in. */
+@keyframes fact-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes fact-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

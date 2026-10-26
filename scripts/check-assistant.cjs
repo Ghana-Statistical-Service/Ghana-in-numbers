@@ -24,6 +24,23 @@ for (const item of indicatorCatalogue) {
 }
 assert.equal(findIndicators('annual Ghana population size')[0].id, 'population-size');
 assert.ok(findIndicators('regional monthly inflation 2026').some(item => item.id === 'cached-regional-inflation'));
+// Starters and follow-ups only come from the question bank, and each question must lead search to the dataset that answers it.
+const { datasetQuestions, answerableQuestions, followUpQuestions, chooseSuggestions, starterQuestions, starterPaths } = require('../lib/assistant/questions.ts');
+const catalogueIds = new Set(indicatorCatalogue.map(item => item.id));
+assert.equal(answerableQuestions.length, Object.values(datasetQuestions).flat().length, 'Questions are unique');
+for (const [id, questions] of Object.entries(datasetQuestions)) {
+  assert.ok(catalogueIds.has(id), id);
+  for (const question of questions) assert.ok(findIndicators(question).some(item => item.id === id), `${question} should find ${id}`);
+}
+for (const page of ['/', '/data-story', ...starterPaths]) {
+  assert.equal(starterQuestions(page).length, 3, page);
+  starterQuestions(page).forEach(question => assert.ok(answerableQuestions.includes(question), question));
+}
+assert.equal(starterQuestions('/youth-bulge'), starterQuestions('/youth-bulge/anything'));
+const menu = followUpQuestions(['neet-annual', 'youth-neet-regions'], ['what does neet measure']);
+assert.deepEqual(menu, ['How has the youth NEET rate changed since 2022?', 'Which region had the highest youth NEET rate in Q3 2025?']);
+assert.deepEqual(chooseSuggestions(['Which region had the highest youth NEET rate in Q3 2025', 'What will unemployment be in 2055?'], menu), ['Which region had the highest youth NEET rate in Q3 2025?', 'How has the youth NEET rate changed since 2022?']);
+assert.deepEqual(followUpQuestions(['unknown-dataset'], []), starterQuestions('/'));
 assert.ok(read('../../.env').error);
 assert.ok(read('population-size', [{ field: '__proto__', value: 'test' }]).error);
 assert.ok(run('run_shell', { command: 'cat .env' }).error);
@@ -109,4 +126,4 @@ try {
   if (originalDailyLimit === undefined) delete process.env.AI_DAILY_REQUEST_LIMIT;
   else process.env.AI_DAILY_REQUEST_LIMIT = originalDailyLimit;
 }
-console.log(`Assistant checks passed: ${indicatorCatalogue.length} source datasets, ${publicationDocument.pageCount} publication pages, Markdown integrity, page search/citations, correction notices, period distinctions, cached JSON filters, paging, safe calculations, unread-evidence rejection, file-access rejection and request/concurrency limits.`);
+console.log(`Assistant checks passed: ${indicatorCatalogue.length} source datasets, ${answerableQuestions.length} answerable suggestion questions, ${publicationDocument.pageCount} publication pages, Markdown integrity, page search/citations, correction notices, period distinctions, cached JSON filters, paging, safe calculations, unread-evidence rejection, file-access rejection and request/concurrency limits.`);

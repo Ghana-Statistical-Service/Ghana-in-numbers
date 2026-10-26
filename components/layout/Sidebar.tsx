@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ExternalLink, Search, X } from "lucide-react";
 import { navGroups } from "@/lib/navigation";
+import FactOfTheWeek from "./FactOfTheWeek";
 
 type Props = { onSearch: () => void; onNavigate?: () => void; onClose?: () => void; idPrefix?: string };
 
@@ -82,9 +83,9 @@ export default function Sidebar({ onSearch, onNavigate, onClose, idPrefix = "nav
         ))}
       </nav>
 
-      <div className="border-t border-white/10 bg-nav-deep/60 px-5 py-4 text-xs leading-relaxed text-white/70">
-        <p>Figures from <span className="text-white">Ghana in Numbers 2025</span>. Reference periods are shown with each indicator.</p>
-        <a href="https://statsghana.gov.gh/" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 rounded text-white/85 underline-offset-2 hover:text-white hover:underline">
+      <div className="px-3 pb-3 pt-1 text-xs leading-relaxed text-white/70">
+        <FactOfTheWeek onNavigate={onNavigate} />
+        <a href="https://statsghana.gov.gh/" target="_blank" rel="noreferrer" className="ml-2 mt-2 inline-flex items-center gap-1.5 rounded text-white/85 underline-offset-2 hover:text-white hover:underline [@media(max-height:859px)]:hidden">
           statsghana.gov.gh <ExternalLink size={12} aria-hidden /><span className="sr-only">(opens in a new tab)</span>
         </a>
       </div>

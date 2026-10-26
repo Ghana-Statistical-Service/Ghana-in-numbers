@@ -1,6 +1,6 @@
 # Ask StatsChat
 
-A persistent **Ask StatsChat** launcher sits at the bottom-right of every page. The welcome message begins: “I am StatsChat, an AI model for official statistics developed by Ghana Statistical Service.” It explains the supported Ghana in Numbers sources, references and unavailable-information handling. On desktop it opens a 400 px chat window anchored above the launcher; on phones it opens a full-screen sheet that respects safe areas and the on-screen keyboard. Minimising keeps the conversation (and any request in progress); **New conversation** clears it. It supports suggested questions, follow-ups, source citations, stop and retry. It never opens automatically. Page content reserves bottom padding so the launcher does not cover the last chart or table, and the Explain panels and search dialog sit above it in the top layer.
+A persistent **Ask StatsChat** launcher sits at the bottom-right of every page. The welcome message begins: “I am StatsChat, an AI model for official statistics developed by Ghana Statistical Service.” It explains the supported Ghana in Numbers sources, references and unavailable-information handling. On desktop it opens a 400 px chat window anchored above the launcher; on phones it opens a full-screen sheet that respects safe areas and the on-screen keyboard. Minimising keeps the conversation (and any request in progress) and the reading position; **New conversation** clears it. It supports suggested questions, follow-ups, source citations, stop and retry. When an answer arrives the window scrolls to the start of the question and answer, not the bottom, so **Explore further** is reached by scrolling down. The line under the input reads: “StatsChat, the official AI chatbot for the Ghana Statistical Service. All answers are cited within the context of Ghana in Numbers.” It never opens automatically. Page content reserves bottom padding so the launcher does not cover the last chart or table, and the Explain panels and search dialog sit above it in the top layer.
 
 ## Local configuration
 
@@ -29,6 +29,12 @@ The catalogue imports the same publication data as the charts. It also decodes t
 
 The model has no general filesystem, shell, database-write or web-search tool. It cannot read environment files. JSON schemas and the server both validate tool arguments. Arbitrary arithmetic expressions are not evaluated. Retrieved evidence reduces unsupported answers but does not guarantee that every generated interpretation is correct; the interface keeps the cited source visible for review.
 
+## Suggested questions
+
+Page starters and **Explore further** questions come only from `lib/assistant/questions.ts`, a bank of questions keyed by the catalogue dataset that answers each one. For every answer the server builds a menu from that bank: questions for the datasets just read, then for the question's candidate datasets, then for other datasets on the same dashboard page, leaving out anything already asked. The model may only copy questions from that menu. The server discards anything else and fills the remaining places from the menu, so a suggestion can never ask for data the dashboard does not hold (forecasts, districts, other countries). Fallback answers use the same menu.
+
+When adding a dataset to the catalogue, add at least one question for it. `node scripts/check-assistant.cjs` fails if a question names an unknown dataset, if keyword search for the question does not return its dataset among the eight candidates the model receives, or if a page starter is not in the bank. Keyword search no longer down-ranks the cached monthly datasets when a question names a month (for example “December 2022”), because only the monthly CPI series covers such dates.
+
 ## Publication Markdown and page retrieval
 
 The source is `2025 GIN-Draft 24-12Oct26-Final (1).pdf` in the workspace parent directory. Its extractable text is converted locally into `public/documents/ghana-in-numbers-2025.md`, with the matching retrieval/reader index in `data/publicationText.json`. Both files are committed application assets: runtime access requires no local PDF, external vector database or uploaded OpenAI file. The model receives relevant passages on demand, rather than the entire document on each question.
@@ -54,7 +60,7 @@ Only bounded user/assistant text is sent in conversation history. The applicatio
 
 ## Validation
 
-- `node scripts/check-assistant.cjs`: source catalogue, JSON filters, units/period anchors, paging, arithmetic and access rejection; 167-page index/Markdown integrity, search relevance, physical/printed labels, citation eligibility, empty-page rejection, invalid page bounds and grassland correction preservation.
+- `node scripts/check-assistant.cjs`: suggested-question bank (every question reaches its dataset; starters and follow-ups stay in the bank), source catalogue, JSON filters, units/period anchors, paging, arithmetic and access rejection; 167-page index/Markdown integrity, search relevance, physical/printed labels, citation eligibility, empty-page rejection, invalid page bounds and grassland correction preservation.
 - `node --experimental-strip-types scripts/check-report-data.mjs`: publication data consistency.
 - `npm run build`: TypeScript, production compilation and routes.
 - Browser checks with a local simulated provider: retrieval/calculation loop, citations, follow-ups, clear/stop, keyboard/focus, mobile fit, malformed requests, origin rejection and error/retry behavior.

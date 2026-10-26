@@ -177,7 +177,7 @@ export function findIndicators(query: string, limit = 8) {
   return catalogue.map(entry => {
     const main = `${entry.id} ${entry.title} ${entry.keywords}`.toLowerCase();
     const secondary = `${entry.topic} ${entry.unit} ${entry.period}`.toLowerCase();
-    const score = tokens.reduce((sum, word) => sum + (main.includes(word.replace(/s$/, "")) ? 4 : secondary.includes(word) ? 1 : 0), 0) - (entry.id.startsWith("cached-") && !/region|monthly|month|snapshot|statsbank|2026|2027|2028|2029|203\d|204\d|2050/i.test(query) ? 2 : 0);
+    const score = tokens.reduce((sum, word) => sum + (main.includes(word.replace(/s$/, "")) ? 4 : secondary.includes(word) ? 1 : 0), 0) - (entry.id.startsWith("cached-") && !/region|monthly|month|\b(?:january|february|march|april|may \d{4}|june|july|august|september|october|november|december)\b|snapshot|statsbank|2026|2027|2028|2029|203\d|204\d|2050/i.test(query) ? 2 : 0);
     return { entry, score };
   }).filter(hit => hit.score > 0).sort((a, b) => b.score - a.score).slice(0, limit).map(({ entry }) => ({ id: entry.id, title: entry.title, topic: entry.topic, unit: entry.unit, period: entry.period, fields: Object.keys(entry.records[0] ?? {}), records: entry.records.length, notes: entry.notes }));
 }
