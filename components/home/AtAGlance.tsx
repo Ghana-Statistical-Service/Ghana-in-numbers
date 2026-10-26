@@ -114,10 +114,10 @@ function GlanceMap() {
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h3 className="text-[15px] font-semibold text-ink">Current indicator by region</h3>
-          <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-muted">{ind === "population" ? <>Projected population, 2025 <Qualifier tone="caution">Projection</Qualifier></> : "Year-on-year inflation, December 2025"}</p>
+          <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-muted">{ind === "population" ? <>Projected population, 2025 <Qualifier tone="caution">Projection</Qualifier></> : "Year-on-year consumer inflation, December 2025"}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Segmented label="Map indicator" size="sm" value={ind} onChange={setInd} options={[{ value: "population", label: "Population" }, { value: "inflation", label: "Inflation" }]} />
+          <Segmented label="Map indicator" size="sm" value={ind} onChange={setInd} options={[{ value: "population", label: "Population" }, { value: "inflation", label: "Consumer Inflation" }]} />
           <CardExplanation indicator={ind === "population" ? "population" : "inflation"} variant="link" />
         </div>
       </div>
@@ -127,7 +127,7 @@ function GlanceMap() {
             : <><p className="text-xs font-medium text-muted">Ghana</p><p className="tabular text-lg font-semibold leading-tight text-ink">{national != null ? (ind === "population" ? `${(national / 1e6).toFixed(1)} million` : `${national.toFixed(1)}%`) : "—"}</p></>}
         </div>
         {paths.length ? (
-          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 h-full w-full" role="group" aria-label={`Map of Ghana's regions: ${ind === "population" ? "projected population 2025" : "inflation December 2025"}`}>
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 h-full w-full" role="group" aria-label={`Map of Ghana's regions: ${ind === "population" ? "projected population 2025" : "consumer inflation December 2025"}`}>
             {paths.map(({ name, d }) => (
               <path key={name} d={d} tabIndex={0} role="img" aria-label={`${name}: ${values[name] != null ? fmt(values[name]) : "not reported"}`} fill={color(values[name])}
                 stroke={active === name ? "#0F172B" : "#FFFFFF"} strokeWidth={active === name ? 1.8 : 0.9} className="cursor-pointer outline-none"

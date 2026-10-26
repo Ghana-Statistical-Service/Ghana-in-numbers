@@ -45,37 +45,38 @@ export default function GovStatMessageModal() {
               <Image src="/gs.jpg" alt="Dr Alhassan Iddrisu, Government Statistician" width={200} height={248} className="h-auto w-[150px] rounded-lg object-cover sm:w-[190px]" style={{ objectPosition: "center top" }} />
             </div>
             <p>
-              Ghana in Numbers presents official statistics to advance understanding of Ghana&apos;s
-              development and support informed decision-making. This dashboard brings the
-              publication&apos;s evidence into an accessible format, enabling policymakers,
-              businesses, researchers, students, and the wider public to examine key national
-              indicators, understand trends, and assess their implications.
+              Ghana in Numbers brings together Ghana&apos;s official statistics in a single document
+              to advance the understanding of statistics and guide evidence-based decision-making.
+            </p>
+            <p>
+              This dashboard presents the publication in an accessible format, enabling
+              policymakers, businesses, researchers, students, and the wider public to examine
+              key national indicators, understand trends, and assess their implications.
             </p>
             <p>
               The evidence records important gains in health, economic activity, and
               macroeconomic stability. It also highlights persistent challenges, including
               youth disengagement from employment, education and training, widespread informal
-              employment, and food insecurity. Presenting these developments together supports
-              a balanced assessment of national progress and the areas requiring sustained
-              attention.
+              employment, and food insecurity.
             </p>
             <p>
-              Our objective is to make statistics useful to every reader. By bringing together
-              the figures, their trends, and their significance, Ghana in Numbers provides a
-              common basis for public discussion, policy formulation, planning, and accountability.
+              By bringing together these figures, trends, and their significance, Ghana in
+              Numbers provides a common basis for public discussion, policy formulation,
+              planning, and accountability. Presenting these developments together supports a
+              balanced assessment of national progress and the areas requiring sustained attention.
             </p>
             <p>
               This initiative reflects the Ghana Statistical Service&apos;s commitment to more
-              timely publication, wider access to official data through StatsBank and other
-              digital platforms, and a stronger National Statistical System. The value of our
+              timely publication, wider access to official data through the StatsBank and other
+              digital platforms, and a stronger National Statistical System. The value of this
               work lies in the extent to which reliable evidence informs decisions and action.
             </p>
             <p>
-              As this first edition develops, we will continue to acknowledge limitations in
-              the available evidence and welcome feedback to guide future improvements.
-              I invite all users to engage critically with the statistics and apply them
-              responsibly. The enduring contribution of Ghana in Numbers will be measured
-              by the decisions it improves and the development outcomes it supports.
+              As this first edition develops, the service will continue to acknowledge
+              limitations in the available evidence and welcome feedback to guide future
+              improvements. Users are encouraged to engage critically with the statistics and
+              apply them responsibly. The enduring contribution of Ghana in Numbers will be
+              measured by the decisions it improves and the development outcomes it supports.
             </p>
           </div>
           <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-line pt-5">

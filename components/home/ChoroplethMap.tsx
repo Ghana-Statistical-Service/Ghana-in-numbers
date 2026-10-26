@@ -57,7 +57,7 @@ export default function ChoroplethMap() {
       explain={{ indicator: indicator === "population" ? "population" : "inflation" }}
       actions={
         <div className="flex flex-wrap items-center gap-2">
-          <Segmented label="Map indicator" size="sm" value={indicator} onChange={setIndicator} options={[{ value: "population", label: "Population" }, { value: "inflation", label: "Inflation" }]} />
+          <Segmented label="Map indicator" size="sm" value={indicator} onChange={setIndicator} options={[{ value: "population", label: "Population" }, { value: "inflation", label: "Consumer Inflation" }]} />
           {indicator === "population" ? (
             <label className="sr-only" htmlFor="map-year">Projection year</label>
           ) : <label className="sr-only" htmlFor="map-month">Month</label>}
@@ -72,7 +72,7 @@ export default function ChoroplethMap() {
       {failed ? <p role="alert" className="rounded-md bg-caution-bg px-3 py-6 text-center text-[13px] text-caution">The regional data could not be loaded. Refresh the page to try again.</p> : (
         <RegionalMap
           data={data}
-          measure={indicator === "population" ? "Projected population (people)" : "Year-on-year inflation (%)"}
+          measure={indicator === "population" ? "Projected population (people)" : "Year-on-year consumer inflation (%)"}
           format={format}
           height={380}
           highlight={national != null ? `Ghana: ${indicator === "population" ? `${(national / 1e6).toFixed(1)} million` : `${national.toFixed(1)}%`}` : undefined}
