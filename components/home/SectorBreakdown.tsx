@@ -23,7 +23,7 @@ export function SectorShareBar({ height = 40 }: { height?: number }) {
   );
 }
 
-// IBES I, p. 48: share of establishments by broad sector, 2024 (a count of businesses, not output).
+// IBES I, p. 51: share of establishments by broad sector, 2024 (a count of businesses, not output).
 const establishments = [{ name: "Agriculture", value: 2.2 }, { name: "Industry", value: 21.1 }, { name: "Services", value: 76.7 }];
 
 export default function SectorBreakdown({ withEstablishments = false }: { withEstablishments?: boolean }) {
@@ -34,7 +34,7 @@ export default function SectorBreakdown({ withEstablishments = false }: { withEs
       period="2025"
       explain={{ indicator: "sector" }}
       notes={withEstablishments ? "Output shares are not employment shares. The second bar counts establishments (fixed-structure businesses), a different measure: farming is mostly outside establishments." : "Output shares, not shares of employment."}
-      source={withEstablishments ? "GSS Annual GDP · p. 37; 2024 IBES I · pp. 48–49" : "GSS Annual GDP; Ghana in Numbers 2025, p. 37"}
+      source={withEstablishments ? "GSS Annual GDP · p. 41; 2024 IBES I · pp. 51–52" : "GSS Annual GDP; Ghana in Numbers 2025, p. 41"}
     >
       <SectorShareBar />
       {withEstablishments && (

@@ -74,7 +74,7 @@ export function FiscalSection() {
         <ChartCard title="Revenue and expenditure" subtitle={unit === "bn" ? "GH¢ billion, nominal" : "% of GDP"} period={`2022–2025 · ${basisLabel}`}
           explain={getGroupExplanation("fiscal", "Revenue and expenditure", [0, 1])}
           notes={unit === "bn" ? "Revenue more than doubled in cedis since 2022, but stayed within 15.3–15.8% of GDP (switch to % of GDP). Tax revenue is part of the total, not an addition to it." : "Measured against the economy, revenue barely moved while commitment spending fell from 27.5% to 16.6% of GDP."}
-          source="Ministry of Finance · Tables 5.9a–b, pp. 73–74">
+          source="Ministry of Finance · Tables 5.9–5.10, pp. 64–65">
           <Legend className="mb-1" items={[{ label: "Revenue and grants", color: C.teal, shape: "line" }, { label: "Tax revenue (included)", color: C.teal, shape: "dash" }, { label: `Expenditure (${basis})`, color: C.purple, shape: "line" }]} />
           <ChartFrame height={250} label={`Revenue, tax revenue and ${basis} expenditure, 2022 to 2025, in ${unit === "bn" ? "billion cedis" : "percent of GDP"}`}>
             <LineChart data={trend} margin={{ top: 20, right: 28, left: -4, bottom: 0 }}>
@@ -92,7 +92,7 @@ export function FiscalSection() {
         <ChartCard title="Deficits and surpluses" subtitle={unit === "bn" ? "GH¢ billion" : "% of GDP"} period={`2022–2025 · ${basisLabel}`}
           explain={getGroupExplanation("fiscal", "Fiscal balances", [3, 4])}
           notes="Bars below zero are deficits. The overall balance includes interest; the primary balance excludes it. On the commitment basis the deficit narrowed from 6.9% of GDP (2024) to 1.0% (2025), partly because capital spending fell."
-          source="Ministry of Finance · Tables 5.9a–b, pp. 73–74">
+          source="Ministry of Finance · Tables 5.9–5.10, pp. 64–65">
           <Legend className="mb-1" items={[{ label: "Overall balance", color: C.purple }, { label: "Primary balance", color: C.teal }]} />
           <ChartFrame height={250} label={`Overall and primary balances, ${basis} basis, 2022 to 2025`}>
             <BarChart data={balances} margin={{ top: 20, right: 8, left: -4, bottom: 0 }} barGap={2}>
@@ -112,7 +112,7 @@ export function FiscalSection() {
         <ChartCard title="Where the money came from" subtitle="Revenue and grants by source, GH¢ billion" period="2022–2025"
           explain={getGroupExplanation("fiscal", "Revenue, grants and tax revenue", [0])}
           notes="The five sources add up to total revenue and grants. About 82 of every 100 cedis came from taxes in 2025; grants were less than one cedi in a hundred."
-          source="Ministry of Finance · Table 5.9a, p. 73">
+          source="Ministry of Finance · Table 5.9, p. 64">
           <Legend className="mb-2" items={revSeries.map(s => ({ label: s.label, color: s.color }))} />
           <ChartFrame height={240} label="Revenue and grants by source, 2022 to 2025">
             <BarChart data={revenueMix} margin={{ top: 22, right: 8, left: -4, bottom: 0 }}>
@@ -129,7 +129,7 @@ export function FiscalSection() {
         <ChartCard title="Where committed spending went" subtitle="Commitment-basis expenditure by item, GH¢ billion" period="2022–2025"
           explain={getGroupExplanation("fiscal", "Compensation, interest and capital expenditure", [2])}
           notes="Items add up to commitment expenditure. In 2025 compensation and interest together took about 57% of revenue and grants, while capital spending fell 31.1% to GH¢20.2 billion (1.4% of GDP)."
-          source="Ministry of Finance · Table 5.9a, p. 73">
+          source="Ministry of Finance · Table 5.9, p. 64">
           <Legend className="mb-2" items={spendSeries.map(s => ({ label: s.label, color: s.color }))} />
           <ChartFrame height={240} label="Commitment expenditure by item, 2022 to 2025">
             <BarChart data={spendMix} margin={{ top: 22, right: 8, left: -4, bottom: 0 }}>
@@ -147,8 +147,8 @@ export function FiscalSection() {
       <ChartCard title="From commitments to cash payments" subtitle="Net change in unpaid bills (arrears), GH¢ billion · positive = bills built up, negative = bills cleared" period="2022–2025"
         explain={getGroupExplanation("fiscal", "Cash and commitment expenditure", [1])}
         notes="Cash expenditure = commitment expenditure − net change in unpaid bills. In 2025 the government cleared GH¢29.5 billion of old bills (2.1% of GDP), so cash spending (GH¢268.3 billion) exceeded commitments (GH¢238.7 billion)."
-        source="Ministry of Finance · Table 5.9a, p. 73"
-        footer={<DataDisclosure hint="Tables 5.9a and 5.9b"><DataTable caption="Selected fiscal indicators, nominal GH¢ million" headings={["Indicator (GH¢ million)", ...YEARS]} rows={tableRows} decimals={0} minWidth={640} /><DataTable caption="Selected fiscal indicators, percent of GDP" headings={["Indicator (% of GDP)", ...YEARS]} rows={shareRows} decimals={1} minWidth={640} unitNote="Indented rows break down their parent and must not be added to it. Published totals may differ from arithmetic on rounded components." /></DataDisclosure>}>
+        source="Ministry of Finance · Table 5.9, p. 64"
+        footer={<DataDisclosure hint="Tables 5.9 and 5.10"><DataTable caption="Selected fiscal indicators, nominal GH¢ million" headings={["Indicator (GH¢ million)", ...YEARS]} rows={tableRows} decimals={0} minWidth={640} /><DataTable caption="Selected fiscal indicators, percent of GDP" headings={["Indicator (% of GDP)", ...YEARS]} rows={shareRows} decimals={1} minWidth={640} unitNote="Indented rows break down their parent and must not be added to it. Published totals may differ from arithmetic on rounded components." /></DataDisclosure>}>
         <ChartFrame height={190} label="Net change in arrears: 2022 +7.0, 2023 +3.5, 2024 +20.1, 2025 −29.5 billion cedis">
           <BarChart data={YEARS.map((year, i) => ({ year, value: N.expenditure.arrearsClearance[i] / 1000 }))} layout="vertical" margin={{ top: 0, right: 48, left: 0, bottom: 0 }} barCategoryGap="30%">
             <CartesianGrid stroke={C.grid} horizontal={false} />
@@ -217,10 +217,10 @@ export function FinanceSection() {
       <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${group.rows.length > 2 ? "xl:grid-cols-4" : ""}`}>
         {group.rows.map(row => <FinanceTile key={row.title} row={row} scale={group.commonScale} />)}
       </div>
-      <DataDisclosure hint="Table 5.10, all 20 indicators">
+      <DataDisclosure hint="Table 5.11, all 20 indicators">
         <DataTable caption="Monetary and financial indicators, 2022–2025" headings={["Indicator (end of period unless stated)", "2022", "2023", "2024", "2025"]}
           rows={[...monetaryIndicators.slice(0, 3).map(r => r as TableRow), ["Nominal private-sector credit growth (%)", ...nominalCreditGrowth], ...monetaryIndicators.slice(3).map(r => r as TableRow)]} decimals={1} minWidth={560}
-          unitNote="Source: Bank of Ghana · Table 5.10, p. 77. The nominal credit-growth row (31.8, 10.7, 26.3, 19.2) is published in Table 5.10 and Table 2.1." />
+          unitNote="Source: Bank of Ghana · Table 5.11, p. 70. The nominal credit-growth row (31.8, 10.7, 26.3, 19.2) is published in Table 5.11 and Table 2.1." />
       </DataDisclosure>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { CartesianGrid, LabelList, Line, LineChart, ReferenceArea, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, LabelList, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { Gavel, Gift, Hand, HandCoins, Megaphone, Vote, type LucideIcon } from "lucide-react";
 import { ChartCard } from "@/components/ui/Card";
 import { BeforeAfter, ChangeBadge, IconTile, Milestones, Pictogram, StatTile, Takeaway, Waffle, tones, type Tone } from "@/components/ui/Infographic";
@@ -35,7 +35,7 @@ export function ParliamentCard() {
   return (
     <ChartCard title="Women representation in Parliament" subtitle="Share of parliamentary seats held by women, %" period="1993–2025 (1st–9th Parliaments)" explain={{ indicator: "parliament" }}
       notes={`The seat diagram is illustrative: 100 seats with ${seats} highlighted (${last.value.toFixed(1)}%). The total number of seats is not given in the publication. Women are 50.7% of the population.`}
-      source="Parliamentary Service of Ghana · Figure 6.1, p. 90"
+      source="Parliamentary Service of Ghana · Figure 6.1, p. 85"
       footer={<DataDisclosure><DataTable caption="Women in Parliament" headings={["Year", "Parliament", "Women (%)"]} rows={womenParliamentData.map(d => [d.year, d.parliament, d.value])} decimals={[undefined, undefined, 1]} minWidth={320} /></DataDisclosure>}>
       <div className="grid items-center gap-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <Hemicycle highlighted={seats} label={`About ${seats} in 100 seats held by women in the ${last.parliament} Parliament (${last.year})`} />
@@ -63,15 +63,15 @@ export function ParliamentCard() {
 }
 
 export function JudgesCard() {
-  // 2012 is not reported in Figure 6.2: the time-scaled axis leaves its gap visible instead of joining across it.
-  const data = [...womenJudgesData.slice(0, 4), { year: "2012", supreme: null, appeal: null, high: null }, ...womenJudgesData.slice(4)].map(d => ({ ...d, yearNum: Number(d.year) }));
+  // The final edition reports every year 2008–2025, including 2012 (absent from the draft).
+  const data = womenJudgesData.map(d => ({ ...d, yearNum: Number(d.year) }));
   const last = womenJudgesData.at(-1)!;
   const s = [{ key: "high", label: "High Court", color: C.teal, tone: "teal" as Tone }, { key: "appeal", label: "Court of Appeal", color: C.blue, tone: "blue" as Tone }, { key: "supreme", label: "Supreme Court", color: C.rose, tone: "rose" as Tone }] as const;
   return (
     <ChartCard title="Percentage of women judges" subtitle="Women as % of judges in each court" period="2008–2025" explain={{ indicator: "judges" }}
-      notes="Each court has its own denominator, so the lines must not be added. The year axis is spaced by time; the break at 2012 marks a year that is not reported."
-      source="Judicial Service of Ghana · Figure 6.2, p. 91"
-      footer={<DataDisclosure><DataTable caption="Women judges by court" headings={["Year", "Supreme Court (%)", "Court of Appeal (%)", "High Court (%)"]} rows={data.map(d => [d.year, d.supreme, d.appeal, d.high])} decimals={1} minWidth={420} unitNote="2012 is not reported." /></DataDisclosure>}>
+      notes="Each court has its own denominator, so the lines must not be added. Revised in the final edition: the Supreme Court series differs from the draft in every year, and 2012 is now reported. Chapter 11 of the publication still quotes the draft 2025 values (High Court 48.6%, Court of Appeal 40.3%); Figure 6.2 and Table 2.1 give 48.8% and 39.0%, which are used here."
+      source="Judicial Service of Ghana · Figure 6.2, p. 86"
+      footer={<DataDisclosure><DataTable caption="Women judges by court" headings={["Year", "Supreme Court (%)", "Court of Appeal (%)", "High Court (%)"]} rows={data.map(d => [d.year, d.supreme, d.appeal, d.high])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <ul className="mb-4 grid gap-2 sm:grid-cols-3" aria-label={`Women judges, ${last.year}`}>
         {s.map(x => <StatTile key={x.key} icon={Gavel} tone={x.tone} label={x.label} value={`${last[x.key].toFixed(1)}%`} period={last.year} />)}
       </ul>
@@ -81,7 +81,6 @@ export function JudgesCard() {
           <CartesianGrid stroke={C.grid} vertical={false} />
           <XAxis dataKey="yearNum" type="number" domain={[2007.5, 2025.5]} ticks={[2008, 2011, 2014, 2017, 2020, 2023, 2025]} {...axisCommon} tick={tickSmall} />
           <YAxis {...axisCommon} tick={tick} domain={[0, 60]} ticks={[0, 20, 40, 60]} tickFormatter={v => `${v}%`} width={42} />
-          <ReferenceArea x1={2011.5} x2={2012.5} fill={C.slateLight} fillOpacity={0.25} />
           <Tooltip content={makeTooltip({ unit: "%" })} />
           {s.map(x => <Line key={x.key} type="linear" dataKey={x.key} name={x.label} stroke={x.color} strokeWidth={2.25} dot={{ r: 2.5, fill: x.color }} connectNulls={false} isAnimationActive={false} />)}
         </LineChart>
@@ -96,7 +95,7 @@ export function GiftRequestsCard() {
   return (
     <ChartCard title="Direct requests for gifts by public officials" subtitle="% of people directly asked for a gift by an official" period={`${giftRequests[0].period}; ${a.period}; ${b.period}`} explain={{ indicator: "requests" }}
       notes={`Requests refer to periods of different length (a full year in ${giftRequests[0].period}, half-years in 2025), so compare the two half-years. Being asked and actually giving are separate measures.`}
-      source="GSS Governance Series Waves 2–3 · Figure 6.3, p. 92"
+      source="GSS Governance Series Waves 2–3 · Figure 6.3, p. 87"
       footer={<DataDisclosure><DataTable caption="Direct requests for gifts" headings={["Period", "Directly asked for a gift (%)"]} rows={giftRequests.map(d => [d.period, d.value])} decimals={1} minWidth={300} /></DataDisclosure>}>
       <BeforeAfter icon={HandCoins} tone="amber" before={{ value: a.value, label: a.period }} after={{ value: b.value, label: b.period }} format={v => `${v.toFixed(1)}%`}
         change={`${diff >= 0 ? "+" : "−"}${Math.abs(diff).toFixed(1)} pp`} lowerIsBetter changeLabel={diff > 0 ? "worse: more people were asked" : "better: fewer people were asked"} />
@@ -111,7 +110,7 @@ export function GiftsGivenCard() {
   return (
     <ChartCard title="Giving gifts to public officials" subtitle="% of people who gave a gift to a public official" period="2021, 2024 and 2025" explain={{ indicator: "gifts" }}
       notes="SDG 16.5.1 bribery incidence. Lower is better."
-      source="GSS Ghana Corruption Survey (2022) and Governance Series Waves 2–3 · Figure 6.4, p. 92"
+      source="GSS Ghana Corruption Survey (2022) and Governance Series Waves 2–3 · Figure 6.4, p. 87"
       footer={<DataDisclosure><DataTable caption="Gave a gift to a public official" headings={["Year", "Gave a gift (%)"]} rows={giftsToOfficialsData.map(d => [d.year, d.value])} decimals={1} minWidth={300} /></DataDisclosure>}>
       <Milestones data={giftsToOfficialsData} tone="teal" icon={Gift} format={v => `${v.toFixed(1)}%`} unit="per cent" />
       <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -127,7 +126,7 @@ function VoiceCard({ title, subtitle, data, icon, explain, notes, extraNote }: {
   const first = data[0], last = data.at(-1)!;
   const inTen = Math.round(last.value / 10);
   return (
-    <ChartCard title={title} subtitle={subtitle} period={data.map(d => d.year).join(", ")} explain={{ indicator: explain }} notes={notes} source="GSS Governance Series Wave 3 · Figure 6.5, p. 93"
+    <ChartCard title={title} subtitle={subtitle} period={data.map(d => d.year).join(", ")} explain={{ indicator: explain }} notes={notes} source="GSS Governance Series Wave 3 · Figure 6.5, p. 88"
       footer={<DataDisclosure><DataTable caption={title} headings={["Year", "% of respondents"]} rows={data.map(d => [d.year, d.value])} decimals={1} minWidth={260} unitNote={extraNote} /></DataDisclosure>}>
       <Milestones data={data} tone="teal" icon={icon} format={v => `${v.toFixed(1)}%`} unit="per cent" />
       <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -142,7 +141,7 @@ function VoiceCard({ title, subtitle, data, icon, explain, notes, extraNote }: {
 export function NoSayCard() {
   return <VoiceCard title="No inclusiveness in decision-making" subtitle="% who feel they have no say in government decisions" data={noSayData} icon={Megaphone} explain="noSay"
     notes="A perception, not a measure of service delivery. The 2013 figure is cited in the text; Figure 6.5 shows 2024 and 2025."
-    extraNote="Table 11.1 (p. 134) gives 29.2% for 2025; the figure, chapter text and Table 2.1 give 29.7%." />;
+    />;
 }
 
 export function NoInfluenceCard() {
@@ -156,7 +155,7 @@ export function VotingCard() {
     <ChartCard title="People who have never voted, by region" subtitle="% of respondents who have never voted in each type of election" period="Governance Series Wave 1"
       explain={{ indicator: "vote" }}
       notes="Almost every adult knows voting is a right (98.1%, 2024), but knowing the right and using it differ. Never voting is more common in district elections than in national ones. * In the district-election map, four labels conflict with their shading (Bono East 0.5%, Greater Accra 4.0%, Oti 8.5% and Upper West 7.7% are shaded above 10%); labels are shown as printed. The wave’s reference period and national totals are not printed."
-      source="GSS Governance Series Wave 1 · Figure 6.6, p. 94"
+      source="GSS Governance Series Wave 1 · Figure 6.6, p. 89"
       footer={<DataDisclosure><DataTable caption="Never voted by region" headings={["Region", "National elections (%)", "District elections (%)", "Note"]} rows={neverVoted.map(r => [r.region, r.national, r.district, r.flag ?? ""])} decimals={[undefined, 1, 1]} minWidth={560} /></DataDisclosure>}>
       <Legend className="mb-3" items={[{ label: "National elections", color: C.purple, shape: "dot" }, { label: "District elections", color: C.amber, shape: "dot" }]} />
       <ul className="space-y-[7px]" aria-label="Never voted by region, national and district elections">
@@ -183,7 +182,7 @@ export function VoteKnowledge() {
   return (
     <ChartCard title="Knowledge of the right to vote" subtitle="% of adults aged 18 and over" period="2024" explain={{ indicator: "vote" }}
       notes="Knowing that voting is a right is not the same as registering or voting; it is not a turnout measure. Each square is 1% of adults."
-      source="GSS Governance Series · p. 93"
+      source="GSS Governance Series · p. 88"
       footer={<DataDisclosure><DataTable caption="Knowledge of the right to vote" headings={["Year", "% of adults"]} rows={[["2024", v]]} decimals={1} minWidth={220} /></DataDisclosure>}>
       <div className="flex items-center gap-4">
         <IconTile icon={Vote} tone="purple" size="lg" />

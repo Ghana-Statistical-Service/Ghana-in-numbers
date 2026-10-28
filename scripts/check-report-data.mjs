@@ -32,11 +32,11 @@ for (const cards of [population.populationKPIs, social.socialDevelopmentKPIs, ec
 // Cross-page reference figures and definitions from the PDF, not current/live statistics.
 assert.equal(population.populationKPIs[0].value, String(population.populationSize.at(-1).value));
 assert.equal(social.healthInsuranceCoverageData.at(-1).value, Number(social.socialDevelopmentKPIs.find(k => k.label === 'Health Insurance').value));
-assert.equal(social.enrolmentRateData.at(-1).primaryNet, 83.2); // Figure 4.1, p. 28
+assert.equal(social.enrolmentRateData.at(-1).primaryNet, 83.2); // Figure 4.1, p. 29
 assert.equal(social.enrolmentRateData.at(-1).jhsNet, 59.3);
-assert.equal(governance.giftsToOfficialsData.at(-1).value, 16.8); // Wave 3, p. 92
+assert.equal(governance.giftsToOfficialsData.at(-1).value, 16.8); // Wave 3, p. 87
 assert.equal(governance.womenJudgesData.find(d => d.year === '2023').supreme, 46.2);
-assert.equal(economy.realGdpData.at(-1).real, 209.6); // Figure 5.5, p. 38
+assert.equal(economy.realGdpData.at(-1).real, 209.6); // Figure 5.5, p. 42
 assert.equal(economy.ppiSectorData.find(d => d.sector === 'Mining and Quarrying').value, 3.3); // Detailed Figure 5.15
 assert.equal(sdg.povertyData.find(d => d.year === '2024').value, 25.2);
 close(economy.sectorShare2025.reduce((s,d) => s + d.value, 0), 100);
@@ -62,7 +62,7 @@ close(Math.max(...environment.monthlyRainfall2025.map(d => d.value)), 216.7);
 close(Math.max(...environment.monthlyTemperature2025.map(d => d.value)), 30.4);
 assert.equal(environment.forestReserveArea2025.length, 12); // Absent regions must not be zero-filled.
 close(environment.forestReserveArea2025.reduce((s,d) => s + d.area, 0), environment.forestReserveTotal2025, 5);
-close(additions.enterpriseTypes.slice(0,3).reduce((s,d) => s + Number(d[1].replaceAll(',','')), 0), 2644358);
+close(additions.enterpriseTypes.slice(0,3).reduce((s,d) => s + Number(d[1].replaceAll(',','')), 0), 2644363);
 for (const d of additions.informalTrade) close(d[1] - d[2], d[4], 0.02);
 // Series added in the October 2026 redesign.
 assert.equal(economy.labourParticipationData.find(d => d.year === '2024').employmentPopulation, 60.6); // Figure 5.17 label
@@ -77,7 +77,7 @@ for (const i of extra.livestockSeries.total.keys()) close(['poultry', 'goats', '
 assert.equal(extra.livestockSeries.years.length, extra.livestockSeries.poultry.length);
 for (const d of extra.fishValue) if (d.aquaculture != null) close(d.marine + d.inland + d.aquaculture, d.total, 0.02);
 assert.ok(extra.fishValue.filter(d => d.aquaculture == null).every(d => Number(d.year) <= 2014)); // unlabelled segments stay missing
-close(extra.fishValue.at(-1).total, 20.44); close(extra.fishValue[0].total, 1.94); // values, matching p. 42 text
+close(extra.fishValue.at(-1).total, 20.44); close(extra.fishValue[0].total, 1.94); // values, matching p. 45 text
 close(extra.fishQuantity[1].marine + extra.fishQuantity[1].inland + extra.fishQuantity[1].aquaculture, extra.fishQuantity[1].total, 1);
 close(extra.tilapiaCatfish.at(-1).tilapia + extra.tilapiaCatfish.at(-1).catfish, 124428, 0.5);
 close(extra.tilapiaCatfish[0].tilapia + extra.tilapiaCatfish[0].catfish, 32512, 0.5);
@@ -151,4 +151,20 @@ close(Object.values(extra.populationDensity).find(() => true) && extra.populatio
   assert.equal(factOfTheWeek(Date.UTC(2026, 0, 12)), 1);
   assert.equal(factOfTheWeek(Date.UTC(2025, 11, 29)), weeklyFacts.length - 1);
 }
+// Final edition (Ghana In Numbers 2025 main report) revisions.
+const judges2025 = governance.womenJudgesData.at(-1);
+assert.deepEqual([judges2025.high, judges2025.appeal, judges2025.supreme], [48.8, 39.0, 25.0]);
+assert.equal(governance.womenJudgesData.length, 18, 'Every year 2008–2025, including 2012');
+assert.equal(governance.womenJudgesData.find(d => d.year === '2008').supreme, 27.3);
+assert.equal(governance.governanceKPIs.find(k => k.label === 'Women High Court Judges').value, '48.8');
+assert.ok(!social.gbvPrevalenceData.some(d => /Physical/.test(d.type)), 'The final edition reports sexual and psychological violence only');
+assert.equal(youth.populationShareData.find(d => d.year === '2025').children, 35.0);
+assert.equal(youth.populationShareData.find(d => d.year === '2025').youth1535, 35);
+// The 2025 child share agrees with the 2025 pyramid (0–14 in million / 33.7 million).
+close(population.pyramidData['2025'].filter(d => ['0-4', '5-9', '10-14'].includes(d.age)).reduce((a, d) => a + d.male + d.female, 0) / 33.7 * 100, 35.0, 0.2);
+assert.equal(Object.keys(extra.childMarriageByRegion).length, 16);
+close(Object.values(extra.povertyByRegionQ3).length, 16);
+for (const d of extra.povertyDrivers) close(d.health + d.living + d.education + d.employment, 100, 0.15);
+assert.equal(extra.povertyQuarterly.at(-1).incidence, 21.9);
+assert.equal(extra.povertyQuarterly.length, 15);
 console.log('Publication data checks passed: source anchors, units/periods, totals, trade balances, regional coverage and cross-page consistency.');

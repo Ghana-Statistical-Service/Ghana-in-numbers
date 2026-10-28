@@ -34,11 +34,11 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Deep dives and stories",
+    label: "Deep dives and impact stories",
     items: [
       { label: "Youth Bulge", href: "/youth-bulge", icon: Users2, description: "Youth population, unemployment, NEET and skills" },
       { label: "Agriculture, Forestry and Fishing", href: "/agriculture-forestry-fishing", icon: Wheat, description: "Public spending, crops, livestock, fish and young farm workers" },
-      { label: "Data Stories", href: "/data-story", icon: BookOpen, description: "Official statistics in use in districts and communities" },
+      { label: "Data Impact Stories", href: "/data-story", icon: BookOpen, description: "Official statistics in use in districts and communities" },
     ],
   },
 ];

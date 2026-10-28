@@ -70,7 +70,7 @@ export default function PopulationAndSociety() {
           </Grid>
         </Section>
 
-        <Section id="migration" title="Migration and population distribution" description="Where people live, which regions gain population through migration, and why Ghanaians move abroad. Migration compares region of birth with region of enumeration at each census." source="§3.3–3.4, §3.7 · pp. 16–26">
+        <Section id="migration" title="Migration and population distribution" description="Where people live, which regions gain population through migration, and why Ghanaians move abroad. Migration compares region of birth with region of enumeration at each census." source="§3.3–3.4, §3.7–3.8 · pp. 16–26">
           <div id="regional" className="mb-4 scroll-mt-16 lg:mb-5"><RegionalCard /></div>
           <MigrationStats />
           <Grid cols={2}>

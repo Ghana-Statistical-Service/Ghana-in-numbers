@@ -11,7 +11,7 @@ export const governanceKPIs = [
   },
   {
     label: "Women High Court Judges",
-    value: "48.6",
+    value: "48.8",
     unit: "%",
     note: "2025",
     color: "#12AEE3",
@@ -51,24 +51,26 @@ export const womenParliamentData = [
   { year: "2025", parliament: "9th", value: 14.9 },
 ];
 
+// Figure 6.2, p. 86 of the final edition (Judicial Service of Ghana). Every year 2008–2025 is reported, including 2012.
 export const womenJudgesData = [
-  { year: "2008", supreme: 20.0, appeal: 12.5, high: 20.0 },
-  { year: "2009", supreme: 30.8, appeal: 15.4, high: 19.0 },
-  { year: "2010", supreme: 30.8, appeal: 17.4, high: 15.2 },
-  { year: "2011", supreme: 30.8, appeal: 17.4, high: 15.4 },
-  { year: "2013", supreme: 36.4, appeal: 18.2, high: 20.2 },
-  { year: "2014", supreme: 33.3, appeal: 37.5, high: 23.5 },
-  { year: "2015", supreme: 23.1, appeal: 37.0, high: 27.6 },
-  { year: "2016", supreme: 23.1, appeal: 37.0, high: 27.6 },
-  { year: "2017", supreme: 25.0, appeal: 37.0, high: 29.2 },
-  { year: "2018", supreme: 21.4, appeal: 37.9, high: 34.4 },
-  { year: "2019", supreme: 15.4, appeal: 44.0, high: 38.8 },
-  { year: "2020", supreme: 29.4, appeal: 42.4, high: 44.1 },
-  { year: "2021", supreme: 33.3, appeal: 39.4, high: 45.3 },
+  { year: "2008", supreme: 27.3, appeal: 12.5, high: 20.0 },
+  { year: "2009", supreme: 35.7, appeal: 15.4, high: 19.0 },
+  { year: "2010", supreme: 35.7, appeal: 17.4, high: 15.2 },
+  { year: "2011", supreme: 35.7, appeal: 17.4, high: 15.4 },
+  { year: "2012", supreme: 41.7, appeal: 18.2, high: 20.2 },
+  { year: "2013", supreme: 38.5, appeal: 34.6, high: 23.3 },
+  { year: "2014", supreme: 38.5, appeal: 37.5, high: 23.5 },
+  { year: "2015", supreme: 28.6, appeal: 37.0, high: 27.6 },
+  { year: "2016", supreme: 28.6, appeal: 37.0, high: 29.6 },
+  { year: "2017", supreme: 30.8, appeal: 37.0, high: 29.2 },
+  { year: "2018", supreme: 26.7, appeal: 37.9, high: 34.4 },
+  { year: "2019", supreme: 21.4, appeal: 44.0, high: 38.8 },
+  { year: "2020", supreme: 27.8, appeal: 42.4, high: 44.1 },
+  { year: "2021", supreme: 31.3, appeal: 39.4, high: 45.3 },
   { year: "2022", supreme: 38.5, appeal: 48.4, high: 45.0 },
   { year: "2023", supreme: 46.2, appeal: 41.0, high: 44.8 },
-  { year: "2024", supreme: 28.6, appeal: 40.6, high: 44.7 },
-  { year: "2025", supreme: 25.0, appeal: 40.3, high: 48.6 },
+  { year: "2024", supreme: 33.3, appeal: 40.6, high: 44.7 },
+  { year: "2025", supreme: 25.0, appeal: 39.0, high: 48.8 },
 ];
 
 export const giftsToOfficialsData = [

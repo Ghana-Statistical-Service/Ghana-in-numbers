@@ -2,7 +2,7 @@ import { BookOpen, House, Lightbulb, School, ShieldPlus } from "lucide-react";
 import DashboardShell from "@/components/layout/DashboardShell";
 import OverviewTopBar from "@/components/home/OverviewTopBar";
 import {
-  ChildMarriageCard, CompletionCard, ElectricityCard, EnrolmentCard, HealthInsuranceCard, HousingCard, LearningGlanceCard, NhisHeadlineCard, TeachersCard,
+  ChildMarriageCard, ChildMarriageRegionsCard, CompletionCard, ElectricityCard, EnrolmentCard, HealthInsuranceCard, HousingCard, LearningGlanceCard, NhisHeadlineCard, TeachersCard,
   TeenageMotherhoodCard, ToiletCard, ViolenceCard, WaterCard,
 } from "@/components/social-development/SocialSections";
 import { KpiCard, KpiGrid } from "@/components/ui/Card";
@@ -33,7 +33,7 @@ export default function SocialDevelopmentPage() {
 
         <SectionNav items={[{ id: "learning", label: "Learning" }, { id: "health", label: "Health" }, { id: "living-conditions", label: "Living conditions" }, { id: "protection", label: "Inclusion and protection" }]} />
 
-        <Section id="learning" accent="green" title="Learning and opportunity" description="Getting children into primary school is no longer the main difficulty; keeping them in school afterwards is." source="§4.1 · pp. 28–29">
+        <Section id="learning" accent="green" title="Learning and opportunity" description="Getting children into primary school is no longer the main difficulty; keeping them in school afterwards is." source="§4.1 · pp. 29–30">
           <LearningGlanceCard />
           <Grid cols={2} className="mt-4 lg:mt-5">
             <EnrolmentCard />
@@ -42,7 +42,7 @@ export default function SocialDevelopmentPage() {
           <div className="mt-4 lg:mt-5"><TeachersCard /></div>
         </Section>
 
-        <Section id="health" accent="green" title="Health and well-being" description="Insurance coverage more than doubled since 2010; teenage motherhood remains far higher in rural areas." source="§4.2 · pp. 30–31">
+        <Section id="health" accent="green" title="Health and well-being" description="Insurance coverage more than doubled since 2010; teenage motherhood remains far higher in rural areas." source="§4.2 · pp. 31–33">
           <Grid cols="1-2">
             <NhisHeadlineCard />
             <HealthInsuranceCard />
@@ -50,7 +50,7 @@ export default function SocialDevelopmentPage() {
           <div className="mt-4 lg:mt-5"><TeenageMotherhoodCard /></div>
         </Section>
 
-        <Section id="living-conditions" accent="green" title="Living conditions" description="More homes and better basic services, with remaining gaps in electricity and sanitation." source="§4.3 · pp. 32–34">
+        <Section id="living-conditions" accent="green" title="Living conditions" description="More homes and better basic services, with remaining gaps in electricity and sanitation." source="§4.3 · pp. 34–35">
           <Grid cols={2}>
             <HousingCard />
             <ElectricityCard />
@@ -61,11 +61,12 @@ export default function SocialDevelopmentPage() {
           </Grid>
         </Section>
 
-        <Section id="protection" accent="green" title="Inclusion and protection" description="Reported violence and child marriage fell, but neither has ended." source="§4.4 · pp. 31–34">
+        <Section id="protection" accent="green" title="Inclusion and protection" description="Reported violence and child marriage fell, but neither has ended." source="§4.2.1, §4.4 · pp. 33, 36">
           <Grid cols="3-2">
             <ViolenceCard />
             <ChildMarriageCard />
           </Grid>
+          <div className="mt-4 lg:mt-5"><ChildMarriageRegionsCard /></div>
         </Section>
       </PageBody>
     </DashboardShell>

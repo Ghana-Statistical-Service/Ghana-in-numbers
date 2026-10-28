@@ -78,7 +78,7 @@ export const internalMigrationFlows: Record<Region, { out: number; in: number }>
   "Upper West": { out: 226226, in: 36411 },
 };
 
-/** pp. 6, 17. Urban and rural residents, million people. 1984 counts are not printed. */
+/** pp. 5, 17. Urban and rural residents, million people. 1984 counts are not printed. */
 export const urbanRuralCounts = [
   { year: "2000", urban: 8.28, rural: 10.63, kind: "census" },
   { year: "2010", urban: 12.55, rural: 12.11, kind: "census" },
@@ -86,12 +86,12 @@ export const urbanRuralCounts = [
   { year: "2025", urban: 19.80, rural: 13.95, kind: "projection" },
 ];
 
-/** Table 2.1, p. 6. 2025 projection by sex, million people. */
+/** Table 2.1, p. 5. 2025 projection by sex, million people. */
 export const sexCounts2025 = { male: 16.6, female: 17.1 };
 
 /* ── Business and Economy ───────────────────────────────────────────────── */
 
-/** Figure 5.2, p. 36. Nominal GDP, US$ billion. Text gives the end points as US$64.83bn and US$114.21bn. */
+/** Figure 5.2, p. 40. Nominal GDP, US$ billion. Text gives the end points as US$64.83bn and US$114.21bn. */
 export const nominalGdpUsd = [
   { year: "2013", value: 64.8 }, { year: "2014", value: 54.1 }, { year: "2015", value: 48.6 }, { year: "2016", value: 56.0 },
   { year: "2017", value: 60.3 }, { year: "2018", value: 67.3 }, { year: "2019", value: 68.3 }, { year: "2020", value: 70.0 },
@@ -99,7 +99,7 @@ export const nominalGdpUsd = [
   { year: "2025**", value: 114.2 },
 ];
 
-/** Figure 5.4, p. 38. GDP per capita, US$. */
+/** Figure 5.4, p. 41. GDP per capita, US$. */
 export const gdpPerCapitaUsd = [
   { year: "2013", value: 2453 }, { year: "2014", value: 1999 }, { year: "2015", value: 1756 }, { year: "2016", value: 1978 },
   { year: "2017", value: 2083 }, { year: "2018", value: 2273 }, { year: "2019", value: 2257 }, { year: "2020", value: 2272 },
@@ -107,10 +107,10 @@ export const gdpPerCapitaUsd = [
   { year: "2025**", value: 3385 },
 ];
 
-/** Table 2.1, p. 7. */
+/** Table 2.1, p. 6. */
 export const nonOilGdpGrowth2025 = 7.6;
 
-/** Figure 5.15, p. 55. Year-on-year producer price inflation at year end, %. */
+/** Figure 5.15, p. 58. Year-on-year producer price inflation at year end, %. */
 export const ppiBySector = [
   { sector: "All industries", y2023: 16.4, y2024: 26.1, y2025: 1.9 },
   { sector: "Electricity and gas", y2023: 43.9, y2024: 8.1, y2025: 6.1 },
@@ -123,7 +123,7 @@ export const ppiBySector = [
   { sector: "Transportation and storage", y2023: 14.8, y2024: 23.1, y2025: -3.7 },
 ];
 
-/** Figure 5.14, p. 54. Prime Building Cost Index, combined, year-on-year %. Component lines are unlabelled and omitted. */
+/** Figure 5.14, p. 57. Prime Building Cost Index, combined, year-on-year %. Component lines are unlabelled and omitted. */
 export const pbciCombined = [
   ["Jan 2024", 6.3], ["Feb 2024", 8.3], ["Mar 2024", 9.1], ["Apr 2024", 8.5], ["May 2024", 11.1], ["Jun 2024", 13.4],
   ["Jul 2024", 16.2], ["Aug 2024", 17.6], ["Sep 2024", 18.4], ["Oct 2024", 19.2], ["Nov 2024", 21.7], ["Dec 2024", 22.6],
@@ -133,24 +133,24 @@ export const pbciCombined = [
 ].map(([month, value]) => ({ month: String(month), value: Number(value) }));
 
 /**
- * Figure 5.13 labels and p. 53 text. Year-on-year %, dated observations only (the monthly series is not printed).
+ * Figure 5.13 labels and p. 55 text. Year-on-year %, dated observations only (the monthly series is not printed).
  * Local inflation's printed peak (51.9) falls at the end of 2022; the text's 51.3 refers to January 2023.
  */
 export const localImportedInflation = [
   { period: "Jan 2022", local: 13.7, imported: 11.1, source: "Figure 5.13 labels" },
-  { period: "Jan 2023", local: 51.3, imported: 62.4, source: "p. 53 text (imported peak)" },
-  { period: "Dec 2023", local: 23.9, imported: 21.8, source: "p. 53 text" },
+  { period: "Jan 2023", local: 51.3, imported: 62.4, source: "p. 56 text (imported peak)" },
+  { period: "Dec 2023", local: 23.9, imported: 21.8, source: "p. 56 text" },
   { period: "Dec 2025", local: 5.9, imported: 4.3, source: "Figure 5.13 labels" },
 ];
 
-/** Table 2.1, p. 8. Ave Q1–Q3 2025 unless stated. */
+/** Table 2.1, p. 7. Ave Q1–Q3 2025 unless stated. */
 export const labourLevels2025 = { employedMillion: 13.3, vulnerableEmploymentMillion: 9.7, vulnerablePeriod: "Ave Q2–Q3 2025", informalShare: "over 70%" };
 
-/** Table 5.8, p. 60–61 and p. 70 text. 2023. Expenditure GH¢ billion. */
+/** Table 5.8, p. 62 and p. 63 text. 2023. Expenditure GH¢ billion. */
 export const tourismSplit = [
   { flow: "Domestic", overnight: 8_800_000, sameDay: 6_600_000, overnightSpend: 4.76, sameDaySpend: 1.83, totalVisitors: 15_388_978, totalSpend: 6.59 },
   { flow: "Inbound", overnight: 888_584, sameDay: 12_866, overnightSpend: 15.4, sameDaySpend: 0.024, totalVisitors: 901_450, totalSpend: 15.42 },
-  { flow: "Outbound", overnight: 393_305, sameDay: 77_500, overnightSpend: 3.4, sameDaySpend: 0.058, totalVisitors: 470_805, totalSpend: 3.46 },
+  { flow: "Outbound", overnight: 393_305, sameDay: 77_501, overnightSpend: 3.4, sameDaySpend: 0.0598, totalVisitors: 470_805, totalSpend: 3.46 },
 ];
 export const tourismPurposes = {
   domestic: "Funerals 39.3% and visiting friends or relatives 35.9% of trips (83% of overnight and 71% of same-day trips together)",
@@ -158,7 +158,7 @@ export const tourismPurposes = {
   outbound: "Overnight: visiting friends or relatives 37%, business 22%. Same-day: business 31%, funerals 23%, family visits 22%",
 };
 
-/** Table 5.9a, p. 73. Nominal GH¢ million, annual outturns 2022–2025. */
+/** Table 5.9, p. 64. Nominal GH¢ million, annual outturns 2022–2025. */
 export const fiscalNominal = {
   years: ["2022", "2023", "2024", "2025"],
   revenue: {
@@ -193,17 +193,17 @@ export const fiscalNominal = {
   gdp: [614336, 887748, 1182799, 1434115],
 };
 
-/** Table 5.9b, p. 74. Percent of GDP. */
+/** Table 5.10, p. 65. Percent of GDP. */
 export const fiscalShareOfGdp = {
   revenue: { total: [15.7, 15.3, 15.8, 15.7], tax: [12.3, 12.4, 12.8, 12.8], nonTax: [2.4, 2.0, 2.3, 1.9], socialContributions: [0.1, 0.1, 0.1, 0.1], other: [0.8, 0.6, 0.4, 0.7], grants: [0.2, 0.3, 0.1, 0.1] },
   expenditure: { cash: [26.3, 18.5, 21.0, 18.7], commitment: [27.5, 18.9, 22.7, 16.6], primaryCash: [18.9, 15.2, 17.0, 15.2], primaryCommitment: [20.0, 15.6, 18.7, 13.2], compensation: [6.4, 5.7, 5.7, 5.5], interest: [7.4, 3.3, 4.0, 3.5], goodsServices: [1.3, 1.0, 1.0, 0.4], capital: [3.0, 2.4, 2.5, 1.4], grantsToUnits: [4.0, 3.5, 3.9, 4.0], socialBenefits: [0.0, 0.0, 0.1, 0.2], other: [2.2, 3.0, 2.3, 1.6], arrearsClearance: [1.1, 0.4, 1.7, -2.1] },
   balance: { overallCash: [-10.6, -3.2, -5.2, -3.0], overallCommitment: [-11.8, -3.5, -6.9, -1.0], primaryCash: [-3.2, 0.2, -1.2, 0.5], primaryCommitment: [-4.3, -0.2, -2.9, 2.5] },
 };
 
-/** Table 5.10 row 1.04, p. 77. Nominal private-sector credit growth, % y/y (row was missing from the dashboard). */
+/** Table 5.11 row 1.04, p. 70. Nominal private-sector credit growth, % y/y (row was missing from the dashboard). */
 export const nominalCreditGrowth = [31.8, 10.7, 26.3, 19.2];
 
-/** Figure 5.23, p. 82. Merchandise trade, US$ billion. 2025 equals Table 2.1 (32.00 / 20.49 / 11.51). */
+/** Figure 5.23, p. 75. Merchandise trade, US$ billion. 2025 equals Table 2.1 (32.00 / 20.49 / 11.51). */
 export const tradeGoodsUsd = [
   { year: "2014", export: 14.7, import: 14.1, balance: 0.6 },
   { year: "2015", export: 12.1, import: 13.3, balance: -1.2 },
@@ -219,13 +219,13 @@ export const tradeGoodsUsd = [
   { year: "2025", export: 32.0, import: 20.5, balance: 11.5 },
 ];
 
-/** pp. 83–84 text. 2025 merchandise exports by named destination, GH¢ billion (not a complete top-ten list). */
+/** pp. 76–78 text. 2025 merchandise exports by named destination, GH¢ billion (not a complete top-ten list). */
 export const namedExportDestinations2025 = [
   { name: "United Arab Emirates", value: 104.0 }, { name: "India", value: 64.3 }, { name: "Switzerland", value: 56.8 }, { name: "China", value: 19.6 },
 ];
 export const tradeFacts2025 = { totalTrade: 654.7, totalTradeGrowth: 20.1, importPartners: 216, exportPartners: 163, africaExports: 70.3, africaImports: 35.6, top5ExportShare: 83.9, top5ImportShare: 28.3, realMerchandiseBalance: -3.4 };
 
-/** Table 5.11, p. 85. Formal trade (all partners) and informal share of all trade, by quarter. */
+/** Table 5.12, p. 80. Formal trade (all partners) and informal share of all trade, by quarter. */
 export const informalTradeContext = [
   { quarter: "Q4 2024", formalTotal: 165.3, informalShare: 4.3 },
   { quarter: "Q1 2025", formalTotal: 181.6, informalShare: 5.5 },
@@ -234,7 +234,7 @@ export const informalTradeContext = [
   { quarter: "12 months", formalTotal: 649.2, informalShare: 5.6 },
 ];
 
-/** Figure 5.26, p. 86. Informal trade balance by neighbour, GH¢ million. Quarterly sums reproduce Table 5.11 balances. */
+/** Figure 5.26, p. 81. Informal trade balance by neighbour, GH¢ million. Quarterly sums reproduce Table 5.12 balances. */
 export const informalBalanceByNeighbour = [
   { quarter: "Q4 2024", burkina: 576, coteDIvoire: 378, togo: -539 },
   { quarter: "Q1 2025", burkina: 699, coteDIvoire: 624, togo: -726 },
@@ -242,24 +242,24 @@ export const informalBalanceByNeighbour = [
   { quarter: "Q3 2025", burkina: 632, coteDIvoire: 412, togo: -994 },
 ];
 
-/** Table 5.12, p. 86. October 2024–September 2025, GH¢ million. Weedicide is a minimum (earlier quarters not published). */
+/** Table 5.13, p. 81. October 2024–September 2025, GH¢ million. Weedicide is a minimum (earlier quarters not published). */
 export const informalTopGoods = {
   exports: [["Alcoholic drinks", 746], ["Soft drinks", 731], ["Petrol", 624], ["Energy drinks", 579], ["Weedicide (minimum)", 534]] as [string, number][],
   imports: [["Cooking oil", 1397], ["Mattresses", 755], ["Rice", 734], ["Material cloth", 650], ["Cattle", 604]] as [string, number][],
   exportTop5Share: 16.0, importTop5Share: 22.6,
 };
 
-/** Figure 5.27, p. 87. */
+/** Figure 5.27, p. 82. */
 export const informalTransport = [["Tricycle", 13.7, 36], ["Motorbike", 10.1, 26], ["Canoe", 4.0, 10], ["On foot", 3.5, 9], ["Truck", 2.6, 7], ["Car", 1.9, 5], ["All others", 2.6, 7]] as [string, number, number][];
 export const informalWomenTransporters = [
   { quarter: "Q4 2024", exports: 34, imports: 41 }, { quarter: "Q1 2025", exports: 32, imports: 39 },
   { quarter: "Q2 2025", exports: 30, imports: 39 }, { quarter: "Q3 2025", exports: 30, imports: 38 },
 ];
 
-/** Figure 5.9, p. 47. Establishments operating in 2024 by year started (survivors only). */
+/** Figure 5.9, p. 50. Establishments operating in 2024 by year started (survivors only). */
 export const establishmentsByStart = [["Before 1975", 21176], ["1975–1984", 15490], ["1985–1994", 42205], ["1995–2004", 139310], ["2005–2014", 323634], ["2015–2023", 1325880]] as [string, number][];
 
-/** Table 5.5, p. 48. % of establishments within each size group; the remainder of each management row is jointly managed. */
+/** Table 5.5, p. 51. % of establishments within each size group; the remainder of each management row is jointly managed. */
 export const managementBySize = [
   { size: "Micro", formal: 5.5, women: 59.4, men: 36.2 },
   { size: "Small", formal: 31.1, women: 29.3, men: 55.6 },
@@ -268,7 +268,7 @@ export const managementBySize = [
   { size: "All sizes", formal: 7.7, women: 56.3, men: 38.1 },
 ];
 
-/** Table 5.6, p. 49. Highest and lowest region for each indicator, %. */
+/** Table 5.6, p. 51. Highest and lowest region for each indicator, %. */
 export const businessConditionsByRegion = [
   { indicator: "Establishments that are formal", high: ["Greater Accra", 12.8], low: ["North East", 1.8], ghana: 7.7 },
   { indicator: "Establishments using digital finance", high: ["Greater Accra", 50.9], low: ["Savannah", 18.9], ghana: 37.2 },
@@ -276,7 +276,7 @@ export const businessConditionsByRegion = [
   { indicator: "Establishments in industry", high: ["Upper East", 37.6], low: ["Greater Accra", 15.7], ghana: 21.1 },
 ] as { indicator: string; high: [string, number]; low: [string, number]; ghana: number }[];
 
-/** Table 5.7, pp. 49–50. */
+/** Table 5.7, p. 52. */
 export const openSpaceVsMobile = [
   ["Number of businesses", "693,748", "82,920"],
   ["People working in them", "922,177", "82,920 operators"],
@@ -293,7 +293,7 @@ export const enterpriseFacts = { servicesShare: 76.7, industryShare: 21.1, agric
 /* ── Agriculture, forestry and fishing ──────────────────────────────────── */
 
 /**
- * Table 5.2, p. 41. Government spending on agriculture and total spending (GH¢), agriculture GVA and GDP (GH¢),
+ * Table 5.2, p. 44. Government spending on agriculture and total spending (GH¢), agriculture GVA and GDP (GH¢),
  * the printed "GVA share of GDP" column (%) and AOI (SDG 2.a.1). The AOI reproduces from (spend ÷ total) ÷ (gva ÷ gdp);
  * the printed share column is about one point higher than gva ÷ gdp (likely GDP at basic prices), so it is not used in the check.
  */
@@ -312,7 +312,7 @@ export const agricultureSpending = [
   { year: "2024", gva: 243743200360, gdp: 1176219900567, spend: 2462583513, total: 517578047240, gvaShare: 22.0, aoi: 0.023 },
 ];
 
-/** Figure 5.7, p. 44. Million metric tonnes, 2013–2024 (2024 provisional). Groundnut, sorghum, cowpea, soyabean and millet are unlabelled and omitted. */
+/** Figure 5.7, p. 47. Million metric tonnes, 2013–2024 (2024 provisional). Groundnut, sorghum, cowpea, soyabean and millet are unlabelled and omitted. */
 export const cropSeries = {
   years: ["2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024*"],
   cassava: [16.0, 16.5, 17.2, 17.8, 19.0, 20.8, 22.8, 23.0, 24.7, 26.1, 27.7, 28.5],
@@ -324,7 +324,7 @@ export const cropSeries = {
   total: [31.5, 32.3, 33.2, 34.2, 36.5, 39.3, 44.0, 44.8, 48.9, 51.5, 55.6, 55.4],
 };
 
-/** Figure 5.8, p. 45. Livestock, million animals, 1990–2024. Components sum to the printed total within 0.1. */
+/** Figure 5.8, p. 48. Livestock, million animals, 1990–2024. Components sum to the printed total within 0.1. */
 export const livestockSeries = {
   years: Array.from({ length: 35 }, (_, i) => String(1990 + i)),
   poultry: [10.0, 10.6, 11.2, 12.2, 12.3, 13.1, 14.6, 15.9, 17.3, 18.8, 20.5, 22.0, 24.3, 26.4, 28.7, 28.4, 34.0, 37.0, 39.8, 43.3, 47.8, 52.6, 57.9, 63.7, 68.5, 71.6, 73.9, 75.4, 76.9, 79.4, 81.8, 81.5, 86.7, 88.1, 90.8],
@@ -336,8 +336,8 @@ export const livestockSeries = {
 };
 
 /**
- * Figure 5.6, p. 42. The figure is captioned "Production in hundred thousand metric tonnes", but its labels are VALUES in GH¢ billion:
- * totals 1.94 (2010) and 20.44 (2025) equal the value figures in the p. 42 text, and 2025 marine (10.67) cannot be 443,794 tonnes.
+ * Figure 5.6, p. 45. The figure is captioned "Production in hundred thousand metric tonnes", but its labels are VALUES in GH¢ billion:
+ * totals 1.94 (2010) and 20.44 (2025) equal the value figures in the p. 45 text, and 2025 marine (10.67) cannot be 443,794 tonnes.
  * Aquaculture segments for 2010–2014 are unlabelled (null); the published total is kept.
  */
 export const fishValue = [
@@ -359,13 +359,13 @@ export const fishValue = [
   { year: "2025", marine: 10.67, inland: 4.85, aquaculture: 4.92, total: 20.44 },
 ];
 
-/** p. 42 text. Fish production quantity, tonnes (only these two years are printed). */
+/** p. 45 text. Fish production quantity, tonnes (only these two years are printed). */
 export const fishQuantity = [
   { year: "2010", marine: 319331, inland: 83127, aquaculture: 10200, total: 412658 },
   { year: "2025", marine: 443794, inland: 154692, aquaculture: 124161, total: 722648 },
 ];
 
-/** Table 5.3, p. 43. Quantity in metric tonnes, value in GH¢ million. */
+/** Table 5.3, p. 46. Quantity in metric tonnes, value in GH¢ million. */
 export const tilapiaCatfish = [
   [2013, 29911.0, 215.4, 2601.0, 15.6], [2014, 35836.7, 394.2, 2698.3, 29.7], [2015, 40818.0, 474.3, 3697.0, 47.0],
   [2016, 48637.9, 583.4, 3832.1, 42.8], [2017, 48663.9, 862.0, 8741.4, 143.3], [2018, 69859.8, 947.0, 6760.2, 91.3],
@@ -376,7 +376,7 @@ export const tilapiaCatfish = [
 
 /* ── Governance ─────────────────────────────────────────────────────────── */
 
-/** Figure 6.3, p. 92. Share reporting a direct request for a gift by a public official. Reference periods differ in length. */
+/** Figure 6.3, p. 87. Share reporting a direct request for a gift by a public official. Reference periods differ in length. */
 export const giftRequests = [
   { period: "Jan–Dec 2024", value: 51.3 },
   { period: "Jan–Jun 2025", value: 38.6 },
@@ -384,7 +384,7 @@ export const giftRequests = [
 ];
 
 /**
- * Figure 6.6, p. 94. % who have never voted, Governance Series Wave 1. Reference period and national figure are not printed.
+ * Figure 6.6, p. 89. % who have never voted, Governance Series Wave 1. Reference period and national figure are not printed.
  * In the district-election map four labels conflict with their shading class (flagged); labels are reproduced as printed.
  */
 export const neverVoted: { region: Region; national: number; district: number; flag?: string }[] = [
@@ -408,20 +408,85 @@ export const neverVoted: { region: Region; national: number; district: number; f
 
 /* ── Environment ────────────────────────────────────────────────────────── */
 
-/** Figure 7.3, p. 97. Change in carbon stock by land-cover class, 2015 → 2021, Mt C. Steps reproduce 1,367.5 → 1,147.6. */
+/** Figure 7.3, p. 93. Change in carbon stock by land-cover class, 2015 → 2021, Mt C. Steps reproduce 1,367.5 → 1,147.6. */
 export const carbonStockChange = {
   start: 1367.5,
   end: 1147.6,
   steps: [["Settlement", -187.6], ["Closed forest", -41.7], ["Grassland", -18.3], ["Other tree crops", -2.9], ["Mangrove", -0.3], ["Open forest", 0.6], ["Mono cocoa", 1.3], ["Shaded cocoa", 6.2], ["Cropland", 22.8]] as [string, number][],
 };
 
-/** Table 2.1, p. 9. */
+/** Table 2.1, p. 8. */
 export const climateAverages2025 = { rainfallMonthlyAverage: 99.3, temperatureMonthlyAverage: 28.2 };
 
-/** Table 2.1 and Chapter 11 (pp. 9, 128). Older forest-reserve share series, superseded in Chapter 7 by 2025 area; shown for context only. */
+/** Table 2.1 and Chapter 11 (pp. 8, 128). Older forest-reserve share series, superseded in Chapter 7 by 2025 area; shown for context only. */
 export const forestShare1990to2021 = [
   { region: "Western North", y1990: 19.6, y2021: 6.5 },
   { region: "Western", y1990: 17.0, y2021: 8.4 },
   { region: "Savannah", y1990: 6.5, y2021: 14.9 },
   { region: "Northern", y1990: 1.1, y2021: 6.9 },
 ];
+
+/* ── Added in the final edition ─────────────────────────────────────────── */
+
+/** Figure 4.7, p. 33 (final edition). Child marriage among girls by region, %, PHC 2010 and 2021. Labels read from the printed map. */
+export const childMarriageByRegion: Record<Region, { y2010: number; y2021: number }> = {
+  "Western": { y2010: 6.1, y2021: 1.2 }, "Central": { y2010: 5.0, y2021: 0.9 }, "Greater Accra": { y2010: 5.6, y2021: 1.1 }, "Volta": { y2010: 5.0, y2021: 1.0 },
+  "Eastern": { y2010: 4.2, y2021: 0.8 }, "Ashanti": { y2010: 4.2, y2021: 1.2 }, "Western North": { y2010: 6.1, y2021: 1.3 }, "Ahafo": { y2010: 4.4, y2021: 1.4 },
+  "Bono": { y2010: 3.6, y2021: 1.2 }, "Bono East": { y2010: 3.8, y2021: 1.9 }, "Oti": { y2010: 5.9, y2021: 1.9 }, "Northern": { y2010: 8.7, y2021: 7.5 },
+  "Savannah": { y2010: 6.6, y2021: 5.7 }, "North East": { y2010: 8.3, y2021: 6.8 }, "Upper East": { y2010: 4.9, y2021: 3.8 }, "Upper West": { y2010: 7.5, y2021: 4.9 },
+};
+
+/** Figure 8.2, p. 98. Multidimensional poverty incidence by locality and sex of household head, Q3 2025 with Q2 2025, %. */
+export const povertyByGroup = [
+  { group: "Rural", kind: "Locality", q3: 31.9, q2: 33.1 },
+  { group: "Urban", kind: "Locality", q3: 14.2, q2: 15.3 },
+  { group: "Male-headed", kind: "Head of household", q3: 21.9, q2: 23.6 },
+  { group: "Female-headed", kind: "Head of household", q3: 22.0, q2: 22.0 },
+];
+
+/** Figure 8.3, p. 98. Multidimensional poverty incidence by region, Q3 2025, %. Ghana 21.9. */
+export const povertyByRegionQ3: Record<Region, number> = {
+  "North East": 57.2, "Savannah": 53.4, "Oti": 46.8, "Northern": 43.8, "Upper East": 41.4, "Upper West": 35.4, "Bono East": 32.2, "Western North": 32.0,
+  "Ahafo": 27.2, "Central": 24.0, "Volta": 23.1, "Ashanti": 22.2, "Eastern": 19.4, "Bono": 17.2, "Western": 17.2, "Greater Accra": 9.1,
+};
+export const povertyGhanaQ3 = 21.9;
+
+/**
+ * Figure 8.4, p. 100. Percentage contribution of each dimension to multidimensional poverty, Q3 2025.
+ * The employment share is not labelled for six regions; there it is 100 minus the three labelled shares (flagged `employmentDerived`).
+ */
+export const povertyDrivers: { area: string; health: number; living: number; education: number; employment: number; employmentDerived?: boolean }[] = [
+  { area: "Ghana", health: 40.9, living: 33.8, education: 13.0, employment: 12.3 },
+  { area: "North East", health: 43.1, living: 39.0, education: 14.2, employment: 3.7, employmentDerived: true },
+  { area: "Savannah", health: 42.7, living: 37.4, education: 17.1, employment: 2.8, employmentDerived: true },
+  { area: "Oti", health: 42.1, living: 39.7, education: 15.2, employment: 3.0, employmentDerived: true },
+  { area: "Northern", health: 44.9, living: 35.8, education: 16.8, employment: 2.5, employmentDerived: true },
+  { area: "Upper East", health: 36.8, living: 37.4, education: 12.2, employment: 13.6 },
+  { area: "Upper West", health: 41.7, living: 35.4, education: 13.9, employment: 9.0 },
+  { area: "Bono East", health: 44.6, living: 37.3, education: 14.3, employment: 3.8, employmentDerived: true },
+  { area: "Western North", health: 41.2, living: 39.9, education: 12.9, employment: 6.1 },
+  { area: "Ahafo", health: 47.5, living: 36.3, education: 10.3, employment: 5.9, employmentDerived: true },
+  { area: "Central", health: 41.7, living: 31.3, education: 9.9, employment: 17.1 },
+  { area: "Volta", health: 36.2, living: 35.5, education: 12.4, employment: 16.0 },
+  { area: "Ashanti", health: 37.8, living: 28.5, education: 12.0, employment: 21.7 },
+  { area: "Eastern", health: 43.7, living: 35.4, education: 10.8, employment: 10.1 },
+  { area: "Bono", health: 39.3, living: 33.1, education: 12.7, employment: 14.9 },
+  { area: "Western", health: 43.7, living: 33.4, education: 12.4, employment: 10.5 },
+  { area: "Greater Accra", health: 34.0, living: 22.0, education: 10.1, employment: 34.0 },
+];
+
+/** Table 8.1, p. 99. Quarterly multidimensional poverty incidence (H) and the share of the population poor and deprived in selected indicators, %. */
+export const povertyQuarterly = [
+  ["2022 Q1", 28.3, 26.5, 26.4, 12.9, 14.1, 15.7], ["2022 Q2", 32.4, 30.7, 27.0, 14.4, 15.8, 18.5], ["2022 Q3", 32.3, 30.5, 29.6, 16.1, 17.4, 20.2],
+  ["2022 Q4", 31.7, 29.6, 28.4, 15.5, 16.3, 19.5], ["2023 Q1", 28.3, 26.7, 26.3, 13.9, 14.6, 17.2], ["2023 Q2", 27.7, 26.0, 25.6, 13.2, 13.3, 17.8],
+  ["2023 Q3", 28.6, 26.7, 26.6, 15.4, 14.4, 19.2], ["2023 Q4", 27.4, 26.1, 25.0, 14.1, 14.8, 16.4], ["2024 Q1", 24.0, 22.2, 22.5, 10.6, 12.4, 14.1],
+  ["2024 Q2", 28.5, 26.0, 26.0, 15.1, 14.1, 19.4], ["2024 Q3", 24.9, 23.0, 23.0, 13.3, 12.2, 15.3], ["2024 Q4", 24.9, 23.3, 23.1, 13.4, 12.5, 15.5],
+  ["2025 Q1", 23.9, 21.9, 22.2, 13.2, 14.8, 8.5], ["2025 Q2", 23.1, 21.3, 21.6, 15.8, 11.4, 7.9], ["2025 Q3", 21.9, 19.5, 20.7, 10.6, 21.6, 3.9],
+].map(([quarter, incidence, noHealthInsurance, noImprovedToilet, nutrition, overcrowding, schoolLag]) => ({ quarter: String(quarter), incidence: Number(incidence), noHealthInsurance: Number(noHealthInsurance), noImprovedToilet: Number(noImprovedToilet), nutrition: Number(nutrition), overcrowding: Number(overcrowding), schoolLag: Number(schoolLag) }));
+
+/** Table 8.2, p. 100. Gini coefficient of consumption (0 = equality, 100 = maximum inequality), GLSS 5–7. */
+export const giniConsumption = {
+  national: [{ period: "2005/06", value: 41.9 }, { period: "2012/13", value: 42.3 }, { period: "2016/17", value: 43.0 }],
+  rural: { from: 37.8, to: 41.8 }, urban: { from: 38.3, to: 37.9 },
+  highest: { region: "Upper West", value: 48.1 }, second: { region: "Northern", value: 45.3 }, lowest: { region: "Greater Accra", value: 35.1 },
+};

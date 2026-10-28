@@ -25,7 +25,7 @@ export function NominalGdpCard() {
       explain={{ indicator: "nominalGdp" }}
       actions={<Segmented label="Currency" size="sm" value={cur} onChange={setCur} options={currencyOptions} />}
       notes={cur === "ghs" ? "Rising prices account for much of the elevenfold increase in cedi terms; real GDP shows the change in volume." : "Converted at market exchange rates: currency movements can make the economy look larger or smaller in dollars (US$64.83bn in 2013 to US$114.21bn in 2025)."}
-      source="GSS Annual GDP 2013–2025 · Figures 5.1–5.2, p. 36"
+      source="GSS Annual GDP 2013–2025 · Figures 5.1–5.2, p. 40"
       footer={<DataDisclosure><DataTable caption="Nominal GDP" headings={["Year", "GH¢ billion", "US$ billion"]} rows={nominalGdpData.map((d, i) => [statusLabel(d.year), d.overall, nominalGdpUsd[i].value])} decimals={1} minWidth={360} unitNote="Figure 5.1 also plots non-oil GDP without value labels; it is not reproduced." /></DataDisclosure>}>
       <ChartFrame height={250} label={cur === "ghs" ? "Nominal GDP rose from GH¢124.5 billion in 2013 to GH¢1,434.1 billion in 2025" : "Nominal GDP in US dollars was US$64.8 billion in 2013 and US$114.2 billion in 2025"}>
         <BarChart data={data} margin={{ top: 22, right: 4, left: -4, bottom: 0 }}>
@@ -50,7 +50,7 @@ export function RealGdpCard() {
       qualifier={<Qualifier tone="caution">2024 revised · 2025 provisional</Qualifier>}
       explain={{ indicator: "realGdp" }}
       notes={`Real GDP rose 68.4% between 2013 and 2025. Growth was 6.0% in 2025; non-oil GDP grew ${nonOilGdpGrowth2025}% (Table 2.1).`}
-      source="GSS Annual GDP 2013–2025 · Figure 5.5, p. 38"
+      source="GSS Annual GDP 2013–2025 · Figure 5.5, p. 42"
       footer={<DataDisclosure><DataTable caption="Real GDP and growth" headings={["Year", "Real GDP (GH¢ bn, 2013 prices)", "Growth (%)"]} rows={realGdpData.map(d => [statusLabel(d.year), d.real, d.growth])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <p className="mb-1 text-xs font-medium text-muted">Real GDP, GH¢ billion (2013 prices)</p>
       <ChartFrame height={170} label="Real GDP rose from GH¢124.5 billion in 2013 to GH¢209.6 billion in 2025">
@@ -90,7 +90,7 @@ export function PerCapitaCard() {
       explain={{ indicator: "perCapita" }}
       actions={<Segmented label="Currency" size="sm" value={cur} onChange={setCur} options={currencyOptions} />}
       notes={cur === "ghs" ? "About nine times the 2013 level in cedis; prices also rose, so purchasing power grew far less. An average of output, not household income." : "In dollars, output per person moved between US$1,756 (2015) and US$3,385 (2025)."}
-      source="GSS Annual GDP 2013–2025 · Figures 5.3–5.4, pp. 37–38"
+      source="GSS Annual GDP 2013–2025 · Figures 5.3–5.4, p. 41"
       footer={<DataDisclosure><DataTable caption="GDP per capita" headings={["Year", "GH¢", "US$"]} rows={nominalGdpPerCapitaData.map((d, i) => [statusLabel(d.year), d.value, gdpPerCapitaUsd[i].value])} decimals={[undefined, 1, 0]} minWidth={340} unitNote="Figure 5.3 is captioned in thousand US$ but its axis and the text are in thousand GH¢; the GH¢ reading is used. Intermediate GH¢ values are labelled in thousands (one decimal)." /></DataDisclosure>}>
       <ChartFrame height={260} minWidth={620} label={`GDP per capita by year in ${cur === "ghs" ? "Ghana cedis" : "US dollars"}`}>
         <BarChart data={data} margin={{ top: 22, right: 22, left: 0, bottom: 0 }}>
@@ -114,7 +114,7 @@ export function OutputStats() {
     <div className="grid gap-3 sm:grid-cols-3">
       <Stat label="Nominal GDP, 2025 (provisional)" value="1,434.1" unit="GH¢ billion" context="About GH¢1.4 trillion; US$114.2 billion" />
       <Stat label="Real GDP growth, 2025 (provisional)" value="6.0" unit="%" context="5.8% in 2024 (revised)" />
-      <Stat label="Non-oil GDP growth, 2025" value={nonOilGdpGrowth2025.toFixed(1)} unit="%" context="Table 2.1, p. 7" />
+      <Stat label="Non-oil GDP growth, 2025" value={nonOilGdpGrowth2025.toFixed(1)} unit="%" context="Table 2.1, p. 6" />
     </div>
   );
 }
@@ -126,7 +126,7 @@ export function EconomyGlanceCard() {
   return (
     <ChartCard title="Economy at a glance" subtitle="Latest figure for each indicator" period={`${cleanYear(pc.year)} (output and trade); 2024 (businesses)`}
       qualifier={<Qualifier tone="caution">2025 provisional</Qualifier>} explain={{ indicator: "nominalGdp" }}
-      source="GSS Annual GDP; merchandise trade statistics; 2024 IBES I · pp. 37–38, 46, 81"
+      source="GSS Annual GDP; merchandise trade statistics; 2024 IBES I · pp. 41–42, 49, 74"
       footer={<DataDisclosure><DataTable caption="Economy at a glance" headings={["Indicator", "Year", "Value"]} rows={[["GDP per capita (GH¢)", statusLabel(pc.year), Math.round(pc.value)], ["Real GDP growth (%)", statusLabel(real.year), real.growth], ["Goods trade balance (GH¢ billion)", trade.year, trade.balance], ["Businesses counted", "2024", businesses]]} decimals={[undefined, undefined, 1]} minWidth={380} /></DataDisclosure>}>
       <ul className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile icon={Wallet} tone="amber" label="GDP per capita" value={`GH¢${Math.round(pc.value).toLocaleString("en-GB")}`} period={statusLabel(pc.year)} />

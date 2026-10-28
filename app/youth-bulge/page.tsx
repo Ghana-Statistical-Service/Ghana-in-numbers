@@ -136,7 +136,7 @@ export default function YouthBulgePage() {
                   <p className="text-[10px] font-bold mt-1" style={{ color: "#94A3B8" }}>→</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-3xl font-black" style={{ color: "#DB2988" }}>33.2%</p>
+                  <p className="text-3xl font-black" style={{ color: "#DB2988" }}>35.0%</p>
                   <p className="text-xs font-semibold mt-1" style={{ color: "#DB2988" }}>2025</p>
                 </div>
               </div>
@@ -173,11 +173,11 @@ export default function YouthBulgePage() {
               </p>
               <p className="text-xs leading-relaxed mb-3" style={{ color: "#1D4ED8" }}>
                 Used by the UN, ILO, and most global labour-force surveys. Ghana&apos;s 15–24 cohort
-                averaged about <strong>18%</strong> of the population over the period —
-                peaking at 18.9% in 2008, easing to 16% in 2025.
+                stood at about <strong>20%</strong> of the population in 2025 (some 6.6 million people),
+                around the same level as in 2010 and 2021.
               </p>
               <div className="flex items-baseline gap-2">
-                <p className="text-2xl font-black" style={{ color: "#2563EB" }}>16%</p>
+                <p className="text-2xl font-black" style={{ color: "#2563EB" }}>~20%</p>
                 <p className="text-xs font-semibold" style={{ color: "#93C5FD" }}>share in 2025</p>
               </div>
             </div>
@@ -190,11 +190,11 @@ export default function YouthBulgePage() {
               </p>
               <p className="text-xs leading-relaxed mb-3" style={{ color: "#047857" }}>
                 Adopted by Ghana&apos;s National Youth Policy and African statistical bodies. This broader
-                band averaged <strong>31.9%</strong> over the last two decades — it peaked at
-                34.6% in 2000 and is now at 30.0% in 2025.
+                band has stayed around <strong>35%</strong> — about 35% in 2010, 36% in 2021 and
+                35% in 2025 (about 12 million people).
               </p>
               <div className="flex items-baseline gap-2">
-                <p className="text-2xl font-black" style={{ color: "#059669" }}>~30%</p>
+                <p className="text-2xl font-black" style={{ color: "#059669" }}>~35%</p>
                 <p className="text-xs font-semibold" style={{ color: "#6EE7B7" }}>share in 2025</p>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function YouthBulgePage() {
               style={{ background: "#FFF1F2", border: "1px solid #FECDD3" }}
             >
               <p className="text-base font-black mb-2" style={{ color: "#9F1239" }}>
-                ⚠️ Demographic Bomb
+                ⚠️ Demographic Pressure
               </p>
               <p className="text-xs leading-relaxed" style={{ color: "#BE123C" }}>
                 Fail to absorb youth into productive employment. The result: rising unemployment,
@@ -264,14 +264,14 @@ export default function YouthBulgePage() {
                   className="font-black leading-none mb-2"
                   style={{ fontSize: "clamp(4rem, 10vw, 6rem)", color: "#DB2988", lineHeight: 1 }}
                 >
-                  ~30%
+                  ~35%
                 </p>
                 <p className="text-lg font-bold mb-4" style={{ color: "#9D174D" }}>
                   of all Ghanaians are aged 15–35
                 </p>
                 <p className="text-sm leading-relaxed mb-3" style={{ color: "#374151" }}>
-                  Ghana&apos;s youth (15–35) make up nearly <strong>30% of the population</strong> — the
-                  approximate share described for 2025 in the publication. The share of children (0–14) is
+                  Ghana&apos;s youth (15–35) make up about <strong>35% of the population</strong>, roughly
+                  12 million of 33.7 million people in 2025. The share of children (0–14) is
                   falling as this bulge of working-age youth expands.
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>
@@ -293,7 +293,7 @@ export default function YouthBulgePage() {
                   Ghana in Numbers 2025 · Youth bulge chapter
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {["~30% aged 15–35 (2025)", "Fertility declining", "2025 demographic overview"].map((tag) => (
+                  {["~35% aged 15–35 (2025)", "Fertility declining", "2025 demographic overview"].map((tag) => (
                     <span
                       key={tag}
                       className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
@@ -319,11 +319,10 @@ export default function YouthBulgePage() {
                   Early Post-Bulge Transition
                 </p>
                 <p className="text-xs leading-relaxed" style={{ color: "#78350F" }}>
-                  Since 2019, youth proportions have started a gradual decline (now ~30%). But{" "}
-                  <strong>absolute numbers remain large</strong> — the cohort is still growing in
-                  absolute size even as its population share falls. The{" "}
-                  <strong>pressure ratio</strong> (youth 15–35 / children 0–14) stands at{" "}
-                  <strong>~0.90 in 2025</strong> — calculated from the approximate shares of 30.0% and 33.2%. This compares population groups, not annual labour-market entrants.
+                  The youth share has held broadly steady (about 35% in 2010, 36% in 2021 and 35% in 2025)
+                  while the <strong>absolute number keeps growing</strong>. Because the child share has fallen, the{" "}
+                  <strong>pressure ratio</strong> (youth 15–35 / children 0–14) is now{" "}
+                  <strong>about one to one</strong>, up from about 0.9 in 2010. This compares population groups, not annual labour-market entrants.
                 </p>
               </div>
             </div>
@@ -604,7 +603,7 @@ export default function YouthBulgePage() {
               Q1–Q3 2025 averages used elsewhere (32.4% for ages 15–24 and 21.9% for ages 15–35).
             </p>
             <div className="grid gap-4 lg:grid-cols-2">
-              <DataDisclosure label="Population shares" hint="2000 and 2025, pp. 108–109"><DataTable caption="Population shares by age group" headings={["Age group", "2000 (%)", "2025 (%)"]} rows={[["Children 0–14", populationShareData[0].children, populationShareData[1].children], ["Youth 15–24", populationShareData[0].youth1524, populationShareData[1].youth1524], ["Youth 15–35", populationShareData[0].youth1535, populationShareData[1].youth1535]]} decimals={1} minWidth={320} unitNote="n/a: not printed for that year. 2025 youth shares are approximate (about)." /></DataDisclosure>
+              <DataDisclosure label="Population shares" hint="2000–2025, pp. 108–109"><DataTable caption="Population shares by age group" headings={["Year", "Children 0–14 (%)", "Youth 15–24 (%)", "Youth 15–35 (%)"]} rows={populationShareData.map(r => [r.year, r.children, r.youth1524, r.youth1535])} decimals={1} minWidth={420} unitNote="n/a: not printed for that year. Youth shares are approximate (about) values read from Figure 3.2." /></DataDisclosure>
               <DataDisclosure label="Youth unemployment by region" hint="Q2 and Q3 2025, Figure 9.1, p. 111"><DataTable caption="Youth unemployment by region, 2025" headings={["Region", "Q2 15–24 (%)", "Q2 15–35 (%)", "Q3 15–24 (%)", "Q3 15–35 (%)"]} rows={[["National", nationalUnemployment.q2_1524, nationalUnemployment.q2_1535, nationalUnemployment.q3_1524, nationalUnemployment.q3_1535], ...unemploymentByRegion.map(r => [r.region, r.q2_1524, r.q2_1535, r.q3_1524, r.q3_1535])]} decimals={1} minWidth={520} unitNote="Source: GSS Quarterly Labour Force Survey, Q2 and Q3 2025." /></DataDisclosure>
               <DataDisclosure label="NEET by sex and locality" hint="Q3 2025, Figure 9.2, p. 112"><DataTable caption="NEET rate by group, Q3 2025" headings={["Group", "Ages 15–24 (%)", "Ages 15–35 (%)"]} rows={neetData.map(r => [r.group, r.rate1524, r.rate1535])} decimals={1} minWidth={320} unitNote="Source: GSS QLFS Q3 2025. NEET counts everyone in the age group, not only the labour force." /></DataDisclosure>
               <DataDisclosure label="NEET by region" hint="Q3 2025, Figure 9.2, p. 112"><DataTable caption="NEET rate by region, all young people, Q3 2025" headings={["Region", "Ages 15–24 (%)", "Ages 15–35 (%)"]} rows={neetRegionalData.regional.map(r => [r.region, r.r1524, r.r1535])} decimals={1} minWidth={320} unitNote="Urban, rural, male and female breakdowns are available with the chart toggles above." /></DataDisclosure>
@@ -622,13 +621,13 @@ export default function YouthBulgePage() {
                 ✦ The question before Ghana
               </p>
               <p className="text-2xl font-black text-white mb-5 max-w-2xl leading-snug">
-                Demographic Dividend — or Demographic Bomb?
+                Demographic Dividend — or Demographic Pressure?
               </p>
 
               {/* Big picture bullets */}
               <div className="mb-6 space-y-2">
                 {[
-                  "Fertility has declined significantly — child share fell from 41.8% (2000) to 33.2% (2025)",
+                  "Fertility has declined significantly — child share fell from 41.8% (2000) to 35.0% (2025)",
                   "Youth aged 15–35 have dominated the population for over two decades",
                   "The window for a demographic dividend is open — but it is narrowing",
                   "Inaction now means the bulge ages into a structurally fragile workforce",
@@ -675,7 +674,7 @@ export default function YouthBulgePage() {
                 <div className="h-8 w-px hidden sm:block" style={{ background: "rgba(255,255,255,0.18)" }} />
                 <div>
                   <p className="text-xs font-bold mb-1" style={{ color: "#FCA5A5" }}>Without investment</p>
-                  <p className="text-sm font-black" style={{ color: "#F87171" }}>→ Demographic Bomb</p>
+                  <p className="text-sm font-black" style={{ color: "#F87171" }}>→ Demographic Pressure</p>
                 </div>
               </div>
             </div>

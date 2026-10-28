@@ -1,16 +1,11 @@
+// Final edition, Chapter 9 pp. 107–109 (read from Figure 3.2): the child share is printed for 2000 and 2025; the
+// youth shares are printed as approximate ("about") values for 2010, 2021 and 2025. The draft's 2025 values
+// (children 33.2%, youth 15–35 about 30%, 15–24 16%) and its 2000 youth share (34.6%) were revised or withdrawn.
 export const populationShareData = [
-  {
-    "year": "2000",
-    "children": 41.8,
-    "youth1524": null,
-    "youth1535": 34.6
-  },
-  {
-    "year": "2025",
-    "children": 33.2,
-    "youth1524": 16,
-    "youth1535": 30
-  }
+  { year: "2000", children: 41.8, youth1524: null, youth1535: null },
+  { year: "2010", children: null, youth1524: 20, youth1535: 35 },
+  { year: "2021", children: null, youth1524: 20, youth1535: 36 },
+  { year: "2025", children: 35.0, youth1524: 20, youth1535: 35 },
 ];
 
 export const unemploymentByRegion = [

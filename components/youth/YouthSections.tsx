@@ -15,13 +15,13 @@ export function DefinitionsCard() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-[var(--radius-md)] border border-line p-4">
           <p className="text-[13.5px] font-semibold text-ink">Ages 15–24 · international definition</p>
-          <p className="tabular mt-2 text-2xl font-semibold text-ink">16% <span className="text-[13px] font-normal text-muted">of the population, 2025</span></p>
-          <p className="mt-2 text-[13px] leading-relaxed text-body">Steady at about 18% between 2000 and 2025, peaking at 18.9% in 2008: inside the 15–20% band used to define a youth bulge.</p>
+          <p className="tabular mt-2 text-2xl font-semibold text-ink">About 20% <span className="text-[13px] font-normal text-muted">of the population, 2025</span></p>
+          <p className="mt-2 text-[13px] leading-relaxed text-body">About 6.6 million people in 2025, around the same share as in 2010 and 2021: inside the 15–20% band used to define a youth bulge.</p>
         </div>
         <div className="rounded-[var(--radius-md)] border border-line p-4">
           <p className="text-[13.5px] font-semibold text-ink">Ages 15–35 · African Union and National Youth Policy</p>
-          <p className="tabular mt-2 text-2xl font-semibold text-ink">≈30% <span className="text-[13px] font-normal text-muted">of the population, 2025</span></p>
-          <p className="mt-2 text-[13px] leading-relaxed text-body">Averaged 31.9% over the period and peaked at 34.6% in 2000. Easing since 2019, but the number of young people remains very large.</p>
+          <p className="tabular mt-2 text-2xl font-semibold text-ink">About 35% <span className="text-[13px] font-normal text-muted">of the population, 2025</span></p>
+          <p className="mt-2 text-[13px] leading-relaxed text-body">About 12 million people in 2025; the share has held broadly steady since 2010, and the number of young people remains very large.</p>
         </div>
       </div>
     </ChartCard>
@@ -30,13 +30,13 @@ export function DefinitionsCard() {
 
 export function ShareEndpointsCard() {
   const rows = [
-    { label: "Children aged 0–14", y2000: populationShareData[0].children, y2025: populationShareData[1].children, color: C.slate },
-    { label: "Youth aged 15–35", y2000: populationShareData[0].youth1535, y2025: populationShareData[1].youth1535, color: C.purple },
-    { label: "Youth aged 15–24", y2000: null, y2025: populationShareData[1].youth1524, color: C.amber },
+    { label: "Children aged 0–14", y2000: populationShareData[0].children, y2025: populationShareData.at(-1)!.children, color: C.slate },
+    { label: "Youth aged 15–35", y2000: populationShareData[0].youth1535, y2025: populationShareData.at(-1)!.youth1535, color: C.purple },
+    { label: "Youth aged 15–24", y2000: null, y2025: populationShareData.at(-1)!.youth1524, color: C.amber },
   ];
   return (
     <ChartCard title="Fewer children, a large youth population" subtitle="% of the total population" period="2000 and 2025" explain={{ indicator: "youth" }}
-      notes="The child share fell from 41.8% to 33.2%. The publication states a youth-to-child ratio of about 0.83 that has “barely moved since 2000”; the 2025 shares shown (30.0 / 33.2) give about 0.90. The 15–24 share for 2000 is described as about 18% but not printed."
+      notes="The child share fell from 41.8% to 35.0%. Youth aged 15–35 have stayed around 35% of the population (about 35% in 2010, 36% in 2021 and 35% in 2025), so there are now roughly as many young people as children, up from about 0.9 in 2010."
       source="pp. 108–109"
       footer={<DataDisclosure><DataTable caption="Population shares by age group" headings={["Age group", "2000 (%)", "2025 (%)"]} rows={rows.map(r => [r.label, r.y2000, r.y2025])} decimals={1} minWidth={320} unitNote="n/a: not printed for that year. 2025 youth shares are approximate (“about”)." /></DataDisclosure>}>
       <Legend className="mb-3" items={[{ label: "2000", color: C.slateLight, shape: "dot" }, { label: "2025", color: C.purple, shape: "dot" }]} />

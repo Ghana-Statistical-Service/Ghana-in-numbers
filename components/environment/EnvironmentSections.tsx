@@ -15,7 +15,7 @@ export function ForestCard() {
   return (
     <ChartCard title="Forest reserve area by region" subtitle="Designated forest reserve, km²" period="December 2025" explain={{ indicator: "forest" }}
       notes={`Reported total ${forestReserveTotal2025.toLocaleString("en-GB")} km² across 12 regions. Western North, Oti, Savannah and North East are not reported separately (hatched): a missing value is not zero. Reserve area is designated land, not current tree cover. Western, Ashanti and Northern hold about 60.8% of the reported area.`}
-      source="Forestry Commission (2025) · Figure 7.1, p. 96"
+      source="Forestry Commission (2025) · Figure 7.1, p. 92"
       footer={<DataDisclosure><DataTable caption="Forest reserve area by region, December 2025" headings={["Region", "Area (km²)"]} rows={[...data].sort((a, b) => (b.value ?? -1) - (a.value ?? -1)).map(d => [d.region, d.value])} decimals={2} minWidth={300} unitNote="n/a: not reported separately in the source. Some smaller regional areas are printed rounded to whole km²." /></DataDisclosure>}>
       <RegionalMap data={data} measure="Forest reserve area (km²)" format={v => v.toLocaleString("en-GB", { maximumFractionDigits: v < 100 ? 2 : 0 })} height={420} highlight={`Reported total: ${forestReserveTotal2025.toLocaleString("en-GB")} km²`} />
     </ChartCard>
@@ -32,7 +32,7 @@ export function ForestHeadlineCard() {
   return (
     <ChartCard title="Forest reserves at a glance" subtitle="Designated forest reserve area, km²" period="December 2025" explain={{ indicator: "forest" }}
       notes={`Shares are of the reported total. The ${forestReserveArea2025.length} regional areas sum to ${regionalSum.toLocaleString("en-GB", { maximumFractionDigits: 2 })} km², ${(forestReserveTotal2025 - regionalSum).toFixed(2)} km² below the published total because smaller regions are printed rounded.`}
-      source="Forestry Commission (2025) · Figure 7.1, p. 96"
+      source="Forestry Commission (2025) · Figure 7.1, p. 92"
       footer={<DataDisclosure><DataTable caption="Largest forest reserve areas, December 2025" headings={["Region", "Area (km²)", "Share of total (%)"]} rows={top.map(f => [f.region, f.area, +share(f.area).toFixed(1)])} decimals={[undefined, 2, 1]} minWidth={300} /></DataDisclosure>}>
       <div className="flex items-center gap-4">
         <IconTile icon={TreePine} tone="teal" size="lg" />
@@ -51,7 +51,7 @@ export function ForestShareCard() {
     <ChartCard title="An earlier measure: regional share of forest reserves" subtitle="% share, 1990 and 2021, regions cited in the text" period="1990 and 2021"
       explain={{ indicator: "forest", title: "Forest reserve share (earlier series)" }}
       notes="Cited in Table 2.1 and Chapter 11 but replaced in Chapter 7 by the December 2025 area figures above. The definition of the share is not stated and only four regions are printed, so the two measures should not be combined."
-      source="Table 2.1, p. 9; Chapter 11, p. 128"
+      source="Table 2.1, p. 8; Chapter 11, p. 128"
       footer={<DataDisclosure><DataTable caption="Forest reserve share, 1990 and 2021" headings={["Region", "1990 (%)", "2021 (%)"]} rows={forestShare1990to2021.map(r => [r.region, r.y1990, r.y2021])} decimals={1} minWidth={300} /></DataDisclosure>}>
       <Legend className="mb-3" items={[{ label: "1990", color: C.slateLight, shape: "dot" }, { label: "2021", color: C.teal, shape: "dot" }]} />
       <ul className="space-y-4">
@@ -74,8 +74,8 @@ export function CarbonCard() {
   const data = carbonRetentionData.map(d => ({ ...d, total: +(d.soil + d.nonSoil).toFixed(1), _top: 0.001 })).filter(d => d.total > 0).sort((a, b) => b.total - a.total);
   return (
     <ChartCard title="Carbon stored by land cover" subtitle="Carbon stock, million tonnes of carbon (Mt C)" period="2021" explain={{ indicator: "carbon" }}
-      notes="A stock, not an annual removal rate. Grassland stores 344.0 Mt C (141.2 non-soil + 202.8 soil); the text’s 334.0 is an arithmetic slip. Grassland, open forest, cropland and closed forest hold about 84% of the total. Water and bare land store none."
-      source="EPA, GSS and FC (2025), Ghana Ecosystem Services Account 2015–2021 · Figure 7.2, p. 97"
+      notes="A stock, not an annual removal rate. Grassland stores 344.0 Mt C (141.2 non-soil + 202.8 soil). Grassland, open forest, cropland and closed forest hold about 84% of the total. Water and bare land store none."
+      source="EPA, GSS and FC (2025), Ghana Ecosystem Services Account 2015–2021 · Figure 7.2, p. 93"
       footer={<DataDisclosure><DataTable caption="Carbon retention by land cover, 2021" headings={["Land cover", "Non-soil (Mt C)", "Soil (Mt C)", "Total (Mt C)"]} rows={carbonRetentionData.map(d => [d.landCover, d.nonSoil, d.soil, +(d.soil + d.nonSoil).toFixed(1)])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <Legend className="mb-2" items={[{ label: "Non-soil (vegetation)", color: C.teal }, { label: "Soil", color: C.amber }]} />
       <ChartFrame height={340} label="Carbon stock by land cover, 2021: grassland 344.0, open forest 236.8, cropland 214.3, closed forest 172.3 million tonnes">
@@ -99,8 +99,8 @@ export function CarbonTopCard() {
   const top = carbonRetentionData.map(d => ({ ...d, total: +(d.soil + d.nonSoil).toFixed(1) })).sort((a, b) => b.total - a.total).slice(0, 3);
   return (
     <ChartCard title="The three largest carbon stores" subtitle="Carbon stock, Mt C: total, soil and non-soil (vegetation)" period="2021" explain={{ indicator: "carbon" }}
-      notes="Grassland’s total (344.0 Mt C) is the figure used in the KPI; the text’s 334.0 is an arithmetic slip."
-      source="EPA, GSS and FC (2025) · Figure 7.2, p. 97"
+      notes="Grassland’s total (344.0 Mt C) is the figure used in the KPI."
+      source="EPA, GSS and FC (2025) · Figure 7.2, p. 93"
       footer={<DataDisclosure><DataTable caption="Largest carbon stores, 2021" headings={["Land cover", "Total (Mt C)", "Soil (Mt C)", "Non-soil (Mt C)"]} rows={top.map(d => [d.landCover, d.total, d.soil, d.nonSoil])} decimals={1} minWidth={360} /></DataDisclosure>}>
       <ul className="grid gap-3 md:grid-cols-3">
         {top.map(d => {
@@ -131,7 +131,7 @@ export function CarbonChangeCard() {
     <ChartCard title="How the carbon stock changed, 2015 to 2021" subtitle="Change by land-cover class, Mt C (waterfall)" period="2015–2021"
       explain={{ indicator: "carbon", title: "Carbon stock change" }}
       notes={`Total stock fell from ${num(carbonStockChange.start)} to ${num(carbonStockChange.end)} Mt C. The scale starts at 1,040 Mt C so that the smaller changes are visible; bar lengths show changes, not totals.`}
-      source="EPA, GSS and FC (2025) · Figure 7.3, p. 97"
+      source="EPA, GSS and FC (2025) · Figure 7.3, p. 93"
       footer={<DataDisclosure><DataTable caption="Carbon stock change by land cover, 2015 to 2021" headings={["Item", "Change (Mt C)", "Running total (Mt C)"]} rows={[{ cells: ["Total stock, 2015", null, carbonStockChange.start], emphasis: "total" as const }, ...steps.map(s => [s.label, s.change, s.end]), { cells: ["Total stock, 2021", null, carbonStockChange.end], emphasis: "total" as const }]} decimals={1} minWidth={380} /></DataDisclosure>}>
       <ul className="space-y-1.5" aria-label="Carbon stock waterfall from 2015 to 2021">
         {[{ label: "Total 2015", start: lo, end: carbonStockChange.start, change: null as number | null, total: true }, ...steps.map(s => ({ ...s, total: false })), { label: "Total 2021", start: lo, end: carbonStockChange.end, change: null, total: true }].map(s => {
@@ -181,7 +181,7 @@ export function RainfallCard() {
   return (
     <ChartCard title="Monthly rainfall" subtitle="Average rainfall, millimetres" period="2025" explain={{ indicator: "rain" }}
       notes={`Two peaks: 216.7 mm in June and 185.1 mm in October, typical of the two rainy seasons in much of southern Ghana. Monthly average ${climateAverages2025.rainfallMonthlyAverage} mm (dashed). The 2000–2010 and 2011–2024 reference curves in Figure 7.4 are unlabelled and not reproduced.`}
-      source="Ghana Meteorological Agency · Figure 7.4, p. 98; Table 2.1"
+      source="Ghana Meteorological Agency · Figure 7.4, p. 94; Table 2.1"
       footer={<DataDisclosure><DataTable caption="Monthly rainfall, 2025" headings={["Month", "Rainfall (mm)"]} rows={monthlyRainfall2025.map(d => [d.month, d.value])} decimals={1} minWidth={260} /></DataDisclosure>}>
       <RainyStrip />
       <ChartFrame height={250} label="Monthly rainfall in 2025, peaking at 216.7 mm in June and 185.1 mm in October">
@@ -215,7 +215,7 @@ export function TemperatureCard() {
   return (
     <ChartCard title="Monthly temperature" subtitle="Average temperature, °C" period="2025" explain={{ indicator: "temperature" }}
       notes={`Warmest in March (30.4°C), coolest in August (25.4°C); the range across the year is under 5°C. Monthly average ${climateAverages2025.temperatureMonthlyAverage}°C (dashed). The axis starts at 20°C to show the seasonal cycle; one year cannot show a long-term trend.`}
-      source="Ghana Meteorological Agency · Figure 7.5, p. 99; Table 2.1"
+      source="Ghana Meteorological Agency · Figure 7.5, p. 95; Table 2.1"
       footer={<DataDisclosure><DataTable caption="Monthly temperature, 2025" headings={["Month", "Temperature (°C)"]} rows={monthlyTemperature2025.map(d => [d.month, d.value])} decimals={1} minWidth={260} /></DataDisclosure>}>
       <TempExtremes />
       <ChartFrame height={250} label="Monthly average temperature in 2025, from 30.4°C in March to 25.4°C in August">

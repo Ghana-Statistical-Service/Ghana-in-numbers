@@ -1,5 +1,5 @@
 import DashboardShell from "@/components/layout/DashboardShell";
-import { ChildMortalityCard, FoodInsecurityCard, InfantCard, MaternalCard, NeonatalCard, PlasticCard, PlasticHeadlineCard, PovertyCard, SdgSummary, SlumsCard, UnderFiveCard } from "@/components/sdg/SdgSections";
+import { ChildMortalityCard, FoodInsecurityCard, InequalityCard, InfantCard, PovertyDriversCard, PovertyGroupsCard, PovertyQuarterlyCard, PovertyRegionsCard, MaternalCard, NeonatalCard, PlasticCard, PlasticHeadlineCard, PovertyCard, SdgSummary, SlumsCard, UnderFiveCard } from "@/components/sdg/SdgSections";
 import { GiftsGivenCard, NoInfluenceCard, NoSayCard } from "@/components/governance/GovernanceSections";
 import OverviewTopBar from "@/components/home/OverviewTopBar";
 import { KpiCard, KpiGrid } from "@/components/ui/Card";
@@ -30,8 +30,11 @@ export default function ProgressOnSDGsPage() {
 
         <SectionNav items={[{ id: "poverty-food", label: "Poverty and hunger" }, { id: "mortality", label: "Maternal and child health" }, { id: "cities", label: "Cities and coasts" }, { id: "institutions", label: "Institutions" }]} />
 
-        <Section id="poverty-food" title="Human development and basic needs" description="Poverty fell steadily; hunger rose again in 2025 after three years of decline; mothers and young children are far more likely to survive than two decades ago." source="§8.1 · pp. 101–103">
+        <Section id="poverty-food" title="Human development and basic needs" description="Poverty fell steadily; hunger rose again in 2025 after three years of decline; mothers and young children are far more likely to survive than two decades ago." source="§8.1 · pp. 97–102">
           <Grid cols={2}><PovertyCard /><FoodInsecurityCard /></Grid>
+          <div className="mt-4 lg:mt-5"><PovertyGroupsCard /></div>
+          <div className="mt-4 lg:mt-5"><PovertyRegionsCard /></div>
+          <Grid cols={2} className="mt-4 lg:mt-5"><PovertyDriversCard /><div className="flex min-w-0 flex-col gap-4 lg:gap-5"><PovertyQuarterlyCard /><InequalityCard /></div></Grid>
           <div id="mortality" className="scroll-mt-16">
             <h3 className="mb-3 mt-8 text-[15px] font-semibold text-ink">Maternal health and child survival</h3>
             <Grid cols={2}><MaternalCard /><UnderFiveCard /></Grid>
@@ -40,12 +43,12 @@ export default function ProgressOnSDGsPage() {
           </div>
         </Section>
 
-        <Section id="cities" title="Cities, environment and sustainability" description="Almost a third of urban residents live in slums or informal settlements; coastal plastic remains far above 2016 levels." source="§8.2 · pp. 103–105">
+        <Section id="cities" title="Cities, environment and sustainability" description="Almost a third of urban residents live in slums or informal settlements; coastal plastic remains far above 2016 levels." source="§8.2 · pp. 103–104">
           <SlumsCard />
           <Grid cols="1-2" className="mt-4 lg:mt-5"><PlasticHeadlineCard /><PlasticCard /></Grid>
         </Section>
 
-        <Section id="institutions" title="Institutions and inclusive decision-making" description="Bribery incidence fell, and more people feel heard by government. The two perception measures are governance context, not SDG indicators." source="Table 2.1, p. 10; pp. 92–93">
+        <Section id="institutions" title="Institutions and inclusive decision-making" description="Bribery incidence fell, and more people feel heard by government. The two perception measures are governance context, not SDG indicators." source="Table 2.1, p. 9; pp. 87–88">
           <Grid cols={3}><GiftsGivenCard /><NoSayCard /><NoInfluenceCard /></Grid>
         </Section>
       </PageBody>

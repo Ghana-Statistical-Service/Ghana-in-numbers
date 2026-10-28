@@ -174,7 +174,7 @@ export function SexSplitCard() {
       period="2025"
       qualifier={<Qualifier tone="caution">Projection</Qualifier>}
       explain={{ indicator: "composition" }}
-      source="GSS 2021–2050 Population Projections · Figure 3.3, p. 15; Table 2.1, p. 6"
+      source="GSS 2021–2050 Population Projections · Figure 3.3, p. 15; Table 2.1, p. 5"
       footer={<DataDisclosure><DataTable caption="Population by sex, 2025" headings={["Sex", "Share (%)", "Million"]} rows={[["Male", male, sexCounts2025.male], ["Female", female, sexCounts2025.female]]} decimals={1} minWidth={320} /></DataDisclosure>}
     >
       <SplitPanels label={`Males ${pct(male)}, females ${pct(female)}`} items={[
@@ -273,7 +273,7 @@ export function UrbanRuralCard() {
 
 type RegionalView = "share2025" | "share2021" | "share2010" | "density2021" | "density2010" | "tfr" | "net";
 const regionalViews: Record<RegionalView, { label: string; measure: string; period: string; source: string; get: (r: typeof REGIONS[number]) => number; fmt: (v: number) => string; note: string; explain: string; diverging?: [number, number]; barMax?: number }> = {
-  share2025: { label: "Share 2025", measure: "Share of national population (%)", period: "2025 projection", source: "Figure 3.6, p. 18; Table 2.1, p. 6", get: r => regionalShare[r].y2025, fmt: v => `${v.toFixed(1)}%`, note: "Greater Accra and Ashanti together hold more than a third of the population. Bars are drawn on a 0–100% scale.", explain: "regionalPopulation", barMax: 100 },
+  share2025: { label: "Share 2025", measure: "Share of national population (%)", period: "2025 projection", source: "Figure 3.6, p. 18; Table 2.1, p. 5", get: r => regionalShare[r].y2025, fmt: v => `${v.toFixed(1)}%`, note: "Greater Accra and Ashanti together hold more than a third of the population. Bars are drawn on a 0–100% scale.", explain: "regionalPopulation", barMax: 100 },
   share2021: { label: "Share 2021", measure: "Share of national population (%)", period: "2021 census", source: "Figure 3.6, p. 18", get: r => regionalShare[r].y2021, fmt: v => `${v.toFixed(1)}%`, note: "Greater Accra (17.7%) edged past Ashanti (17.6%) to become the most populous region. Bars are drawn on a 0–100% scale.", explain: "regionalPopulation", barMax: 100 },
   share2010: { label: "Share 2010", measure: "Share of national population (%)", period: "2010 census", source: "Figure 3.6, p. 18", get: r => regionalShare[r].y2010, fmt: v => `${v.toFixed(1)}%`, note: "Ashanti (19.4%) was the largest region in 2010. Bars are drawn on a 0–100% scale.", explain: "regionalPopulation", barMax: 100 },
   density2021: { label: "Density 2021", measure: "Persons per km²", period: "2021 census", source: "Figure 3.4, p. 16", get: r => populationDensity[r].y2021, fmt: v => v >= 1000 ? Math.round(v).toLocaleString("en-GB") : v.toFixed(1), note: "Density is people per square kilometre of land, not a population share.", explain: "regionalPopulation" },
@@ -540,7 +540,7 @@ export function EmigrantDestinationsCard() {
   return (
     <ChartCard title="Where emigrants live" subtitle="% of census-recorded emigrants, by destination" period="2021 census" explain={{ indicator: "emigrantDestinations" }}
       notes="ECOWAS and Other Africa are separate categories. Bars are drawn on a 0–100% scale. Shares may not total 100% because of rounding."
-      source="GSS 2021 PHC · Figure 3.16, pp. 25–26"
+      source="GSS 2021 PHC · Figure 3.16, p. 26"
       footer={<DataDisclosure><DataTable caption="Destinations of emigrants" headings={["Destination", "% of emigrants"]} rows={emigrantDestinationsData.map(r => [r.name, r.value])} decimals={1} minWidth={300} /></DataDisclosure>}>
       <ul className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
         {emigrantDestinationsData.map((d, i) => (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import DashboardShell from "@/components/layout/DashboardShell";
 import { PageBody, PageHeader } from "@/components/ui/Page";
 import publication from "@/data/publicationText.json";
+import { JUDGES_PROSE_PAGES } from "@/lib/assistant/publication";
 
 export const metadata: Metadata = { title: "Publication text | Ghana in Numbers" };
 
@@ -37,7 +38,7 @@ export default function PublicationPage() {
           {publication.pages.map(page => (
             <article key={page.id} id={`pdf-page-${page.pdfPage}`} aria-labelledby={`${page.id}-heading`} className="min-w-0 scroll-mt-6 rounded-xl border border-line bg-surface p-5 shadow-sm sm:p-8">
               <h2 id={`${page.id}-heading`} className="mb-5 border-b border-line pb-3 text-sm font-semibold text-brand">PDF page {page.pdfPage}{page.printedPage ? ` · Printed page ${page.printedPage}` : " · No printed label identified"}</h2>
-              {page.printedPage === "97" && <p className="mb-5 rounded-lg border border-line bg-surface-muted p-4 text-sm leading-relaxed text-body">Correction used in the dashboard: grassland soil carbon (202.8 Mt C) plus non-soil carbon (141.2 Mt C) totals 344.0 Mt C. The original prose below gives 334.0 Mt C.</p>}
+              {JUDGES_PROSE_PAGES.has(page.pdfPage) && <p className="mb-5 rounded-lg border border-line bg-surface-muted p-4 text-sm leading-relaxed text-body">Note used in the dashboard: this page still quotes the draft women-judges values (High Court 48.6%, Court of Appeal 40.3%). Figure 6.2 (printed page 86) and Table 2.1 give 48.8% and 39.0%.</p>}
               {!page.hasExtractableText && <p className="text-sm italic text-muted">No extractable text on this PDF page. Consult the original PDF for its visual content.</p>}
               <div className="space-y-4 text-[15px] leading-7 text-body">
                 {page.blocks.map((block, index) => block.kind === "heading" ? (

@@ -24,7 +24,7 @@ export function MerchandiseTradeCard() {
       explain={{ indicator: "trade" }}
       actions={<Segmented label="Currency" size="sm" value={cur} onChange={setCur} options={[{ value: "ghs", label: "GH¢" }, { value: "usd", label: "US$" }]} />}
       notes={<>Goods only. The 2025 current-price surplus (GH¢148.3 billion; US$11.5 billion) became a real deficit of GH¢{Math.abs(tradeFacts2025.realMerchandiseBalance)} billion after adjusting for prices, largely because gold prices were high. This differs from national-accounts net exports of goods and services (−GH¢7.6 billion real). Cedi values also move with the exchange rate.</>}
-      source="GSS merchandise trade statistics · Figures 5.22–5.23, pp. 81–82; p. 84"
+      source="GSS merchandise trade statistics · Figures 5.22–5.23, pp. 74–75; p. 78"
       footer={<DataDisclosure><DataTable caption="Merchandise trade" headings={["Year", "Exports GH¢ bn", "Imports GH¢ bn", "Balance GH¢ bn", "Exports US$ bn", "Imports US$ bn", "Balance US$ bn"]} rows={tradeGoodsData.map((d, i) => [d.year, d.export, d.import, d.balance, tradeGoodsUsd[i].export, tradeGoodsUsd[i].import, tradeGoodsUsd[i].balance])} decimals={1} minWidth={640} unitNote="Published balances may differ from exports minus imports by 0.1 because of rounding." /></DataDisclosure>}>
       <p className="mb-1 text-xs font-medium text-muted">Exports and imports, {unit}</p>
       <Legend className="mb-1" items={[{ label: "Exports", color: C.purple, shape: "line" }, { label: "Imports", color: C.amber, shape: "line" }]} />
@@ -82,7 +82,7 @@ export function CommoditiesCard() {
     <ChartCard title="Top five export and import commodities" subtitle="% of the value of exports or imports" period="2025"
       explain={{ indicator: "exports" }}
       notes={`Bars are drawn on a 0–100% scale. Exports are concentrated: the top five make up ${tradeFacts2025.top5ExportShare}% (gold bullion alone 62.9%). Imports are spread out: the top five make up ${tradeFacts2025.top5ImportShare}%. Crude oil is 8.3% of exports while refined fuels (gas oil and motor spirit) are 20.4% of imports.`}
-      source="GSS · Figure 5.24, pp. 82–83"
+      source="GSS · Figure 5.24, p. 76"
       footer={<DataDisclosure><DataTable caption="Top five exports, 2025" headings={["Export", "% of exports"]} rows={topExports2025.map(i => [i.name, i.share])} decimals={1} minWidth={280} /><DataTable caption="Top five imports, 2025" headings={["Import", "% of imports"]} rows={topImports2025.map(i => [i.name, i.share])} decimals={1} minWidth={280} /></DataDisclosure>}>
       <div className="grid gap-6">
         <div><p className="mb-2.5 text-[13.5px] font-semibold text-ink">Exports</p><ShareList items={topExports2025} color={C.purple} tint="#EEECFA" /></div>
@@ -97,7 +97,7 @@ export function PartnersCard() {
     <ChartCard title="Trade by continent" subtitle="% of exports and of imports" period="2025"
       explain={{ indicator: "partner" }}
       notes={`Bars are drawn on a 0–100% scale. Ghana exported to ${tradeFacts2025.exportPartners} partners and imported from ${tradeFacts2025.importPartners}. Trade with Africa ran a surplus: GH¢${tradeFacts2025.africaExports}bn exported, GH¢${tradeFacts2025.africaImports}bn imported. South America, Oceania and unknown destinations are small and not labelled in the source.`}
-      source="GSS · Figure 5.25, pp. 83–84"
+      source="GSS · Figure 5.25, p. 77"
       footer={<DataDisclosure><DataTable caption="Trade by continent, 2025" headings={["Continent", "% of exports", "% of imports"]} rows={tradePartnerRegions.map(r => [r.region, r.export, r.import])} decimals={1} minWidth={320} /><DataTable caption="Named export destinations, 2025" headings={["Destination", "Exports (GH¢ bn)"]} rows={namedExportDestinations2025.map(d => [d.name, d.value])} decimals={1} minWidth={300} unitNote="Destinations named in the text; the publication does not print a complete top-ten country list." /></DataDisclosure>}>
       <Legend className="mb-2" items={[{ label: "Exports", color: C.purple }, { label: "Imports", color: C.amber }]} />
       <ul className="space-y-3">
@@ -140,7 +140,7 @@ export function InformalTradeSection() {
         <ChartCard title="Informal exports and imports by quarter" subtitle="GH¢ billion" period="Q4 2024 – Q3 2025"
           explain={getGroupExplanation("informalTrade", "Informal cross-border trade", [0])}
           notes="Only four quarters have been observed; Q4 2024 was the survey’s first quarter, so read the rise into 2025 with care. The survey period is not calendar-year 2025."
-          source="GSS ICBT Survey · Table 5.11, p. 85"
+          source="GSS ICBT Survey · Table 5.12, p. 80"
           footer={<DataDisclosure><DataTable caption="Informal and formal trade by quarter" headings={["Period", "Informal exports", "Informal imports", "Informal total", "Informal balance", "Formal total (all partners)", "Informal share of all trade (%)"]} rows={informalTrade.map((r, i) => ({ cells: [r[0], r[1], r[2], r[3], r[4], informalTradeContext[i].formalTotal, informalTradeContext[i].informalShare], emphasis: i === 4 ? "total" as const : undefined }))} decimals={[undefined, 2, 2, 2, 2, 1, 1]} minWidth={720} unitNote="GH¢ billion unless stated. Rounded quarterly balances are shown as published and can differ from exports minus imports (e.g. Q4 2024: 3.95 − 3.53 = 0.42, published 0.41)." /></DataDisclosure>}>
           <Legend className="mb-1" items={[{ label: "Exports", color: C.purple }, { label: "Imports", color: C.amber }]} />
           <ChartFrame height={230} label="Informal exports and imports by quarter">
@@ -158,7 +158,7 @@ export function InformalTradeSection() {
         <ChartCard title="Informal trade balance with each neighbour" subtitle="GH¢ million · above zero = Ghana sells more" period="Q4 2024 – Q3 2025"
           explain={getGroupExplanation("informalTrade", "Informal trade balance and share", [1])}
           notes="Surpluses with Burkina Faso (+GH¢2.8bn over 12 months) and Côte d’Ivoire (+GH¢2.0bn) offset a widening deficit with Togo (−GH¢3.2bn). The three add up to the quarterly balance; the surplus nearly vanished in Q3 2025 (GH¢49–50 million)."
-          source="GSS ICBT Survey · Figure 5.26, p. 86"
+          source="GSS ICBT Survey · Figure 5.26, p. 81"
           footer={<DataDisclosure><DataTable caption="Informal trade balance by neighbour, GH¢ million" headings={["Quarter", "Burkina Faso", "Côte d’Ivoire", "Togo", "Sum"]} rows={neighbours.map(r => [r.quarter, r.burkina, r.coteDIvoire, r.togo, r.burkina + r.coteDIvoire + r.togo])} decimals={0} minWidth={420} /></DataDisclosure>}>
           <Legend className="mb-1" items={[{ label: "Burkina Faso", color: C.teal }, { label: "Côte d’Ivoire", color: C.blue }, { label: "Togo", color: C.negative }]} />
           <ChartFrame height={230} label="Informal trade balance by neighbour and quarter">
@@ -179,7 +179,7 @@ export function InformalTradeSection() {
         <ChartCard title="What crosses the border" subtitle="Top five goods, GH¢ million" period="Oct 2024 – Sep 2025"
           explain={getGroupExplanation("informalTrade", "Informal cross-border trade", [0])}
           notes={`Drinks and fuel go out; food and household goods come in. Top five: ${informalTopGoods.exportTop5Share}% of informal exports and ${informalTopGoods.importTop5Share}% of imports. Weedicide is a minimum (earlier quarters unpublished).`}
-          source="GSS ICBT Survey · Table 5.12, p. 86">
+          source="GSS ICBT Survey · Table 5.13, p. 81">
           {[{ label: "Exports", rows: informalTopGoods.exports, color: C.purple }, { label: "Imports", rows: informalTopGoods.imports, color: C.amber }].map(g => (
             <div key={g.label} className="mb-4 last:mb-0">
               <p className="mb-2 text-[13px] font-semibold text-ink">{g.label}</p>
@@ -190,13 +190,13 @@ export function InformalTradeSection() {
         <ChartCard title="How informal trade moves" subtitle="Value carried by means of transport, GH¢ billion (% of total)" period="Oct 2024 – Sep 2025"
           explain={getGroupExplanation("informalTrade", "Informal cross-border trade", [0])}
           notes="Tricycles and motorbikes carried 62% of the value. Upper East is the export gateway (GH¢5.3bn) and Volta the import gateway (GH¢6.1bn)."
-          source="GSS ICBT Survey · Figure 5.27a, p. 87">
+          source="GSS ICBT Survey · Figure 5.27a, p. 82">
           <ul className="space-y-2">{informalTransport.map(([mode, v, s]) => <li key={mode} className="grid grid-cols-[5.5rem_minmax(0,1fr)_5rem] items-center gap-2 text-[12.5px]"><span className="text-body">{mode}</span><span className="h-3 rounded-sm bg-surface-muted"><span className="block h-full rounded-sm" style={{ width: `${(v / 14) * 100}%`, background: mode === "All others" ? C.slateLight : C.teal }} /></span><span className="tabular text-right font-semibold text-ink">{v.toFixed(1)} <span className="font-normal text-subtle">({s}%)</span></span></li>)}</ul>
         </ChartCard>
         <ChartCard title="Women as transporters" subtitle="% of transporters who are women" period="Q4 2024 – Q3 2025"
           explain={getGroupExplanation("informalTrade", "Informal cross-border trade", [0])}
           notes="About two in three export transporters are men; women make up about four in ten import transporters."
-          source="GSS ICBT Survey · Figure 5.27b, p. 87"
+          source="GSS ICBT Survey · Figure 5.27b, p. 82"
           footer={<DataDisclosure><DataTable caption="Women as % of transporters" headings={["Quarter", "Exports (%)", "Imports (%)"]} rows={informalWomenTransporters.map(r => [r.quarter, r.exports, r.imports])} decimals={0} minWidth={280} /></DataDisclosure>}>
           <Legend className="mb-1" items={[{ label: "Exports", color: C.purple }, { label: "Imports", color: C.amber }]} />
           <ChartFrame height={190} label="Women as a share of transporters by quarter">

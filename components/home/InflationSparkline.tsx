@@ -16,7 +16,7 @@ export default function InflationSparkline() {
       period="Jan 2024 – Dec 2025"
       explain={{ indicator: "inflation" }}
       notes="Lower inflation means prices are rising more slowly, not that they have fallen. Annual average for 2025: 14.6%."
-      source="GSS Consumer Price Index; Ghana in Numbers 2025, pp. 51–53"
+      source="GSS Consumer Price Index; Ghana in Numbers 2025, pp. 54–56"
     >
       <p className="tabular flex items-baseline gap-2 text-ink"><span className="text-3xl font-semibold tracking-tight">{last.value}%</span><span className="text-[13px] text-muted">December 2025, down from {first.value}% in January 2024</span></p>
       <ChartFrame height={190} label={`Monthly year-on-year inflation from ${first.value}% in January 2024 to ${last.value}% in December 2025`}>

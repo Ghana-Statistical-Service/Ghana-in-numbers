@@ -7,6 +7,7 @@ import { DataDisclosure, DataTable } from "@/components/ui/Data";
 // Chapter 10, pp. 117–122. Survey results describe respondents in the covered districts, not national prevalence.
 const dacf = [
   ["Knew about the DACF allocation for persons with disabilities", 55],
+  ["Did not know about the allocation or were unsure", 45],
   ["Had received support", 54],
   ["Took part in discussions on how the fund is allocated and spent", 30],
   ["Had no formal education", 37.5],
@@ -92,11 +93,11 @@ function Bars({ rows, color, t }: { rows: [string, number][]; color: string; t: 
 
 const body = "text-sm leading-relaxed text-slate-700";
 
-export default function DataStoriesPage() {
+export default function DataImpactStoriesPage() {
   const t = themes;
   return (
     <DashboardShell>
-      <OverviewTopBar page="Data Stories" />
+      <OverviewTopBar page="Data Impact Stories" />
       <div className="min-h-full" style={{ background: "#EEF1F6" }}>
 
         {/* ── HERO ──────────────────────────────────────────────────────── */}
@@ -107,7 +108,7 @@ export default function DataStoriesPage() {
             ))}
           </div>
           <span className="mb-6 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold" style={{ background: "rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.92)" }}>
-            <Sparkles size={13} aria-hidden="true" /> Chapter 10 · Data Stories
+            <Sparkles size={13} aria-hidden="true" /> Chapter 10 · Data Impact Stories
           </span>
           <h1 className="mb-3 font-black uppercase leading-none text-white" style={{ fontSize: "clamp(2.4rem, 6vw, 4rem)" }}>
             From evidence<br /><span style={{ color: "#5EEAD4" }}>to action</span>
@@ -171,7 +172,7 @@ export default function DataStoriesPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               <FactBox t={t.hack} strong label="Official data points" value="350+" unit="million" note="2021 PHC and other datasets" />
               <FactBox t={t.hack} label="Tertiary institutions" value="11" note="Taking part across two editions" />
-              <div className="sm:col-span-2"><FactBox t={t.hack} label="People aged 15–35, 2021" value="11.7" unit="million" note="38.2% of the population (the 2021 census definition used in this story) · p. 118" /></div>
+              <div className="sm:col-span-2"><FactBox t={t.hack} label="People aged 15–35" value="11.9" unit="million" note="About 35% of the population, as stated in this story · p. 118" /></div>
             </div>
           </div>
         </section>

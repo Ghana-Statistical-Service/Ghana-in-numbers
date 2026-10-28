@@ -42,7 +42,7 @@ export function ParticipationCard() {
   return (
     <ChartCard title="Labour-force participation and employment" subtitle="% of the working-age population" period="2022–2025" explain={{ indicator: "participation" }}
       notes="2025 is the Q1–Q3 average (QLFS); 2022–2024 are annual (AHIES). Participation includes jobseekers; the employment-to-population ratio counts only people in work."
-      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.17, p. 58"
+      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.17, p. 60"
       footer={<DataDisclosure><DataTable caption="Labour market participation" headings={["Year", "Participation (%)", "Employment-to-population (%)"]} rows={labourParticipationData.map(d => [yearLabel(d.year), d.labourForce, d.employmentPopulation])} decimals={1} minWidth={380} /></DataDisclosure>}>
       <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
       <TrendLines data={labourParticipationData} series={s} max={100} label="Labour-force participation rose from 67.1% in 2022 to 74.5% in 2025; employment-to-population rose from 58.3% to 65.0%" />
@@ -55,7 +55,7 @@ export function UnemploymentCard() {
   return (
     <ChartCard title="Unemployment rate" subtitle="% of the labour force in each group" period="2017, 2021–2025" explain={{ indicator: "unemployment" }}
       notes="A share of each group’s labour force, not of all young people. The year axis is spaced by time: there is no observation between 2017 and 2021. 2025 is the Q1–Q3 average."
-      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.18, p. 59"
+      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.18, p. 61"
       footer={<DataDisclosure><DataTable caption="Unemployment rate by group" headings={["Year", "Youth 15–24 (%)", "Youth 15–35 (%)", "National (%)"]} rows={unemploymentData.map(d => [yearLabel(d.year), d.youth1524, d.youth1535, d.national])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
       <TrendLines proportional data={unemploymentData} series={s} max={40} label="Unemployment in 2025: 32.4% for ages 15–24, 21.9% for ages 15–35, 12.8% nationally" />
@@ -68,7 +68,7 @@ export function NeetCard() {
   return (
     <ChartCard title="Young people not in employment, education or training" subtitle="NEET, % of all people in the age group" period="2022–2025" explain={{ indicator: "neet" }}
       notes="The denominator is everyone in the age group, unlike unemployment. 2025 is the Q1–Q3 average; the Q3 2025 rate alone was higher (21.5% and 19.5%)."
-      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.19, p. 59"
+      source="GSS AHIES 2022–2024; QLFS 2025 · Figure 5.19, p. 61"
       footer={<DataDisclosure><DataTable caption="Youth NEET rate" headings={["Year", "Youth 15–24 (%)", "Youth 15–35 (%)"]} rows={neetData.map(d => [yearLabel(d.year), d.youth1524, d.youth1535])} decimals={1} minWidth={340} /></DataDisclosure>}>
       <Legend className="mb-1" items={s.map(x => ({ label: x.label, color: x.color, shape: "line" as const }))} />
       <TrendLines data={neetData} series={s} max={30} label="Youth NEET rates fell from 22.4% and 21.7% in 2022 to 19.1% and 17.9% in 2025" />
@@ -111,9 +111,9 @@ export function TourismCard() {
   return (
     <ChartCard title="Tourism flows and spending" subtitle="Visitors (million) and expenditure (GH¢ billion), by type of trip" period="2023"
       explain={{ indicator: "tourism" }}
-      notes={<>Same-day and overnight flows are counted separately and are not unique people. The GH¢22.01 billion headline is domestic plus inbound spending; outbound spending (GH¢3.46 billion) is residents’ spending abroad. Table 2.1 reports inbound overnight spending of GH¢15.18 billion; Table 5.8 and the text give GH¢15.4 billion.</>}
-      source="GSS DOTS and GITS 2023 · Figures 5.20–5.21, Table 5.8, pp. 60, 70"
-      footer={<DataDisclosure><DataTable caption="Tourism flows and expenditure, 2023" headings={["Flow", "Overnight visitors", "Same-day visitors", "Total visitors", "Overnight spend (GH¢ bn)", "Same-day spend (GH¢ bn)", "Total spend (GH¢ bn)"]} rows={tourismSplit.map(t => [t.flow, t.overnight, t.sameDay, t.totalVisitors, t.overnightSpend, t.sameDaySpend, t.totalSpend])} minWidth={760} unitNote="Domestic overnight and same-day counts are printed rounded to 0.1 million. Outbound same-day: 77,500 in Table 5.8, 77,501 in the text." /></DataDisclosure>}>
+      notes={<>Same-day and overnight flows are counted separately and are not unique people. The GH¢22.01 billion headline is domestic plus inbound spending; outbound spending (GH¢3.46 billion) is residents’ spending abroad.</>}
+      source="GSS DOTS and GITS 2023 · Figures 5.20–5.21, Table 5.8, pp. 62, 63"
+      footer={<DataDisclosure><DataTable caption="Tourism flows and expenditure, 2023" headings={["Flow", "Overnight visitors", "Same-day visitors", "Total visitors", "Overnight spend (GH¢ bn)", "Same-day spend (GH¢ bn)", "Total spend (GH¢ bn)"]} rows={tourismSplit.map(t => [t.flow, t.overnight, t.sameDay, t.totalVisitors, t.overnightSpend, t.sameDaySpend, t.totalSpend])} minWidth={760} unitNote="Domestic overnight and same-day counts are printed rounded to 0.1 million." /></DataDisclosure>}>
       <div className="grid gap-3 sm:grid-cols-3">
         {tourismSplit.map(t => <Stat key={t.flow} label={`${t.flow} visitors`} value={t.totalVisitors.toLocaleString("en-GB")} context={`GH¢${t.totalSpend.toFixed(2)} billion spent`} />)}
       </div>

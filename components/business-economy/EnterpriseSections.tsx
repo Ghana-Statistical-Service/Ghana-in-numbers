@@ -15,7 +15,7 @@ const typeColors = [C.purple, C.teal, C.amber];
 export function EnterpriseStats() {
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <Stat tone="brand" label="Businesses counted" value="2,644,358" context="2024 IBES I census: establishments, open-space and mobile" />
+      <Stat tone="brand" label="Businesses counted" value="2,644,363" context="2024 IBES I census: establishments, open-space and mobile" />
       <Stat label="Persons engaged in establishments" value="6.90" unit="million" context={`${enterpriseFacts.persons2014} million in 2014; about 36% unpaid`} />
       <Stat label="Formal establishments" value="7.7" unit="%" context={`${enterpriseFacts.newFormal}% of those started 2015–2023`} />
       <Stat label="Establishments using digital finance" value="37.2" unit="%" context="Mobile money, transfers, cards" />
@@ -28,9 +28,9 @@ export function BusinessTypesCard() {
     <ChartCard title="Businesses with and without walls" subtitle="Number and share of all businesses" period="2024"
       explain={getGroupExplanation("enterprises", "Businesses and establishments", [0])}
       notes="Seven in ten businesses work inside a fixed structure. Mobile businesses were counted on a single day and are likely understated. Establishments rose from 638,235 in 2014 to 1,867,690 in 2024, partly because the 2024 census counted more widely."
-      source="GSS 2024 IBES I · Table 5.4, p. 46"
+      source="GSS 2024 IBES I · Table 5.4, p. 49"
       footer={<DataDisclosure><DataTable caption="Businesses by type, 2024" headings={["Business type", "Number", "Share of all businesses"]} rows={enterpriseTypes.map((r, i) => i === 3 ? { cells: r, emphasis: "total" as const } : r)} minWidth={420} /></DataDisclosure>}>
-      <div className="flex h-10 overflow-hidden rounded-md" role="img" aria-label="Fixed-structure establishments 70.6%, open-space businesses 26.2%, mobile businesses 3.1%">
+      <div className="flex h-10 overflow-hidden rounded-md" role="img" aria-label="Fixed-structure establishments 70.6%, open-space businesses 26.3%, mobile businesses 3.1%">
         {enterpriseTypes.slice(0, 3).map((r, i) => <div key={r[0]} style={{ width: r[2], background: typeColors[i] }} className="flex items-center justify-center text-[12.5px] font-semibold text-white">{parseFloat(r[2]) > 5 ? r[2] : ""}</div>)}
       </div>
       <ul className="mt-4 space-y-3">
@@ -51,7 +51,7 @@ export function SizeCard() {
     <ChartCard title="Small firms, different employment footprints" subtitle="Share by establishment size, %" period="2024"
       explain={getGroupExplanation("enterprises", "Establishment size and persons engaged", [1])}
       notes="Size is persons engaged, including owners and unpaid workers: micro 1–5, small 6–30, medium 31–100, large over 100. Just 4,874 large firms engage about 1.5 million people."
-      source="GSS 2024 IBES I · Figure 5.10, p. 48"
+      source="GSS 2024 IBES I · Figure 5.10, p. 50"
       footer={<DataDisclosure><DataTable caption="Establishments and persons engaged by size" headings={["Size", "Share of establishments", "Share of persons engaged", "Formal within size"]} rows={establishmentSize} minWidth={480} /></DataDisclosure>}>
       <Legend className="mb-3" items={establishmentSize.map((r, i) => ({ label: r[0].split(" (")[0], color: sizeColors[i] }))} />
       {groups.map(g => (
@@ -72,7 +72,7 @@ export function FormalityCard() {
     <ChartCard title="Formality and management by size" subtitle="% of establishments within each size group" period="2024"
       explain={getGroupExplanation("enterprises", "Formality and digital finance", [2])}
       notes="Rates within each size group, not shares of all establishments; they should not be added across groups. The remainder of each management bar is jointly managed by women and men."
-      source="GSS 2024 IBES I · Table 5.5, p. 48"
+      source="GSS 2024 IBES I · Table 5.5, p. 51"
       footer={<DataDisclosure><DataTable caption="Formality and management by size" headings={["Size", "Formal (%)", "Managed by women only (%)", "Managed by men only (%)", "Jointly managed (%)"]} rows={managementBySize.map(r => ({ cells: [r.size, r.formal, r.women, r.men, +(100 - r.women - r.men).toFixed(1)], emphasis: r.size === "All sizes" ? "total" as const : undefined }))} decimals={1} minWidth={560} unitNote="Jointly managed share derived as the remainder of 100%." /></DataDisclosure>}>
       <div className="grid gap-6 md:grid-cols-2">
         <div>
@@ -113,7 +113,7 @@ export function StartYearCard() {
     <ChartCard title="Establishments operating in 2024, by year started" subtitle="Number of establishments" period="2024"
       explain={getGroupExplanation("enterprises", "Businesses and establishments", [0])}
       notes="Counts only businesses still open in 2024, so it shows survivors rather than how many started in each period. Seven in ten started between 2015 and 2023."
-      source="GSS 2024 IBES I · Figure 5.9, p. 47"
+      source="GSS 2024 IBES I · Figure 5.9, p. 50"
       footer={<DataDisclosure><DataTable caption="Establishments by period started" headings={["Period started", "Establishments"]} rows={data.map(d => [d.period, d.value])} decimals={0} minWidth={300} /></DataDisclosure>}>
       <ChartFrame height={230} label="Establishments operating in 2024 by period started: 1,325,880 started in 2015–2023">
         <BarChart data={data} margin={{ top: 22, right: 4, left: 4, bottom: 0 }}>
@@ -135,7 +135,7 @@ export function RegionalConditionsCard() {
     <ChartCard title="The same country, different business conditions" subtitle="Highest and lowest region against the national figure, %" period="2024"
       explain={getGroupExplanation("enterprises", "Formality and digital finance", [2])}
       notes="Only the highest and lowest regions are published for each indicator. A business in Greater Accra is about seven times as likely to be formal as one in North East."
-      source="GSS 2024 IBES I · Table 5.6, p. 49"
+      source="GSS 2024 IBES I · Table 5.6, p. 51"
       footer={<DataDisclosure><DataTable caption="Business conditions by region" headings={["Indicator", "Lowest region", "Lowest (%)", "Ghana (%)", "Highest region", "Highest (%)"]} rows={businessConditionsByRegion.map(r => [r.indicator, r.low[0], r.low[1], r.ghana, r.high[0], r.high[1]])} decimals={[undefined, undefined, 1, 1, undefined, 1]} minWidth={640} /></DataDisclosure>}>
       <Legend className="mb-3" items={[{ label: "Lowest region", color: C.amber, shape: "dot" }, { label: "Ghana", color: C.ink, shape: "dot" }, { label: "Highest region", color: C.purple, shape: "dot" }]} />
       <ul className="space-y-5">
@@ -161,7 +161,7 @@ export function WithoutWallsCard() {
     <ChartCard title="Businesses without walls: open-space and mobile" subtitle="Profile of the 776,668 businesses working outside a building" period="2024"
       explain={getGroupExplanation("enterprises", "Businesses and establishments", [0])}
       notes={`Mostly women, mostly Ghanaian, mostly selling food. Six in ten mobile operators (${enterpriseFacts.mobileYouth.toLocaleString("en-GB")}) are aged 15–35, and ${enterpriseFacts.mobileChildren.toLocaleString("en-GB")} are children aged 10–14. Daily sales are money taken in, not profit.`}
-      source="GSS 2024 IBES I · Table 5.7, pp. 49–50">
+      source="GSS 2024 IBES I · Table 5.7, p. 52">
       <div className="scroll-hint overflow-x-auto rounded-[var(--radius-sm)] border border-line" tabIndex={0} role="region" aria-label="Open-space and mobile businesses compared">
         <table className="w-full min-w-[520px] text-[13px]">
           <caption className="sr-only">Open-space and mobile businesses side by side, 2024</caption>

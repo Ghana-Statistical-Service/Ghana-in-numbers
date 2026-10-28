@@ -12,7 +12,7 @@ const anchors: Record<string, [string, string][]> = {
   "/progress-on-sdgs": [["23.0%", "multidimensionally poor, Q1–Q3 2025"], ["301", "maternal deaths per 100,000 live births, 2021"]],
   "/youth-bulge": [["21.9%", "unemployment, ages 15–35, Q1–Q3 2025"]],
   "/agriculture-forestry-fishing": [["0.02", "Agriculture Orientation Index, 2024"]],
-  "/data-story": [["4", "stories of statistics in use"]],
+  "/data-story": [["4", "data impact stories"]],
 };
 
 export default function TopicGrid() {

@@ -37,7 +37,7 @@ export default function PopulationSharePanel() {
         <CardExplanation indicator="youth" />
       </div>
       <p className="text-xs mb-3" style={{ color: "#6B7280" }}>
-        2000 and 2025 observations; the 15–24 share is 16% in 2025 (p. 108).
+        Children: 2000 and 2025. Youth shares are approximate (“about”) values for 2010, 2021 and 2025 (pp. 108–109).
       </p>
 
 
@@ -77,6 +77,7 @@ export default function PopulationSharePanel() {
                 <Line
                   key={key}
                   type="monotone"
+                  connectNulls
                   dataKey={key}
                   name={label}
                   stroke={color}

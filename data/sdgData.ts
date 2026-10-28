@@ -92,7 +92,6 @@ export const neonatalMortality = [
 export const urbanSlums = {
   householdPct: 29.5,
   householdCount: 1_404_266,
-  urbanPopMillions: 15.67,
   urbanSlumPct: 30.8,
 };
 
@@ -104,7 +103,7 @@ export const coastalDebrisData = [
   { year: "2020", value: 152.13 },
 ];
 
-// SDG 3.2 – Infant Mortality Rate (per 1,000 live births), GDHS; Figure 8.4, p. 103
+// SDG 3.2 – Infant Mortality Rate (per 1,000 live births), GDHS; Figure 8.7, p. 102
 export const infantMortality = [
   { year: "2003", value: 64 },
   { year: "2008", value: 50 },

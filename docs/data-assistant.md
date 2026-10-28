@@ -37,7 +37,7 @@ When adding a dataset to the catalogue, add at least one question for it. `node 
 
 ## Publication Markdown and page retrieval
 
-The source is `2025 GIN-Draft 24-12Oct26-Final (1).pdf` in the workspace parent directory. Its extractable text is converted locally into `public/documents/ghana-in-numbers-2025.md`, with the matching retrieval/reader index in `data/publicationText.json`. Both files are committed application assets: runtime access requires no local PDF, external vector database or uploaded OpenAI file. The model receives relevant passages on demand, rather than the entire document on each question.
+The source is the final edition, `Ghana In Numbers 2025 main report.pdf` (178 PDF pages), in the workspace parent directory. It replaced the October 2026 draft on 28 October 2026. Its extractable text is converted locally into `public/documents/ghana-in-numbers-2025.md`, with the matching retrieval/reader index in `data/publicationText.json`. Both files are committed application assets: runtime access requires no local PDF, external vector database or uploaded OpenAI file. The model receives relevant passages on demand, rather than the entire document on each question.
 
 Regenerate after replacing the PDF using:
 

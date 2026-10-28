@@ -17,7 +17,7 @@ const components = [
 ];
 
 /**
- * Waterfall of 2025 GDP by expenditure (Table 5.1, p. 39): consumption + investment + exports − imports = GDP.
+ * Waterfall of 2025 GDP by expenditure (Table 5.1, p. 42): consumption + investment + exports − imports = GDP.
  * Consumption sub-items are shown separately and are already included in the consumption bar.
  */
 export default function GDPExpenditureVisual() {
@@ -55,7 +55,7 @@ export default function GDPExpenditureVisual() {
       explain={getGroupExplanation("expenditure", "GDP by expenditure")}
       actions={<Segmented label="GDP price basis" size="sm" value={basis} onChange={v => { setBasis(v); setActive(null); }} options={[{ value: "nominal", label: "Nominal" }, { value: "real", label: "Real (2013 prices)" }]} />}
       notes={<>Expenditure levels, not contributions to growth. Domestic demand grew 8.9% in real terms, led by household consumption (+10.5%); real imports grew faster (+19.3%) than exports (+8.2%), leaving real net exports at −GH¢7.6 billion while the nominal balance was +GH¢112.9 billion. Published components may not sum exactly to totals because of rounding.</>}
-      source="GSS Quarterly GDP, Expenditure Approach (September 2026) · Table 5.1, p. 39"
+      source="GSS Quarterly GDP, Expenditure Approach (September 2026) · Table 5.1, p. 42"
       footer={<DataDisclosure hint="All expenditure items, with real growth"><GDPExpenditureTable /></DataDisclosure>}
     >
       <div className="grid gap-3 sm:grid-cols-3">

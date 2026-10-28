@@ -1,6 +1,6 @@
 # Ghana in Numbers: document reconciliation
 
-Source: `../2025 GIN-Draft 24-12Oct26-Final (1).pdf`. Page references below use the printed page number, not the PDF viewer index. Reconciled 24 October 2026. This audit checks the dashboard against this supplied edition; it is not an independent validation of the publication or a refresh from external statistical releases.
+Source: originally `../2025 GIN-Draft 24-12Oct26-Final (1).pdf` (draft); the dashboard now follows the final edition, `../Ghana In Numbers 2025 main report.pdf` (see the last section). Page references in the sections below are draft printed pages unless stated; the code and coverage record use final-edition pages, not the PDF viewer index. Reconciled 24 October 2026. This audit checks the dashboard against this supplied edition; it is not an independent validation of the publication or a refresh from external statistical releases.
 
 ## Reference periods
 
@@ -145,3 +145,19 @@ Validation for this pass: TypeScript, `scripts/check-report-data.mjs` (extended)
 The complete source PDF now has a reproducible local text-to-Markdown conversion, with sections for all 167 physical PDF pages (164 have extractable text), retained printed page labels and source/Markdown hashes. Source wording and inconsistencies are preserved; images, maps and plotted marks are not reconstructed. The original PDF remains authoritative for visual inspection. The assistant searches and reads bounded page passages for explanations, methods, glossary entries and narrative context, alongside the 105 structured datasets. Only pages actually read can become citations, which open the new publication reader at the relevant physical page. Downloadable Markdown is at `/documents/ghana-in-numbers-2025.md`.
 
 Audited structured datasets remain the numerical calculation source. Reading printed p. 97 additionally supplies the grassland carbon correction, so the preserved prose error does not override the corrected dashboard total. Page-bound validation and search-only/empty-page citation rejection are covered by the assistant checks. See `data-assistant.md` for regeneration and extraction limitations.
+
+## Final edition reconciliation (28 October 2026)
+
+The final report (`Ghana In Numbers 2025 main report.pdf`, 178 PDF pages, "Maiden edition") replaced the draft. Its text was compared with the draft word by word and every chart page was checked visually against the dashboard data. Most content is unchanged; the differences are:
+
+- **Renumbering and pages.** Chapters 4–9 moved (Chapter 4 by +1 to +2 pages, Chapter 5 by +3 to −7, Chapters 6–8 by −4 to −5). New Figure 4.7 (child-marriage map) and Figures 8.2–8.4 renumber later figures (4.7–4.9 → 4.8–4.10; 8.2–8.6 → 8.5–8.9). Tables 5.9a/5.9b → 5.9/5.10 and 5.10–5.12 → 5.11–5.13. New §3.8 Emigration and §6.3 Right to vote. Figure 9.3 was removed (its text remains, pp. 114–115). All 650+ citations in the code were remapped from a page-by-page text alignment and the final list of figures and tables.
+- **Chapter 10** is renamed *Data Impact Stories*. The hackathon story now gives 11.9 million people aged 15–35 (about 35%), not 11.7 million (38.2%); the DACF story adds that 45% did not know about the allocation or were unsure.
+- **Women judges (Figure 6.2)**: the series is revised in every year (Supreme Court especially; 2012 now reported). 2025: High Court 48.8%, Court of Appeal 39.0%, Supreme Court 25.0%. **Conflict:** Chapter 11 prose (printed pp. 128–130) still quotes the draft 48.6% and 40.3%; the dashboard uses Figure 6.2 and Table 2.1, and the assistant attaches a notice to those pages.
+- **Youth (pp. 107–109)**: child share 35.0% in 2025 (draft 33.2%); youth 15–35 about 35% in 2010, 36% in 2021 and 35% in 2025, about 12 million (draft about 30%, more than 11 million); youth 15–24 about 20%, 6.6 million (draft 16%); youth-to-child ratio about one to one, up from 0.9 in 2010 (draft 0.83, "barely moved"). "Demographic bomb" became "demographic pressure". The final values agree with the age–sex pyramids.
+- **Enterprises**: 2,644,363 businesses and 1,867,695 establishments (draft 2,644,358 and 1,867,690); open-space share 26.3% (draft 26.2%).
+- **Tourism**: outbound same-day 77,501 trips, GH¢0.0598 billion (draft 77,500, 0.058); Table 2.1 now gives inbound overnight spending of GH¢15.4 billion (the draft's 15.18 conflict is resolved).
+- **Gender-based violence (Figure 4.10)**: physical violence (42.4% → 9.8%) is no longer reported; removed from the dashboard.
+- **Resolved draft inconsistencies**: grassland carbon prose now 344.0 Mt C (draft 334.0); Table 11.1 now 29.7% for no say (draft 29.2%); the slum chapter no longer quotes 15.67 million urban residents (removed from the dashboard); the internal-migration COVID-19 explanation was removed.
+- **New content added to the dashboard**: Figure 4.7 regional child marriage; Figures 8.2–8.4 and Tables 8.1–8.2 (poverty by group, region and driver; quarterly deprivations; Gini). The preface (p. vii) is now the welcome message.
+- **Unchanged after checking**: all other chart values in Chapters 3–9, including Figure 3.1, the pyramids, the regional maps, GDP, prices, labour, trade, fiscal, environment and mortality series.
+- **Assistant**: the publication Markdown and index were regenerated from the final PDF (178 pages, 165 with extractable text); the grassland correction notice was retired; six datasets were added (111 in total).

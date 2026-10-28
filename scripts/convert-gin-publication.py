@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_PDF = ROOT.parent / '2025 GIN-Draft 24-12Oct26-Final (1).pdf'
+DEFAULT_PDF = ROOT.parent / 'Ghana In Numbers 2025 main report.pdf'
 MARKDOWN = ROOT / 'public/documents/ghana-in-numbers-2025.md'
 INDEX = ROOT / 'data/publicationText.json'
 
@@ -85,7 +85,7 @@ This Markdown contains the PDF's extractable text, organised by physical PDF pag
 
 Narrative line wraps are joined for reading. Tables and column-aligned material are kept in fenced text blocks to preserve associations. Images, maps, plotted marks and image-only chart labels are not reproduced or inferred. An empty text page does not imply a blank PDF page. Consult the original PDF for its visual content.
 
-For dashboard answers, use the audited structured datasets for numerical comparisons and calculations. Use this text for explanations, context, glossary definitions and methodology. Consult the existing document-data audit when original prose and chart figures disagree; in particular the grassland carbon prose on printed page 97 contains a known total inconsistency.
+For dashboard answers, use the audited structured datasets for numerical comparisons and calculations. Use this text for explanations, context, glossary definitions and methodology. Consult the existing document-data audit when original prose and chart figures disagree; in particular the Chapter 11 prose (printed pages 128–130) still quotes the draft women-judges values (High Court 48.6%, Court of Appeal 40.3%), while Figure 6.2 and Table 2.1 give 48.8% and 39.0%.
 
 ## Page index
 

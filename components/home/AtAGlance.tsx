@@ -216,7 +216,7 @@ function BottomRow() {
       <Link href="/youth-bulge" className="on-dark group flex flex-col rounded-[var(--radius-lg)] bg-nav px-4 py-3 text-white shadow-card transition-colors hover:bg-[#2C2270]">
         <p className="text-xs font-semibold uppercase tracking-[0.08em] text-white/75">Data story</p>
         <h3 className="mt-0.5 text-[14.5px] font-semibold leading-snug text-white">Ghana&apos;s youth dividend</h3>
-        <p className="mt-1 text-[13px] leading-snug text-white/85">~30% of Ghana&apos;s projected 33.7 million people are aged 15–35: an opportunity that depends on skills and jobs.</p>
+        <p className="mt-1 text-[13px] leading-snug text-white/85">~35% of Ghana&apos;s projected 33.7 million people are aged 15–35: an opportunity that depends on skills and jobs.</p>
         <span className="mt-auto inline-flex items-center gap-1.5 pt-1.5 text-[13px] font-semibold text-white">Explore data story<ArrowRight size={15} aria-hidden className="transition-transform group-hover:translate-x-0.5" /></span>
       </Link>
     </div>

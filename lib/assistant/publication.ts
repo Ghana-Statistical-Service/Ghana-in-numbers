@@ -2,6 +2,8 @@ import publication from "@/data/publicationText.json";
 
 export const publicationDocument = publication;
 export const publicationPages = publication.pages;
+// Chapter 11 pages (printed 128–130) whose prose was not updated with the revised Figure 6.2 values.
+export const JUDGES_PROSE_PAGES = new Set([149, 150, 151]);
 const stopWords = new Set("a an and are as at be been by can did do does explain for from give has have how i in into is it me of on or our please say says show tell that the their them there these they this to us used using was we were what when where which who why will with would you your about according publication document report ghana numbers 2025 pdf".split(" "));
 function tokens(text: string) {
   return text.toLowerCase().normalize("NFKD").replace(/[’']/g, "").split(/[^a-z0-9]+/).filter(word => word.length > 2 && !stopWords.has(word)).map(word => word.length > 5 ? word.replace(/(?:ing|ies|s)$/, suffix => suffix === "ies" ? "y" : "") : word);
@@ -57,7 +59,7 @@ export function readPublicationPages(pageNumbers: unknown, readIds: Set<string>)
       if (page.hasExtractableText) readIds.add(page.id);
       return { id: page.id, pdf_page: page.pdfPage, printed_page: page.printedPage, title: page.title, markdown: page.markdown,
         has_extractable_text: page.hasExtractableText, contains_figure_references: page.hasFigures,
-        correction_notice: page.printedPage === "97" ? "Known inconsistency: grassland soil 202.8 plus non-soil 141.2 is 344.0 Mt C. The original prose says 334.0 in error. Use the audited carbon dataset for numerical answers and calculations." : null };
+        correction_notice: JUDGES_PROSE_PAGES.has(page.pdfPage) ? "Known inconsistency in the final edition: this Chapter 11 page still quotes the draft women-judges values (High Court 48.6%, Court of Appeal 40.3%). Figure 6.2 (printed page 86) and Table 2.1 give 48.8% and 39.0%, which the dashboard uses." : null };
     }),
   };
 }

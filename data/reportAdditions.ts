@@ -1,9 +1,9 @@
 // Transcribed from the supplied 2025 Ghana in Numbers PDF. Page numbers are printed pages.
 export const enterpriseTypes = [
-  ["Fixed-structure establishments", "1,867,690", "70.6%"],
-  ["Open-space businesses", "693,748", "26.2%"],
+  ["Fixed-structure establishments", "1,867,695", "70.6%"],
+  ["Open-space businesses", "693,748", "26.3%"],
   ["Mobile businesses", "82,920", "3.1%"],
-  ["All businesses", "2,644,358", "100%"],
+  ["All businesses", "2,644,363", "100%"],
 ];
 export const establishmentSize = [
   ["Micro (1–5 persons)", "90.4%", "41.9%", "5.5%"],
@@ -89,7 +89,7 @@ export const agricultureEndpointComparisons = [
   { label: "Poultry", start: 10.0, end: 90.8, startYear: "1990", endYear: "2024", unit: "million birds", decimals: 1 },
 ];
 
-// Migration chart data, publication pp. 18 and 23–26; shared with the data assistant.
+// Migration chart data, publication p. 18 and 23–26; shared with the data assistant.
 export const regionalPopulationShares2025 = [
   ["Greater Accra",18.2],["Ashanti",17.0],["Central",9.4],["Eastern",9.1],
   ["Northern",7.9],["Western",6.7],["Volta",5.2],["Upper East",4.2],

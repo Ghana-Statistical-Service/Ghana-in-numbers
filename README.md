@@ -6,7 +6,7 @@ The current implementation focuses on the homepage experience: a national snapsh
 
 ## Current Scope
 
-Ten routes present the statistics of *Ghana in Numbers 2025*: an overview, six chapter pages (Population and Society, Social Development, Business and Economy, Governance, Environment and Climate, Progress on the SDGs), two deep dives (Youth Bulge; Agriculture, Forestry and Fishing) and Data Stories. Every indicator card shows its unit, reference period, qualifiers (provisional, projection, estimate) and source page, with a **View data** table and an **Explain** panel. A floating **Ask Ghana in Numbers** assistant answers questions from the same data (see `docs/data-assistant.md`).
+Ten routes present the statistics of *Ghana in Numbers 2025*: an overview, six chapter pages (Population and Society, Social Development, Business and Economy, Governance, Environment and Climate, Progress on the SDGs), two deep dives (Youth Bulge; Agriculture, Forestry and Fishing) and Data Impact Stories. Every indicator card shows its unit, reference period, qualifiers (provisional, projection, estimate) and source page, with a **View data** table and an **Explain** panel. A floating **Ask Ghana in Numbers** assistant answers questions from the same data (see `docs/data-assistant.md`).
 
 ## Design system
 

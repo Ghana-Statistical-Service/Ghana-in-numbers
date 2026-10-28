@@ -10,6 +10,8 @@ import { ChartCard, Qualifier, Stat } from "@/components/ui/Card";
 import { DataDisclosure, DataTable, Legend, Segmented } from "@/components/ui/Data";
 import { IconTile, Milestones, Pictogram, Takeaway, tones, type Tone } from "@/components/ui/Infographic";
 import { C, ChartFrame, axisCommon, labelStyle, makeTooltip, tick, tickSmall } from "@/components/ui/chart";
+import RegionalMap from "@/components/maps/RegionalMap";
+import { REGIONS, childMarriageByRegion } from "@/data/publicationAdditions";
 import {
   childMarriageData, completionRateData, drinkingWaterData, electricityAccessData, enrolmentRateData, gbvPrevalenceData,
   healthInsuranceCoverageData, housingDeficitData, improvedToiletUseData, pupilTeacherRatioData, teenageMotherhoodData,
@@ -45,7 +47,7 @@ export function LearningGlanceCard() {
   const enrol = enrolmentRateData.at(-1)!, completion = completionRateData.at(-1)!, ptr = pupilTeacherRatioData.at(-1)!;
   return (
     <ChartCard title="Learning at a glance" subtitle="Latest figure for each indicator" period={`${enrol.year} (enrolment and completion); ${ptr.year} (teachers)`} explain={{ indicator: "enrolment" }}
-      source="EMIS · Figures 4.1–4.3, pp. 28–29"
+      source="EMIS · Figures 4.1–4.3, pp. 29–30"
       footer={<DataDisclosure><DataTable caption="Latest learning indicators" headings={["Indicator", "Year", "Value"]} rows={[["Primary net enrolment rate (%)", enrol.year, enrol.primaryNet], ["JHS gross enrolment rate (%)", enrol.year, enrol.jhsGross], ["JHS completion rate (%)", completion.year, completion.jhs], ["Pupils per trained teacher, primary", ptr.year, ptr.primary]]} decimals={1} minWidth={380} /></DataDisclosure>}>
       <ul className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
         <GlanceTile icon={Backpack} label="Primary net enrolment" value={pct(enrol.primaryNet)} period={enrol.year} />
@@ -65,7 +67,7 @@ export function EnrolmentCard() {
       explain={{ indicator: "enrolment" }}
       actions={<Segmented label="Enrolment measure" size="sm" value={mode} onChange={setMode} options={[{ value: "net", label: "NER" }, { value: "gross", label: "GER" }]} />}
       notes={mode === "net" ? "NER counts only pupils of the official age. JHS rose from a low of 44.3% (2021/22) to 59.3% (2023/24)." : "GER counts pupils of all ages against the official-age population, so it can exceed 100% (dashed line)."}
-      source="EMIS 2019/20–2023/24 · Figure 4.1, p. 28 (levels as labelled in the figure legend)"
+      source="EMIS 2019/20–2023/24 · Figure 4.1, p. 29 (levels as labelled in the figure legend)"
       footer={<DataDisclosure><DataTable caption="Enrolment rates by level" headings={["School year", "KG NER", "Primary NER", "JHS NER", "KG GER", "Primary GER", "JHS GER"]} rows={enrolmentRateData.map(r => [r.year, r.kgNet, r.primaryNet, r.jhsNet, r.kgGross, r.primaryGross, r.jhsGross])} decimals={1} minWidth={620} /></DataDisclosure>}>
       <Legend className="mb-2" items={levels.map(l => ({ label: l.label, color: l.color, shape: "line" as const }))} />
       <ChartFrame height={250} label={`${mode === "net" ? "Net" : "Gross"} enrolment by level, 2019/20 to 2023/24`}>
@@ -88,7 +90,7 @@ export function CompletionCard() {
     <ChartCard title="Completion rates" subtitle="Gross completion ratio, primary and JHS, %. Values above 100% are real: the ratio counts completers of any age." period="2019/20–2023/24" explain={{ indicator: "completion" }}
       qualifier={<Qualifier tone="brand">JHS {pct(last.jhs)}</Qualifier>}
       notes={`An administrative ratio: pupils’ varying ages can push it above 100% (dashed line). JHS completion was ${pct(last.jhs)} in ${last.year}, down from ${pct(prev.jhs)} a year earlier.`}
-      source="EMIS · Figure 4.2, p. 29"
+      source="EMIS · Figure 4.2, p. 30"
       footer={<DataDisclosure><DataTable caption="Completion rates" headings={["School year", "Primary (%)", "JHS (%)"]} rows={completionRateData.map(r => [r.year, r.primary, r.jhs])} decimals={1} minWidth={320} /></DataDisclosure>}>
       <Legend className="mb-2" items={[{ label: "Primary", color: C.purple, shape: "line" }, { label: "JHS", color: C.amber, shape: "line" }]} />
       <ChartFrame height={250} label="Completion rates: JHS rose from 77.5% to 88.4%; primary eased from 107.5% to 102.0%">
@@ -112,7 +114,7 @@ export function TeachersCard() {
   return (
     <ChartCard title="Pupil to trained teacher ratio" subtitle="Pupils for each trained teacher, by level" period="2010/11–2020/21" explain={{ indicator: "teachers" }}
       notes="Lower is better. Compare levels separately; the ratios should not be added. KG fell from 96 to 34 pupils per trained teacher."
-      source="EMIS · Figure 4.3, p. 29"
+      source="EMIS · Figure 4.3, p. 30"
       footer={<DataDisclosure><DataTable caption="Pupil to trained teacher ratio" headings={["School year", "KG", "Primary", "JHS"]} rows={pupilTeacherRatioData.map(r => [r.year, r.kg, r.primary, r.jhs])} decimals={0} minWidth={360} /></DataDisclosure>}>
       <Legend className="mb-2" items={levels.map(l => ({ label: l.label, color: l.color, shape: "line" as const }))} />
       <ChartFrame height={250} minWidth={520} label="Pupils per trained teacher by level, 2010/11 to 2020/21">
@@ -136,7 +138,7 @@ export function NhisHeadlineCard() {
   return (
     <ChartCard title="Active NHIS membership" subtitle="% of the population with active health insurance" period={last.year} explain={{ indicator: "health" }}
       notes="Active membership able to use services in the year, not everyone ever registered."
-      source="National Health Insurance Authority; population denominator from GSS · Figure 4.4, p. 30"
+      source="National Health Insurance Authority; population denominator from GSS · Figure 4.4, p. 31"
       footer={<DataDisclosure><DataTable caption="Active NHIS coverage, latest and earlier years" headings={["Year", "Coverage (%)"]} rows={[[first.year, first.value], [prev.year, prev.value], [last.year, last.value]]} decimals={1} minWidth={260} /></DataDisclosure>}>
       <div className="flex items-center gap-4">
         <IconTile icon={ShieldPlus} tone="purple" size="lg" />
@@ -158,7 +160,7 @@ export function HealthInsuranceCard() {
   return (
     <ChartCard title="Health insurance coverage" subtitle="Active NHIS members, % of population" period="2010–2025" explain={{ indicator: "health" }}
       notes="Coverage peaked at 58.8% in 2015, fell to 48.3% in 2018, then rose 10.3 percentage points in 2025."
-      source="National Health Insurance Authority; population denominator from GSS · Figure 4.4, p. 30"
+      source="National Health Insurance Authority; population denominator from GSS · Figure 4.4, p. 31"
       footer={<DataDisclosure><DataTable caption="Active health insurance coverage" headings={["Year", "Coverage (%)"]} rows={healthInsuranceCoverageData.map(d => [d.year, d.value])} decimals={1} minWidth={280} /></DataDisclosure>}>
       <ChartFrame height={280} minWidth={600} label="Active NHIS coverage rose from 30.0% in 2010 to 66.2% in 2025">
         <BarChart data={healthInsuranceCoverageData} margin={{ top: 22, right: 8, left: 0, bottom: 0 }}>
@@ -187,7 +189,7 @@ export function TeenageMotherhoodCard() {
   return (
     <ChartCard title="Teenage motherhood" subtitle="Girls aged 15–19 who already have a child, %" period="2008–2022" explain={{ indicator: "teenage" }}
       notes="Survey years only (straight lines join them); values between surveys are not available."
-      source="Figure 4.5, p. 31 (source line cites GDHS 2008, 2014 and 2022; the figure also plots 2011 and 2017)"
+      source="Figure 4.5, p. 32 (source line cites GDHS 2008, 2014 and 2022; the figure also plots 2011 and 2017)"
       footer={<DataDisclosure><DataTable caption="Teenage motherhood by locality" headings={["Year", "Rural (%)", "National (%)", "Urban (%)"]} rows={teenageMotherhoodData.map(r => [r.year, r.rural, r.national, r.urban])} decimals={1} minWidth={360} /></DataDisclosure>}>
       <div className="grid gap-5 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
         <div>
@@ -229,7 +231,7 @@ export function HousingCard() {
   return (
     <ChartCard title="Housing deficit" subtitle="Estimated shortfall in dwelling units, million" period="2010 and 2021" qualifier={<Qualifier tone="caution">Estimate</Qualifier>} explain={{ indicator: "housing" }}
       notes={`The deficit is an estimate that depends on occupancy assumptions; it does not measure housing quality, vacancy or affordability. The 2010 figure is printed as about ${before.deficit.toFixed(1)} million.`}
-      source="GSS PHC 2010 and 2021 · Figure 4.7, pp. 32–33"
+      source="GSS PHC 2010 and 2021 · Figure 4.8, p. 34"
       footer={<DataDisclosure><DataTable caption="Housing indicators" headings={["Indicator", "Value"]} rows={[[`Housing deficit, ${before.year} (million units, estimate)`, before.deficit.toFixed(1)], [`Housing deficit, ${after.year} (million units, estimate)`, after.deficit.toFixed(2)], ["Housing requirement, 2021 (million units)", "11.81"], ["Dwelling units, 2021 (million)", "About 10.0"], ["Households, 2021 (million)", "8.3"], ["Residential structures, 2010 to 2021 (million)", "3.4 to 5.9 (+72.8%)"], ["Vacant dwelling units, 2021", "About one in eight"]]} minWidth={420} /></DataDisclosure>}>
       <div className="flex items-center gap-3 sm:gap-4">
         <IconTile icon={House} tone="amber" size="lg" />
@@ -274,36 +276,36 @@ function UtilityCard({ title, subtitle, data, tone, icon, pictoIcon = House, exp
 export function ElectricityCard() {
   return <UtilityCard title="Access to electricity" subtitle="% of households with access" data={electricityAccessData} tone="amber" icon={Lightbulb} explain="electricity"
     takeaway="About one household in seven still had no electricity in 2021."
-    notes="Census years; values between censuses are not available." source="GSS PHC 2000, 2010 and 2021 · Figure 4.8, p. 33" />;
+    notes="Census years; values between censuses are not available." source="GSS PHC 2000, 2010 and 2021 · Figure 4.9, p. 35" />;
 }
 
 export function WaterCard() {
   return <UtilityCard title="Improved drinking water" subtitle="% of households using an improved source" data={drinkingWaterData} tone="blue" icon={Droplet} pictoIcon={Droplet} explain="water"
     takeaway="More than nine in ten households used an improved source in 2021."
-    notes="Source classification, not continuous supply or water quality." source="GSS PHC 2000, 2010 and 2021 · Figure 4.8, p. 33" />;
+    notes="Source classification, not continuous supply or water quality." source="GSS PHC 2000, 2010 and 2021 · Figure 4.9, p. 35" />;
 }
 
 export function ToiletCard() {
   return <UtilityCard title="Use of improved household toilet" subtitle="% of households using an improved facility" data={improvedToiletUseData} tone="teal" icon={Toilet} explain="toilet"
     takeaway="Almost one household in three still lacked an improved toilet in 2022."
-    notes="Note the different end year (2022) from the other utilities." source="GSS PHC 2010; survey data 2022 · Figure 4.8, p. 33" />;
+    notes="Note the different end year (2022) from the other utilities." source="GSS PHC 2010; survey data 2022 · Figure 4.9, p. 35" />;
 }
 
 /* ── Inclusion and protection ────────────────────────────────────────────── */
 
-const violenceIcons: LucideIcon[] = [ShieldAlert, HeartCrack, Brain];
+const violenceIcons: Record<string, LucideIcon> = { Physical: ShieldAlert, Sexual: HeartCrack, Psychological: Brain };
 
 export function ViolenceCard() {
   const data = gbvPrevalenceData.map(d => ({ type: d.type.replace(" Violence", ""), y2016: d.value2016, y2022: d.value2022 }));
   const latest = tones.rose.fg;
   return (
     <ChartCard title="Prevalence of gender-based violence" subtitle="% reporting each form of violence" period="2016 and 2022" explain={{ indicator: "psychological", title: "Gender-based violence" }}
-      notes="Each form is measured separately; the shares overlap and must not be added. Psychological violence remained the most common form."
-      source="Figure 4.9, p. 34"
+      notes="Each form is measured separately; the shares overlap and must not be added. Psychological violence remained the most common form. The final edition reports sexual and psychological violence only (the draft also showed physical violence)."
+      source="Figure 4.10, p. 36"
       footer={<DataDisclosure><DataTable caption="Gender-based violence prevalence" headings={["Form of violence", "2016 (%)", "2022 (%)", "Change (percentage points)"]} rows={data.map(d => [d.type, d.y2016, d.y2022, +(d.y2022 - d.y2016).toFixed(1)])} decimals={1} minWidth={420} /></DataDisclosure>}>
-      <ul className="grid gap-2.5 sm:grid-cols-3">
-        {data.map((d, i) => {
-          const Icon = violenceIcons[i];
+      <ul className="grid gap-2.5 sm:grid-cols-2">
+        {data.map(d => {
+          const Icon = violenceIcons[d.type] ?? ShieldAlert;
           return (
             <li key={d.type} className="flex flex-col items-center rounded-[var(--radius-md)] border border-line bg-surface-muted/60 p-3 text-center">
               <IconTile icon={Icon} tone="rose" />
@@ -340,8 +342,8 @@ export function ChildMarriageCard() {
   const inHundred = Math.round(value2021);
   return (
     <ChartCard title="Child marriage among girls" subtitle="Census indicator, %" period={`${year2010} and ${year2021}`} explain={{ indicator: "childMarriage" }}
-      notes="Not the SDG measure (women aged 20–24 first married before 18). The regional breakdown in Figure 4.6 is not printed with values."
-      source="GSS PHC 2010 and 2021 · Figure 4.6, pp. 31–32"
+      notes="Not the SDG measure (women aged 20–24 first married before 18). The regional breakdown is mapped below (Figure 4.7)."
+      source="GSS PHC 2010 and 2021 · Figure 4.6, p. 33"
       footer={<DataDisclosure><DataTable caption="Child marriage, female" headings={["Census year", "%"]} rows={[[year2010, value2010], [year2021, value2021]]} decimals={1} minWidth={240} /></DataDisclosure>}>
       <div className="flex items-center gap-3 rounded-[var(--radius-md)] p-3" style={{ background: tones.rose.bg }}>
         <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white" style={{ color: tones.rose.fill }}><UserRound size={26} aria-hidden="true" /></span>
@@ -351,11 +353,27 @@ export function ChildMarriageCard() {
           <p className="text-center"><span className="tabular block text-[30px] font-bold leading-none" style={{ color: tones.rose.fg }}>{pct(value2021)}</span><span className="mt-1 block text-xs font-semibold text-ink">{year2021}</span></p>
         </div>
       </div>
-      <div className="mt-4">
+      {/* Centred under the 2010 → 2021 strip so the grid is not read as belonging to the 2010 figure. */}
+      <div className="mt-4 flex flex-col items-center text-center">
         <Pictogram total={100} highlighted={inHundred} icon={UserRound} size={14} tone="rose" label={`${inHundred} of 100 girls highlighted`} />
         <p className="mt-2 text-[13px] font-medium text-ink">About {inHundred} in 100 ({year2021}), {Math.abs(value2021 - value2010).toFixed(1)} percentage points lower than in {year2010}.</p>
       </div>
       <Takeaway>The practice declined between the censuses but has not ended.</Takeaway>
+    </ChartCard>
+  );
+}
+
+export function ChildMarriageRegionsCard() {
+  const [year, setYear] = useState<"y2021" | "y2010">("y2021");
+  const data = REGIONS.map(region => ({ region, value: childMarriageByRegion[region][year] }));
+  const north = ["Northern", "North East", "Savannah", "Upper West", "Upper East"] as const;
+  return (
+    <ChartCard title="Child marriage by region" subtitle="% of girls, census indicator" period={year === "y2021" ? "2021 census" : "2010 census"} explain={{ indicator: "childMarriage" }}
+      actions={<Segmented label="Census year" size="sm" value={year} onChange={setYear} options={[{ value: "y2021", label: "2021" }, { value: "y2010", label: "2010" }]} />}
+      notes={`Added in the final edition. Every region fell between the censuses, but the five northern regions still recorded ${Math.min(...north.map(r => childMarriageByRegion[r].y2021)).toFixed(1)}–${Math.max(...north.map(r => childMarriageByRegion[r].y2021)).toFixed(1)}% in 2021, against 0.8–1.9% elsewhere. Values are read from the printed map labels. Bars are drawn on a 0–100% scale.`}
+      source="GSS PHC 2010 and 2021 · Figure 4.7, p. 33"
+      footer={<DataDisclosure><DataTable caption="Child marriage among girls by region" headings={["Region", "2010 (%)", "2021 (%)", "Change (percentage points)"]} rows={REGIONS.map(r => [r, childMarriageByRegion[r].y2010, childMarriageByRegion[r].y2021, +(childMarriageByRegion[r].y2021 - childMarriageByRegion[r].y2010).toFixed(1)])} decimals={1} minWidth={420} /></DataDisclosure>}>
+      <RegionalMap key={year} data={data} measure="Child marriage among girls (%)" format={v => `${v.toFixed(1)}%`} barMax={100} height={400} />
     </ChartCard>
   );
 }

@@ -15,7 +15,7 @@ export default function GDPGrowthChart() {
       period="2017–2025"
       explain={{ indicator: "gdpGrowth" }}
       notes="2024 revised; 2025 provisional (lighter bar). Growth was 6.0% in 2025, 0.2 percentage points above 2024."
-      source="GSS Annual GDP 2013–2025; Ghana in Numbers 2025, p. 38"
+      source="GSS Annual GDP 2013–2025; Ghana in Numbers 2025, p. 42"
     >
       <ChartFrame height={220} label="Real GDP growth by year: 2017 8.1%, 2018 6.2%, 2019 6.5%, 2020 0.5%, 2021 5.1%, 2022 3.8%, 2023 3.1%, 2024 5.8% revised, 2025 6.0% provisional">
         <BarChart data={data} margin={{ top: 22, right: 4, left: -8, bottom: 0 }}>

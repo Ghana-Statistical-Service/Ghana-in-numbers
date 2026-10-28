@@ -15,7 +15,7 @@ export function SpendingCard() {
     <ChartCard title="Agriculture Orientation Index" subtitle="Agriculture’s share of government spending ÷ its share of GDP (1 = proportionate)" period="2013–2024"
       explain={getGroupExplanation("agriculture", "Agriculture Orientation Index", [3])}
       notes="The index never came close to 1: it peaked at 0.066 (printed as 0.07 in the text) in 2018 and was 0.02 in 2022–2024. In 2024 agriculture produced 22% of GDP but received less than one cedi in every hundred government spent. Public spending on agriculture was about 0.2% of GDP in 2024."
-      source="Controller and Accountant-General’s Department; GSS · Table 5.2, pp. 40–41 (SDG 2.a.1)"
+      source="Controller and Accountant-General’s Department; GSS · Table 5.2, p. 44 (SDG 2.a.1)"
       footer={<DataDisclosure><DataTable caption="Government spending on agriculture" headings={["Year", "Spending on agriculture (GH¢)", "Total government spending (GH¢)", "Agriculture GVA (GH¢)", "GDP (GH¢)", "GVA share of GDP, printed (%)", "AOI"]} rows={agricultureSpending.map(d => [d.year, d.spend, d.total, d.gva, d.gdp, d.gvaShare, d.aoi])} decimals={[undefined, 0, 0, 0, 0, 1, 3]} minWidth={860} unitNote="AOI = (spending ÷ total spending) ÷ (GVA ÷ GDP); it reproduces from these columns. The printed GVA-share column is about one point higher than GVA ÷ GDP (likely GDP at basic prices). The 2024 GDP here (GH¢1,176.2bn) predates the revised national-accounts figure (GH¢1,182.8bn)." /></DataDisclosure>}>
       <ChartFrame height={240} label="Agriculture Orientation Index, 2013 to 2024: between 0.022 and 0.066, far below 1">
         <LineChart data={data} margin={{ top: 22, right: 20, left: 6, bottom: 0 }}>
@@ -45,7 +45,7 @@ export function CropsCard() {
     <ChartCard title="Production of major crops" subtitle="Million metric tonnes · each panel has its own scale, starting at zero" period="2013–2024"
       explain={{ indicator: "crops" }}
       notes="2024 is provisional. Quantities harvested, not yields or value. Groundnut, sorghum, cowpea, soyabean and millet are drawn without labels and are excluded, so panel values do not sum to the printed totals (31.5 million tonnes in 2013, 55.4 million in 2024)."
-      source="SRID, Ministry of Food and Agriculture (March 2024) · Figure 5.7, p. 44"
+      source="SRID, Ministry of Food and Agriculture (March 2024) · Figure 5.7, p. 47"
       footer={<DataDisclosure><DataTable caption="Production of major crops, million metric tonnes" headings={["Year", ...crops.map(c => c.label), "All crops (printed total)"]} rows={cropSeries.years.map((y, i) => [y.replace("*", " (prov.)"), ...crops.map(c => cropSeries[c.key][i]), cropSeries.total[i]])} decimals={1} minWidth={680} /></DataDisclosure>}>
       <div className="grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-3">
         {crops.map(c => {
@@ -89,7 +89,7 @@ export function LivestockCard() {
       explain={getGroupExplanation("agriculture", "Livestock population", [2])}
       actions={<Segmented label="Livestock type" size="sm" value={view} onChange={setView} options={[{ value: "animals", label: "Goats, sheep, cattle, pigs" }, { value: "birds", label: "Poultry" }]} />}
       notes="Poultry (90.8 million birds in 2024) is shown separately because it is about ten times larger than the other species. Cattle more than doubled (1.1 → 2.4 million), sheep nearly tripled (2.2 → 6.3 million). Counts, not meat output."
-      source="SRID, Ministry of Food and Agriculture (March 2024) · Figure 5.8, pp. 44–45"
+      source="SRID, Ministry of Food and Agriculture (March 2024) · Figure 5.8, p. 48"
       footer={<DataDisclosure><DataTable caption="Livestock population, million" headings={["Year", "Poultry", "Goats", "Sheep", "Cattle", "Pigs", "Total (printed)"]} rows={livestockSeries.years.map((y, i) => [y, livestockSeries.poultry[i], livestockSeries.goats[i], livestockSeries.sheep[i], livestockSeries.cattle[i], livestockSeries.pigs[i], livestockSeries.total[i]])} decimals={1} minWidth={560} unitNote="Components are read from the figure labels and sum to the printed totals within 0.1 because of rounding." /></DataDisclosure>}>
       <Legend className="mb-1" items={shown.map(s => ({ label: s.label, color: s.color, shape: "line" as const }))} />
       <ChartFrame height={250} minWidth={520} label={view === "birds" ? "Poultry rose from 10.0 million in 1990 to 90.8 million in 2024" : "Goats, sheep, cattle and pigs, 1990 to 2024"}>
@@ -111,7 +111,7 @@ export function FishValueCard() {
     <ChartCard title="Value of fish production by source" subtitle="GH¢ billion, current prices" period="2010–2025"
       explain={{ indicator: "fish" }}
       notes={<>Figure 5.6 is captioned “production in hundred thousand metric tonnes”, but its labels are values in GH¢ billion: the totals (1.94 in 2010, 20.44 in 2025) match the value figures in the text. For 2010–2014 the aquaculture segment is not labelled; the hatched part is the remainder of the printed total. Values are nominal, so they rise with prices as well as catch.</>}
-      source="Ministry of Fisheries and Aquaculture Development · Figure 5.6 and text, p. 42"
+      source="Ministry of Fisheries and Aquaculture Development · Figure 5.6 and text, p. 45"
       footer={<DataDisclosure><DataTable caption="Value of fish production, GH¢ billion" headings={["Year", "Marine", "Inland", "Aquaculture", "Total (printed)"]} rows={fishValue.map(d => [d.year, d.marine, d.inland, d.aquaculture, d.total])} decimals={2} minWidth={460} unitNote="n/a: aquaculture not labelled for 2010–2014." /></DataDisclosure>}>
       <Legend className="mb-1" items={[{ label: "Marine", color: C.blue }, { label: "Inland", color: C.teal }, { label: "Aquaculture", color: C.amber }, { label: "Aquaculture, not labelled", color: C.amber, shape: "hatch" }]} />
       <ChartFrame height={260} minWidth={560} label="Value of fish production rose from GH¢1.94 billion in 2010 to GH¢20.44 billion in 2025">
@@ -140,7 +140,7 @@ export function FishQuantityCard() {
     <ChartCard title="Fish production by source" subtitle="Metric tonnes" period="2010 and 2025"
       explain={{ indicator: "fish" }}
       notes="Only these two years are printed as quantities. Components sum to 722,647 tonnes in 2025 against the published 722,648 (rounding); the published total is kept. Aquaculture grew about twelvefold."
-      source="Ministry of Fisheries and Aquaculture Development · p. 42"
+      source="Ministry of Fisheries and Aquaculture Development · p. 45"
       footer={<DataDisclosure><DataTable caption="Fish production, tonnes" headings={["Year", "Marine", "Inland", "Aquaculture", "Total (published)"]} rows={fishQuantity.map(d => [d.year, d.marine, d.inland, d.aquaculture, d.total])} decimals={0} minWidth={440} /></DataDisclosure>}>
       <ul className="space-y-4">
         {sources.map(s => (
@@ -169,7 +169,7 @@ export function TilapiaCard() {
       explain={getGroupExplanation("agriculture", "Fish production", [0])}
       actions={<Segmented label="Measure" size="sm" value={measure} onChange={setMeasure} options={[{ value: "qty", label: "Quantity" }, { value: "value", label: "Value" }]} />}
       notes="Combined output rose from 32,512 to 124,428 tonnes (about +283%) and peaked at 132,652 tonnes in 2022. The 2025 species total is 267 tonnes above the aggregate aquaculture series (124,161 t), reflecting revisions, not extra species."
-      source="Ministry of Fisheries and Aquaculture Development · Table 5.3, pp. 42–43"
+      source="Ministry of Fisheries and Aquaculture Development · Table 5.3, p. 46"
       footer={<DataDisclosure><DataTable caption="Tilapia and catfish production and value" headings={["Year", "Tilapia (t)", "Tilapia (GH¢ m)", "Catfish (t)", "Catfish (GH¢ m)"]} rows={tilapiaCatfish.map(d => [d.year, d.tilapia, d.tilapiaValue, d.catfish, d.catfishValue])} decimals={1} minWidth={460} /></DataDisclosure>}>
       <Legend className="mb-1" items={[{ label: "Tilapia", color: C.purple }, { label: "Catfish", color: C.teal }]} />
       <ChartFrame height={250} minWidth={480} label={`Tilapia and catfish ${measure === "qty" ? "production" : "value"}, 2013 to 2025`}>
@@ -192,7 +192,7 @@ export function YouthAgricultureCard() {
     <ChartCard title="Young people working in agriculture, forestry and fishing" subtitle="Persons, by sex and age group" period="2010 and 2021 censuses"
       explain={{ indicator: "youthAgriculture" }}
       notes={`Ages 15–24 fell from ${agricultureTotals.total1524_2010.toLocaleString("en-GB")} to ${agricultureTotals.total1524_2021.toLocaleString("en-GB")} (−56%); ages 15–35 from ${agricultureTotals.total1535_2010.toLocaleString("en-GB")} to ${agricultureTotals.total1535_2021.toLocaleString("en-GB")} (−40%). The age bands overlap: 15–24 is inside 15–35. Percentage changes are calculated from the published counts. The publication offers possible explanations (better-paying options, migration to towns, perceptions of farming) without measuring their causes.`}
-      source="GSS 2010 and 2021 PHC · Figure 9.3, pp. 114–115"
+      source="GSS 2010 and 2021 PHC · Chapter 9, Youth in agriculture, pp. 114–115"
       footer={<DataDisclosure><DataTable caption="Youth in agriculture" headings={["Group", "2010", "2021", "Change (%)"]} rows={[...data.map(d => [d.group, d.y2010, d.y2021, +d.change.toFixed(1)]), { cells: ["15–24 total", agricultureTotals.total1524_2010, agricultureTotals.total1524_2021, +((agricultureTotals.total1524_2021 / agricultureTotals.total1524_2010 - 1) * 100).toFixed(1)], emphasis: "subtotal" as const }, { cells: ["15–35 total", agricultureTotals.total1535_2010, agricultureTotals.total1535_2021, +((agricultureTotals.total1535_2021 / agricultureTotals.total1535_2010 - 1) * 100).toFixed(1)], emphasis: "subtotal" as const }]} decimals={[undefined, 0, 0, 1]} minWidth={420} /></DataDisclosure>}>
       <Legend className="mb-1" items={[{ label: "2010", color: C.slateLight }, { label: "2021", color: C.teal }]} />
       <ChartFrame height={260} label="Youth in agriculture by sex and age, 2010 and 2021. Females aged 15–24 fell from 387,293 to 138,112.">

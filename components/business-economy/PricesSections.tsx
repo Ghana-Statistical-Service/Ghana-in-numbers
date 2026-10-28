@@ -57,7 +57,7 @@ export function CpiCard() {
         <Segmented label="Inflation measure" size="sm" value={measure} onChange={setMeasure} options={[{ value: "yoy", label: "Year on year" }, { value: "mom", label: "Month on month" }]} />
       </>}
       notes={<>Year-on-year inflation peaked at 54.1% in December 2022 and fell to 5.4% in December 2025. The annual average (badge) is the mean of the 12 monthly year-on-year rates: 14.6% in 2025. Lower inflation means prices rose more slowly; it does not mean they fell. {measure === "mom" && "Negative month-on-month values mean the index fell from the previous month."}</>}
-      source="GSS Consumer Price Index (StatsBank extract) · Figure 5.11, p. 51"
+      source="GSS Consumer Price Index (StatsBank extract) · Figure 5.11, p. 54"
       footer={points && <DataDisclosure hint="Monthly values, Ghana"><DataTable caption="Monthly CPI inflation, Ghana" headings={["Month", "Year on year (%)", "Month on month (%)"]} rows={[...points].reverse().map(p => [p.label, p.yoy, p.mom])} decimals={1} minWidth={360} /></DataDisclosure>}>
       {failed ? <p role="alert" className="rounded-md bg-caution-bg px-3 py-6 text-center text-[13px] text-caution">Monthly CPI data could not be loaded. Refresh to try again.</p> : !points ? <div className="h-[300px] animate-pulse rounded-md bg-surface-muted" /> : (
         <ChartFrame height={300} minWidth={600} label="Monthly inflation; year-on-year inflation peaked at 54.1% in December 2022 and ending at 5.4% in December 2025">
@@ -106,7 +106,7 @@ export function FoodLocalCard() {
     <ChartCard title="What drove inflation" subtitle="Year-on-year inflation for selected dated months, %" period="2022–2025"
       explain={{ indicator: "foodInflation" }}
       notes="Only the dated values printed in the publication are shown; the full monthly series behind Figures 5.12–5.13 is not labelled. Local inflation’s own peak was 51.9% at the end of 2022."
-      source="GSS CPI · Figures 5.12–5.13 and pp. 52–53"
+      source="GSS CPI · Figures 5.12–5.13 and p. 55"
       footer={<DataDisclosure><DataTable caption="Food and non-food inflation" headings={["Month", "Food (%)", "Non-food (%)"]} rows={foodNonFoodInflationData.map(d => [d.year, d.food, d.nonFood])} decimals={1} minWidth={320} /><DataTable caption="Local and imported inflation" headings={["Month", "Local (%)", "Imported (%)", "Source"]} rows={localImportedInflation.map(d => [d.period, d.local, d.imported, d.source])} decimals={[undefined, 1, 1]} minWidth={460} /></DataDisclosure>}>
       <div className="grid gap-6 md:grid-cols-2">
         <div>
@@ -133,9 +133,9 @@ export function FoodLocalCard() {
 export function PbciCard() {
   return (
     <ChartCard title="Building cost inflation" subtitle="Prime Building Cost Index, combined, year-on-year %" period="Jan 2024 – Mar 2026"
-      explain={{ title: "Prime Building Cost Index", meaning: "The Prime Building Cost Index tracks the cost of putting up a building, combining labour, materials and plant. Building cost inflation is the year-on-year percentage change in that index.", story: "Building cost inflation climbed from 6.3% in January 2024 to 22.6% in December 2024 and peaked at 24.4% in April 2025, when a project costing GH¢1 million in 2024 cost almost a quarter more. It then fell to 4.4% by December 2025 and 2.2% by March 2026.", why: "Slower growth in construction costs eases pressure on schools, clinics, roads and housing projects, making project budgets and investment planning more predictable. It does not mean building costs fell.", source: "pp. 54" }}
+      explain={{ title: "Prime Building Cost Index", meaning: "The Prime Building Cost Index tracks the cost of putting up a building, combining labour, materials and plant. Building cost inflation is the year-on-year percentage change in that index.", story: "Building cost inflation climbed from 6.3% in January 2024 to 22.6% in December 2024 and peaked at 24.4% in April 2025, when a project costing GH¢1 million in 2024 cost almost a quarter more. It then fell to 4.4% by December 2025 and 2.2% by March 2026.", why: "Slower growth in construction costs eases pressure on schools, clinics, roads and housing projects, making project budgets and investment planning more predictable. It does not mean building costs fell.", source: "p. 57" }}
       notes="Months after December 2025 are outside the main reference period but are printed in the publication. Labour, materials and plant components are drawn without labels and are not reproduced."
-      source="GSS PBCI annexes 2024–2026 · Figure 5.14, p. 54"
+      source="GSS PBCI annexes 2024–2026 · Figure 5.14, p. 57"
       footer={<DataDisclosure><DataTable caption="Prime Building Cost Index, combined" headings={["Month", "Year on year (%)"]} rows={pbciCombined.map(d => [d.month, d.value])} decimals={1} minWidth={280} /></DataDisclosure>}>
       <ChartFrame height={240} minWidth={520} label="Building cost inflation peaked at 24.4% in April 2025 and fell to 2.2% in March 2026">
         <LineChart data={pbciCombined} margin={{ top: 22, right: 20, left: -6, bottom: 0 }}>
@@ -180,7 +180,7 @@ export function PpiCard() {
     <ChartCard title="Producer price inflation by sector" subtitle="Year-on-year, end of year, %" period="2023–2025"
       explain={{ indicator: "ppi" }}
       notes="Labels show 2025. Negative values (accommodation and food, transport) mean producer prices were below the same point a year earlier, not below 2023 levels. Table 2.1 lists different sector values; the detailed figure is used."
-      source="GSS Producer Price Index · Figure 5.15, p. 55"
+      source="GSS Producer Price Index · Figure 5.15, p. 58"
       footer={<DataDisclosure><DataTable caption="Producer price inflation by sector" headings={["Sector", "2023 (%)", "2024 (%)", "2025 (%)"]} rows={ppiBySector.map(d => [d.sector, d.y2023, d.y2024, d.y2025])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
       <ul className="grid content-start grid-cols-1 gap-2 min-[420px]:grid-cols-2" aria-label="Producer price inflation by sector, end of 2025">
@@ -210,7 +210,7 @@ export function IipCard() {
     <ChartCard title="Industrial production growth by sector" subtitle="Index of Industrial Production, year-on-year at end of period, %" period="2023–2025"
       explain={{ indicator: "iip" }}
       notes="Measures the volume produced, not prices. Labels show 2025: manufacturing and electricity grew while mining and water contracted. Table 2.1 gives −1.1% for water in 2025; the detailed figure’s −2.1% is used."
-      source="GSS Index of Industrial Production · Figure 5.16, pp. 56–57"
+      source="GSS Index of Industrial Production · Figure 5.16, p. 59"
       footer={<DataDisclosure><DataTable caption="Industrial production growth" headings={["Sector", "2023 (%)", "2024 (%)", "2025 (%)"]} rows={data.map(d => [d.sector, d.y2023, d.y2024, d.y2025])} decimals={1} minWidth={420} /></DataDisclosure>}>
       <Legend className="mb-2" items={years.map(y => ({ label: y.label, color: y.color }))} />
       <SectorBars data={data} height={220} domain={[-8, 8]} ticks={[-8, -4, 0, 4, 8]} label="Industrial production growth by sector, 2023 to 2025. All industries 1.9% in 2025." />

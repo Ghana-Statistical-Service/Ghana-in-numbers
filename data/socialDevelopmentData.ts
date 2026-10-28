@@ -213,7 +213,6 @@ export const improvedToiletUseData = [
 ];
 
 export const gbvPrevalenceData = [
-  { type: "Physical Violence", value2016: 42.4, value2022: 9.8, color: "#F26B2A" },
   { type: "Sexual Violence", value2016: 10.6, value2022: 6.1, color: "#5EC5E8" },
   { type: "Psychological Violence", value2016: 48.0, value2022: 25.5, color: "#8B1E5D" },
 ];

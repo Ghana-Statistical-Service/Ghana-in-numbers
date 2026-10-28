@@ -18,7 +18,7 @@ export function FishProductionCard() {
   return (
     <ChartCard title="Fish production" subtitle="Thousand tonnes, by source" period={`${a.year} and ${b.year}`} explain={{ indicator: "fish" }}
       notes={`Only these two years are printed as quantities. Components sum to ${(a.marine + a.inland + a.aquaculture).toLocaleString("en-GB")} and ${(b.marine + b.inland + b.aquaculture).toLocaleString("en-GB")} tonnes against published totals of ${a.total.toLocaleString("en-GB")} and ${b.total.toLocaleString("en-GB")} (rounding); the published totals are kept.`}
-      source="Ministry of Fisheries and Aquaculture Development · p. 42"
+      source="Ministry of Fisheries and Aquaculture Development · p. 45"
       footer={<DataDisclosure><DataTable caption="Fish production by source, tonnes" headings={["Source", `${a.year} (tonnes)`, `${b.year} (tonnes)`, "Change (%)"]} rows={[...sources.map(s => [s.label, a[s.key], b[s.key], +pctChange(a[s.key], b[s.key]).toFixed(1)]), ["Total", a.total, b.total, +pctChange(a.total, b.total).toFixed(1)]]} decimals={[undefined, 0, 0, 1]} minWidth={420} /></DataDisclosure>}>
       <div className="grid gap-x-8 gap-y-5 md:grid-cols-2 min-[1440px]:grid-cols-4">
         {sources.map(s => (
@@ -45,7 +45,7 @@ export function CropProductionCard() {
   return (
     <ChartCard title="Major crop production" subtitle="Million tonnes" period={`${by} and ${ey}`} qualifier={<Qualifier tone="caution">{ey} provisional</Qualifier>} explain={{ indicator: "crops" }}
       notes="Quantities harvested, not yields or value. Each crop has its own scale; the full annual series is in the Agriculture, Forestry and Fishing deep dive."
-      source="SRID, Ministry of Food and Agriculture (March 2024) · Figure 5.7, p. 44"
+      source="SRID, Ministry of Food and Agriculture (March 2024) · Figure 5.7, p. 47"
       footer={<DataDisclosure><DataTable caption="Major crop production, million tonnes" headings={["Crop", `${by}`, `${ey} (provisional)`, "Change (%)"]} rows={crops.map(c => [c.label, a[c.key], b[c.key], +pctChange(a[c.key], b[c.key]).toFixed(1)])} decimals={[undefined, 1, 1, 1]} minWidth={380} /></DataDisclosure>}>
       <ul className="grid gap-x-5 gap-y-5 sm:grid-cols-2 xl:grid-cols-3">
         {crops.map(c => (

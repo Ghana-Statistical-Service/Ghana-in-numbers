@@ -27,13 +27,13 @@ export default function EnvironmentAndClimateChangePage() {
 
         <SectionNav items={[{ id: "forests", label: "Forest reserves" }, { id: "carbon", label: "Carbon" }, { id: "climate", label: "Rainfall and temperature" }]} />
 
-        <Section id="forests" accent="green" title="Forest reserves and carbon retention" description="Three regions hold about 60% of the reported reserve area; vegetation and soils hold carbon that would otherwise reach the atmosphere, and the stock fell between 2015 and 2021." source="§7.1–7.2 · pp. 96–97">
+        <Section id="forests" accent="green" title="Forest reserves and carbon retention" description="Three regions hold about 60% of the reported reserve area; vegetation and soils hold carbon that would otherwise reach the atmosphere, and the stock fell between 2015 and 2021." source="§7.1–7.2 · pp. 92–93">
           <Grid cols="2-1"><ForestCard /><ForestHeadlineCard /></Grid>
           <Grid cols="1-2" className="mt-4 lg:mt-5"><ForestShareCard /><div id="carbon" className="flex min-w-0 scroll-mt-16 flex-col"><CarbonTopCard /></div></Grid>
           <Grid cols={2} className="mt-4 lg:mt-5"><CarbonCard /><CarbonChangeCard /></Grid>
         </Section>
 
-        <Section id="climate" accent="green" title="Rainfall and temperature" description="Two rainfall peaks and a narrow temperature range shape the farming calendar." source="§7.3–7.4 · pp. 98–99">
+        <Section id="climate" accent="green" title="Rainfall and temperature" description="Two rainfall peaks and a narrow temperature range shape the farming calendar." source="§7.3–7.4 · pp. 94–95">
           <Grid cols={2}><RainfallCard /><TemperatureCard /></Grid>
         </Section>
       </PageBody>
