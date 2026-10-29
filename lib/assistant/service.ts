@@ -4,9 +4,9 @@ import type { ResponseInput, ResponseCreateParamsNonStreaming } from "openai/res
 import { findIndicators, getIndicator, indicatorCatalogue } from "./catalog";
 import { assistantTools, runAssistantTool } from "./tools";
 import { searchPublication, getPublicationSource } from "./publication";
-import { chooseSuggestions, followUpQuestions } from "./questions";
+import { chooseSuggestions, followUpQuestions, starterQuestions } from "./questions";
 import { randomUUID } from "node:crypto";
-import { CONDUCT_RULES, FORECAST_REFUSAL, FORECAST_RULE, REFUSALS, UNVERIFIED_ANSWER, classifyRequest, reviewAnswer, type AnswerIssue } from "./policy";
+import { CONDUCT_RULES, FORECAST_REFUSAL, FORECAST_RULE, INTRODUCTION, NOT_FOUND_ANSWER, REFUSALS, THANKS_REPLY, UNVERIFIED_ANSWER, classifyRequest, classifySmallTalk, reviewAnswer, type AnswerIssue } from "./policy";
 
 export type AssistantMessage = { role: "user" | "assistant"; content: string };
 export type AssistantSource = { id: string; title: string; href: string; reference: string; period: string };
@@ -50,6 +50,12 @@ export async function answerDashboardQuestion(messages: AssistantMessage[], sign
   const publicationCandidates = searchPublication(lastQuestion, 3).map(({ excerpt: _excerpt, ...page }) => page);
   const asked = messages.filter(message => message.role === "user").map(message => message.content);
   const id = randomUUID().slice(0, 8);
+  const smallTalk = classifySmallTalk(lastQuestion);
+  if (smallTalk) {
+    const answer = smallTalk === "thanks" ? THANKS_REPLY : INTRODUCTION;
+    audit({ id, question: lastQuestion, outcome: smallTalk, answer, sources: [] });
+    return { id, answer, sources: [], suggestions: chooseSuggestions([], starterQuestions("/").filter(question => !asked.includes(question))) };
+  }
   // Predictions, advice, political opinions and requests about identifiable people are answered in code, without calling the model.
   const refusal = classifyRequest(lastQuestion);
   if (refusal) {
@@ -99,7 +105,8 @@ export async function answerDashboardQuestion(messages: AssistantMessage[], sign
     const result = parsed as { answer: string; source_ids?: unknown; suggestions?: unknown };
     const menu = followUpMenu(readIds, candidates, asked);
     if (readIds.size === 0) {
-      return { id, answer: "I could not verify an answer from the available dashboard records or publication text. I can help with Ghana’s population, economy, social development, governance, environment and youth indicators. Please specify an indicator, year or region; information outside the supplied datasets is not available here.", sources: [], suggestions: chooseSuggestions([], menu) };
+      audit({ id, question: lastQuestion, outcome: "not-found", answer: NOT_FOUND_ANSWER, sources: [] });
+      return { id, answer: NOT_FOUND_ANSWER, sources: [], suggestions: chooseSuggestions([], menu.length ? menu : starterQuestions("/")) };
     }
     // Every answer is checked against the evidence and the conduct rules. One revision is allowed; then it is withheld.
     const issues = reviewAnswer(result.answer, evidence.join("\n"));

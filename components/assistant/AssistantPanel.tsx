@@ -161,7 +161,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
                   ))}
                 </div>
               )}
-              {message.answerId && <p className="text-xs text-muted">Answer ID <span className="tabular font-medium text-body">{message.answerId}</span> · Figures are checked against the cited sources</p>}
+              {message.answerId && <p className="text-xs text-muted">Answer ID <span className="tabular font-medium text-body">{message.answerId}</span>{message.sources?.length ? " · Figures are checked against the cited sources" : ""}</p>}
             </article>
           ))}
 

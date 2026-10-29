@@ -59,6 +59,21 @@ export const REFUSALS: Record<RefusalCategory, string> = {
   forecast: FORECAST_REFUSAL,
 };
 
+// Greetings, thanks and "what can you do" are answered in code with an introduction. A message counts only when every word
+// is greeting or help vocabulary, so "hello, what is the population?" still goes to the model.
+const SMALL_TALK_WORDS = new Set("hello hi hey hiya helo hallo greetings good morning afternoon evening day akwaaba statschat stats chat there bot assistant please pls kindly can could would will you u your yourself help helping me us i im i'm we need want some assist with something anything who whom are r what whats what's is do does this it work works name how hw use start started get begin ok okay great cool nice yes yeah yo sup thanks thank thx much very a lot so tell about".split(" "));
+export type SmallTalk = "greeting" | "thanks";
+
+export function classifySmallTalk(question: string): SmallTalk | null {
+  const words = question.toLowerCase().replace(/[’`]/g, "'").replace(/[^a-z' ]+/g, " ").split(/\s+/).filter(Boolean);
+  if (words.length < 1 || words.length > 14 || !words.every(word => SMALL_TALK_WORDS.has(word))) return null;
+  return words.some(word => ["thanks", "thank", "thx"].includes(word)) ? "thanks" : "greeting";
+}
+
+export const INTRODUCTION = "Hello! I’m StatsChat, the Ghana Statistical Service’s data assistant for Ghana in Numbers 2025. I can help you find and understand official statistics on population and society, the economy and business, social development, governance, the environment and climate, young people, agriculture and progress on the SDGs. Each answer gives its source and reference period.\n\nAsk me about an indicator, a year or a region, or start with one of the questions below.";
+export const THANKS_REPLY = "You’re welcome! I’m StatsChat, and I’m happy to help with any other official statistic from Ghana in Numbers 2025. Ask about an indicator, a year or a region, or pick one of the questions below.";
+export const NOT_FOUND_ANSWER = "I’m StatsChat, the data assistant for Ghana in Numbers 2025. I couldn’t find an answer to that in the dashboard’s data or the publication. I can help with Ghana’s population, economy, social development, governance, environment and climate, youth, agriculture and SDG indicators.\n\nTry asking about a specific indicator, year or region, or pick one of the questions below.";
+
 /* ── Checks on every generated answer ───────────────────────────────────── */
 
 const CAUSAL = /\b(because of|due to|caused by|as a result of|thanks to|driven by|led to|resulted in|attributable to|owing to)\b/i;

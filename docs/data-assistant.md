@@ -84,6 +84,7 @@ StatsChat reports official statistics; it does not forecast. `lib/assistant/poli
 
 The same file holds the other safeguards for a statistics assistant. The model's instructions include `CONDUCT_RULES`, and the server checks both the question and the answer:
 
+- **Greetings and thanks** (`classifySmallTalk`): a message made only of greeting or help words ("hello StatsChat, can you help me", "what can you do?", "thanks") gets a fixed StatsChat introduction and starter questions, without calling the model. A message with any other word, such as "hello, what is the population?", goes to the model as usual. When the model finds nothing to read, the reply also introduces StatsChat and suggests questions.
 - **Refused before the model is called** (`classifyRequest`, no API credit used):
   - *Personal or identifiable data*: names, addresses, specific households or people, raw census or survey records (microdata). The reply explains the confidentiality duty under the Statistical Service Act, 2019 (Act 1003) and points to aggregate figures.
   - *Advice*: investment, financial, medical, legal or tax advice ("Should I invest…", "Is it a good time to buy…").
