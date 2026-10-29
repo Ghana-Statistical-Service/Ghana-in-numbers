@@ -7,7 +7,7 @@ import { ArrowUp, ArrowUpRight, ChevronDown, LoaderCircle, MessageSquareText, Ro
 import type { AssistantAnswer, AssistantSource } from "@/lib/assistant/service";
 import { starterQuestions } from "@/lib/assistant/questions";
 
-type Message = { id: number; role: "user" | "assistant"; content: string; sources?: AssistantSource[]; suggestions?: string[] };
+type Message = { id: number; role: "user" | "assistant"; content: string; sources?: AssistantSource[]; suggestions?: string[]; answerId?: string };
 
 function emphasis(text: string): ReactNode {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => part.startsWith("**") && part.endsWith("**") ? <strong key={i} className="font-semibold text-ink">{part.slice(2, -2)}</strong> : part);
@@ -92,7 +92,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
       if (!response.ok) throw new Error(data.error || "The assistant could not complete this request.");
       if (typeof data.answer !== "string" || !Array.isArray(data.sources)) throw new Error("The assistant returned an incomplete answer. Please try again.");
       const sources = data.sources.filter(source => typeof source.href === "string" && source.href.startsWith("/") && !source.href.startsWith("//"));
-      setMessages(current => [...current, { id: ++nextId.current, role: "assistant", content: data.answer, sources, suggestions: Array.isArray(data.suggestions) ? data.suggestions.slice(0, 3) : [] }]);
+      setMessages(current => [...current, { id: ++nextId.current, role: "assistant", content: data.answer, sources, answerId: typeof data.id === "string" ? data.id.slice(0, 16) : undefined, suggestions: Array.isArray(data.suggestions) ? data.suggestions.slice(0, 3) : [] }]);
     } catch (cause) {
       if (requestSequence === sequence.current && !abort.signal.aborted) setError(cause instanceof Error ? cause.message : "Could not connect. Please try again.");
     } finally { if (requestSequence === sequence.current) { controller.current = null; setBusy(false); } }
@@ -161,6 +161,7 @@ export default function AssistantPanel({ open, onOpen, onMinimise }: { open: boo
                   ))}
                 </div>
               )}
+              {message.answerId && <p className="text-xs text-muted">Answer ID <span className="tabular font-medium text-body">{message.answerId}</span> · Figures are checked against the cited sources</p>}
             </article>
           ))}
 
