@@ -7,10 +7,25 @@ export const maxDuration = 90;
 const headers = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers });
 
+/**
+ * Same-site check for browser requests. Behind TLS-terminating proxies, request.url is the internal
+ * address (e.g. http://localhost:3000), so the browser's Origin is compared with the public host the
+ * proxies forward. ASSISTANT_ALLOWED_ORIGINS (comma-separated origins) can allow extra sites.
+ */
+function isAllowedOrigin(request: Request, origin: string) {
+  let parsed: URL;
+  try { parsed = new URL(origin); } catch { return false; }
+  const allowed = (process.env.ASSISTANT_ALLOWED_ORIGINS ?? "").split(",").map(entry => entry.trim().replace(/\/$/, "")).filter(Boolean);
+  if (allowed.includes(parsed.origin)) return true;
+  const hosts = [request.headers.get("x-forwarded-host"), request.headers.get("host"), new URL(request.url).host]
+    .flatMap(value => (value ?? "").split(",").map(host => host.trim().toLowerCase()).filter(Boolean));
+  return hosts.includes(parsed.host.toLowerCase());
+}
+
 export async function POST(request: Request) {
   if (!process.env.OPENAI_API_KEY || process.env.AI_ASSISTANT_ENABLED === "false") return reply({ error: "The data assistant is not configured yet. Please try again later." }, 503);
   const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(request.url).origin) return reply({ error: "This request must come from the dashboard." }, 403);
+  if (origin && !isAllowedOrigin(request, origin)) return reply({ error: "This request must come from the dashboard." }, 403);
   if (!request.headers.get("content-type")?.includes("application/json")) return reply({ error: "Send a JSON question." }, 415);
   let raw = "";
   try {
