@@ -69,3 +69,13 @@ Only bounded user/assistant text is sent in conversation history. The applicatio
 - Publication browser checks at 1440 px and 390 px: downloadable Markdown hash, all 167 sections, direct physical-page anchors, source-link navigation, automatic chat minimisation when opening a publication citation, and no horizontal page overflow or browser runtime errors.
 
 The local `.env` assignment formatting was corrected before successful authentication. No secret key was printed, committed or embedded in the client bundle.
+
+## No predictions or forecasts
+
+StatsChat reports official statistics; it does not forecast. `lib/assistant/policy.ts` enforces this in code:
+
+- `isForecastRequest` detects questions asking for a prediction ("predict", "forecast", "next year", "what will … be in 2027") and returns a fixed explanation **before the model is called**, so no API credit is used and the model cannot speculate.
+- The model's instructions include `FORECAST_RULE`, which forbids extrapolation and "if the trend continues" reasoning. Official projections printed in the publication (for example the 2025 population projection) may still be quoted with their label.
+- `containsForecast` checks every generated answer; speculative wording is replaced with the same fixed explanation.
+
+`scripts/check-assistant.cjs` asserts that forecast phrasings are refused and that none of the suggested questions, or ordinary questions about published projections, are blocked.

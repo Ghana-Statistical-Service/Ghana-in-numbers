@@ -131,4 +131,10 @@ try {
   if (originalDailyLimit === undefined) delete process.env.AI_DAILY_REQUEST_LIMIT;
   else process.env.AI_DAILY_REQUEST_LIMIT = originalDailyLimit;
 }
-console.log(`Assistant checks passed: ${indicatorCatalogue.length} source datasets, ${answerableQuestions.length} answerable suggestion questions, ${publicationDocument.pageCount} publication pages, Markdown integrity, page search/citations, correction notices, period distinctions, cached JSON filters, paging, safe calculations, unread-evidence rejection, file-access rejection and request/concurrency limits.`);
+// Statistics, not forecasts: predictions are refused in code, before any model call.
+const { isForecastRequest, containsForecast } = require('../lib/assistant/policy.ts');
+for (const q of ['based on the information predict annual inflation for me in the next year', 'Forecast GDP growth for 2026', 'What will inflation be in 2027?', "What will Ghana's population be in 2030?", 'Can you project unemployment for next year?', 'What is the outlook for the cedi next year?', 'How high will inflation go in the coming months?', 'Estimate inflation in 2026 based on the trend', 'Will poverty fall by 2030?', 'predict the population']) assert.ok(isForecastRequest(q), `Forecast not refused: ${q}`);
+for (const q of ['What is the population of Ghana?', 'What is the projected population for 2025?', 'How has inflation changed since 2022?', 'What was annual average inflation in 2025?', 'Why did inflation fall?', 'What are the 2021–2050 population projections based on?', ...answerableQuestions]) assert.ok(!isForecastRequest(q), `Statistical question wrongly refused: ${q}`);
+assert.ok(containsForecast('Inflation in 2026 may stay below the 2025 annual average if the recent downward trend continues.'));
+assert.ok(!containsForecast('Year-on-year inflation was 5.4% in December 2025, down from 54.1% in December 2022.'));
+console.log(`Assistant checks passed: ${indicatorCatalogue.length} source datasets, ${answerableQuestions.length} answerable suggestion questions, ${publicationDocument.pageCount} publication pages, Markdown integrity, page search/citations, correction notices, period distinctions, cached JSON filters, paging, safe calculations, unread-evidence rejection, file-access rejection and request/concurrency limits, forecast refusal.`);
