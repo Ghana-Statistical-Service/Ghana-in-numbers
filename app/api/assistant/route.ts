@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     // Do not log provider messages, prompts, raw request bodies or credentials.
     if (error instanceof OpenAI.APIError) {
       if (error.status === 401 || error.status === 403) return reply({ error: "The AI service could not authenticate. The dashboard administrator needs to check the API configuration." }, 503);
-      if (error.status === 429) return reply({ error: "The AI provider’s usage or billing limit was reached. Please try again later." }, 429);
+      if (error.status === 429) return reply({ error: "API model unavailable. Please try again later." }, 429);
       return reply({ error: "The AI service is temporarily unavailable. Please try again shortly." }, 502);
     }
     return reply({ error: "I could not complete this answer. Please try a shorter question with an indicator and year." }, 502);

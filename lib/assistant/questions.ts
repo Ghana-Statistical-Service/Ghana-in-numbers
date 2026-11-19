@@ -25,6 +25,19 @@ export const datasetQuestions: Record<string, string[]> = {
   "emigrant-destinations": ["Where do most Ghanaian emigrants live?"],
   "cached-regional-projections": ["What is the projected population of each region in 2030?"],
 
+  "mpi-national-quarterly": ["How many people were multidimensionally poor in 2025 Q3?", "What was the intensity of multidimensional poverty in 2025 Q3?"],
+  "mpi-locality-quarterly": ["How does MPI incidence differ between urban and rural areas in 2025 Q3?"],
+  "mpi-indicators-quarterly": ["Which indicator contributed most to the national MPI in 2025 Q3?"],
+  "mpi-regions-quarterly": ["Which region had the largest number of multidimensionally poor people in 2025 Q3?"],
+  "mpi-household-groups-quarterly": ["How does MPI incidence in 2025 Q3 differ by the work of the household head?"],
+  "mpi-multiple-burden": ["How many people faced the triple burden of poverty, food insecurity and unemployment in 2025 Q3?"],
+  "mpi-national-2021": ["How many people were multidimensionally poor in the 2021 census?", "How did MPI incidence differ between urban and rural areas in 2021?"],
+  "mpi-indicators": ["Which indicators and weights make up Ghana’s MPI?"],
+  "mpi-regions": ["Which region had the largest number of multidimensionally poor people in 2021?", "What was the MPI incidence in the Volta region in 2021?"],
+  "mpi-household-groups": ["How does MPI incidence differ by the education of the household head?"],
+  "mpi-districts": ["Which districts had the highest MPI incidence in 2025?", "How has multidimensional poverty in Karaga district changed since 2021?"],
+  "mpi-district-contributions": ["Which indicator contributes most to the district MPI of Karaga in 2025?"],
+
   "nominal-gdp": ["What was Ghana’s nominal GDP in 2025?"],
   "real-gdp": ["How fast did Ghana’s real GDP grow in 2025?", "Explain the difference between nominal and real GDP."],
   "sector-gdp": ["What share of nominal GDP did services, industry and agriculture contribute in 2025?"],
@@ -135,6 +148,7 @@ const starters: [path: string, questions: string[]][] = [
   ["/social-development", ["How has active health insurance coverage changed?", "Explain net versus gross school enrolment.", "What share of households had access to electricity in 2021?"]],
   ["/environment-and-climate-change", ["What were the wettest months of 2025?", "How is carbon retention measured?", "Which regions hold the largest reported forest reserves?"]],
   ["/governance", ["How has women’s representation in Parliament changed?", "Compare women judges across courts in 2025.", "What share of citizens felt they had no say in 2025?"]],
+  ["/multidimensional-poverty", ["How many people were multidimensionally poor in 2025 Q3?", "Which districts had the highest MPI incidence in 2025?", "Which indicators and weights make up Ghana’s MPI?"]],
   ["/progress-on-sdgs", ["How has multidimensional poverty changed since 2022?", "What does food insecurity measure?", "How has under-five mortality changed since 2003?"]],
   ["/agriculture-forestry-fishing", ["How has cassava production changed since 2013?", "What is the Agriculture Orientation Index?", "How many young people worked in agriculture in 2021?"]],
 ];

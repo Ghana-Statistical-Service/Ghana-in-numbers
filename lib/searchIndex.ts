@@ -4,6 +4,8 @@ import { socialDevelopmentKPIs } from "@/data/socialDevelopmentData";
 import { governanceKPIs } from "@/data/governanceData";
 import { environmentKPIs } from "@/data/environmentData";
 import { allNavItems } from "@/lib/navigation";
+import { regions as mpiRegions } from "@/data/mpiData";
+import mpiPlaces from "@/data/mpiPlaces.json";
 
 export type SearchItem = {
   id: string;
@@ -79,9 +81,25 @@ const indicatorItems = (href: string, cards: { label: string; value: string; uni
     period: card.note, category: topicOf[href], kind: "Indicator", href, keywords: [card.note],
   }));
 
+// Multidimensional Poverty: its five views, and a direct entry for every region and district.
+const mpi = "/multidimensional-poverty";
+const mpiViewItems: SearchItem[] = ([
+  ["overview", "National picture: how many people are multidimensionally poor", ["MPI", "incidence", "intensity", "headcount", "quarterly", "2021 census", "urban", "rural", "drivers", "SDG 1.2.2"]],
+  ["regions", "Multidimensional poverty by region", ["MPI", "regional map", "number of poor people"]],
+  ["districts", "Multidimensional poverty in all 261 districts", ["MPI", "district ranking", "district map", "fact sheet", "small area estimates"]],
+  ["groups", "Who is affected by multidimensional poverty", ["MPI", "household head", "education", "employment", "agriculture", "disability", "triple burden", "food insecurity"]],
+  ["method", "How multidimensional poverty is measured", ["MPI", "indicators", "weights", "deprivation", "cut-off", "Alkire-Foster", "glossary"]],
+] as [string, string, string[]][]).map(([view, title, keywords]) => ({ id: `mpi-view-${view}`, title, category: topicOf[mpi], kind: "Section", href: `${mpi}?view=${view}`, keywords }));
+const mpiPlaceItems: SearchItem[] = [
+  ...mpiRegions.map(r => ({ id: `mpi-region-${r.region}`, title: `${r.region} Region: multidimensional poverty`, period: "MPI region profile", category: topicOf[mpi], kind: "Section" as const, href: `${mpi}?view=regions&region=${encodeURIComponent(r.region)}`, keywords: ["MPI", "poverty", "region"] })),
+  ...(mpiPlaces as string[][]).map(([name, region]) => ({ id: `mpi-district-${name}`, title: `${name}: multidimensional poverty`, period: `MPI district profile · ${region} Region`, category: topicOf[mpi], kind: "Section" as const, href: `${mpi}?view=districts&district=${encodeURIComponent(name)}`, keywords: ["MPI", "poverty", "district", region] })),
+];
+
 export const searchIndex: SearchItem[] = [
   ...pages,
   ...sectionItems,
+  ...mpiViewItems,
+  ...mpiPlaceItems,
   ...indicatorItems("/business-and-economy", businessEconomyKPIs),
   ...indicatorItems("/population-and-society", populationKPIs),
   ...indicatorItems("/social-development", socialDevelopmentKPIs),

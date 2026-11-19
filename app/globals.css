@@ -148,6 +148,44 @@ dialog::backdrop { background: rgba(15, 23, 43, 0.32); }
   to { opacity: 1; transform: none; }
 }
 
+/*
+ * Multidimensional Poverty dashboard: presentation layer shared with the GSS Annual Economic Survey dashboard
+ * (hero, glass stats, gold accent, Ghana-flag hairline). Rules: docs/mpi-dashboard-guidelines.md §6.
+ */
+:root { --gss-gold: #F5C451; --gss-gold-deep: #C9A227; }
+.mpi-hero {
+  position: relative; overflow: hidden; isolation: isolate; border-radius: 24px; color: #fff; padding: 32px 36px;
+  background:
+    radial-gradient(900px 420px at 105% -10%, rgba(245, 196, 81, 0.20), transparent 60%),
+    radial-gradient(700px 360px at -10% 120%, rgba(14, 138, 126, 0.34), transparent 60%),
+    radial-gradient(500px 300px at 60% 120%, rgba(107, 75, 255, 0.35), transparent 65%),
+    linear-gradient(135deg, #1A1343 0%, #241B5A 45%, #3C2FA3 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 24px 48px -20px rgba(36, 27, 90, 0.55), 0 4px 10px rgba(26, 19, 67, 0.18);
+}
+.mpi-hero::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; z-index: 2; background: linear-gradient(90deg, #CE1126 0 33.3%, #FCD116 33.3% 66.6%, #006B3F 66.6% 100%); }
+.mpi-hero::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px); background-size: 18px 18px; mask-image: linear-gradient(90deg, transparent 10%, #000 70%); }
+.mpi-hero > * { position: relative; z-index: 1; }
+@media (max-width: 640px) { .mpi-hero { padding: 24px 20px; border-radius: 20px; } }
+.mpi-glass { background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.05)); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; padding: 14px 16px; backdrop-filter: blur(6px); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10) inset; }
+.mpi-gold { color: var(--gss-gold); }
+.mpi-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.mpi-kicker::before { content: ""; width: 22px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--gss-gold), #8B7FF0); }
+.mpi-sec { display: flex; align-items: center; gap: 12px; margin: 32px 0 14px; }
+.mpi-sec::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line-strong), transparent); }
+.mpi-step { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 999px; background: var(--gss-gold); color: #1D1500; font-size: 13px; font-weight: 800; }
+.mpi-lift { transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease); }
+.mpi-lift:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -14px rgba(36, 27, 90, 0.35), 0 2px 6px rgba(15, 23, 43, 0.06); border-color: var(--gss-purple-line); }
+.mpi-glow { position: relative; overflow: hidden; }
+.mpi-glow::after { content: ""; position: absolute; right: -40px; top: -40px; width: 130px; height: 130px; border-radius: 999px; pointer-events: none; background: radial-gradient(closest-side, color-mix(in srgb, var(--glow, #3C2FA3) 14%, transparent), transparent); }
+.mpi-grow { transform-origin: left center; animation: mpi-grow 0.8s var(--ease) both; }
+@keyframes mpi-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.mpi-rise { animation: mpi-rise 0.5s var(--ease) both; }
+@keyframes mpi-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.mpi-pop { animation: mpi-pop 0.45s var(--ease) both; }
+@keyframes mpi-pop { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+.mpi-breathe::before { content: ""; position: absolute; inset: -14%; border-radius: 28px; background: radial-gradient(closest-side, rgba(245, 196, 81, 0.22), transparent 72%); filter: blur(8px); animation: mpi-breathe 5s ease-in-out infinite; }
+@keyframes mpi-breathe { 0%, 100% { opacity: 0.55; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

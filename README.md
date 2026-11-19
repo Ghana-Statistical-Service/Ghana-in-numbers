@@ -74,3 +74,12 @@ npm run start
 ## Ownership
 
 Built for the Ghana in Numbers dashboard initiative in the Ghana Statistical Service context.
+
+## Multidimensional Poverty dashboard
+
+`/multidimensional-poverty` is a thematic page built from the GSS multidimensional poverty reports and StatsBank, not from Ghana in Numbers 2025. It shows two series kept apart: the quarterly survey series (to 2025 Q3) and the annual series (2021 census; districts 2021 to 2025).
+
+- Rules for wording, numbers and charts: `docs/mpi-dashboard-guidelines.md`.
+- Data: `data/mpiQuarterlyData.ts` (quarterly survey series), `data/mpiData.ts` (2021 census: national, regional, household groups, method) and `data/mpiDistricts.json` (261 districts, built by `scripts/build-mpi-districts.py`).
+- Checks: `node --experimental-strip-types scripts/check-mpi-data.mjs`.
+- Components: `components/mpi/`.

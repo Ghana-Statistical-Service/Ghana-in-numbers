@@ -2,6 +2,7 @@ import {
   BookOpen,
   GraduationCap,
   Landmark,
+  Layers,
   LayoutDashboard,
   Leaf,
   Target,
@@ -31,6 +32,13 @@ export const navGroups: NavGroup[] = [
       { label: "Governance", href: "/governance", icon: Landmark, description: "Women in leadership, accountability and public trust" },
       { label: "Environment and Climate", href: "/environment-and-climate-change", icon: Leaf, description: "Forest reserves, carbon, rainfall and temperature" },
       { label: "Progress on the SDGs", href: "/progress-on-sdgs", icon: Target, description: "Poverty, food security, mortality, slums and coastal plastics" },
+    ],
+  },
+  {
+    // Not a chapter of the publication: built from the GSS multidimensional poverty reports and StatsBank.
+    label: "Thematic dashboards",
+    items: [
+      { label: "Multidimensional Poverty", href: "/multidimensional-poverty", icon: Layers, description: "MPI for Ghana, 16 regions and 261 districts: incidence, intensity and what drives it" },
     ],
   },
   {

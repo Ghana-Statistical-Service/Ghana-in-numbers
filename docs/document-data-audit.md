@@ -161,3 +161,46 @@ The final report (`Ghana In Numbers 2025 main report.pdf`, 178 PDF pages, "Maide
 - **New content added to the dashboard**: Figure 4.7 regional child marriage; Figures 8.2–8.4 and Tables 8.1–8.2 (poverty by group, region and driver; quarterly deprivations; Gini). The preface (p. vii) is now the welcome message.
 - **Unchanged after checking**: all other chart values in Chapters 3–9, including Figure 3.1, the pyramids, the regional maps, GDP, prices, labour, trade, fiscal, environment and mortality series.
 - **Assistant**: the publication Markdown and index were regenerated from the final PDF (178 pages, 165 with extractable text); the grassland correction notice was retired; six datasets were added (111 in total).
+
+## Multidimensional Poverty dashboard (19 November 2026)
+
+A thematic page, `/multidimensional-poverty`, was added outside the Ghana in Numbers chapters. Rules: `mpi-dashboard-guidelines.md`. Checks: `node --experimental-strip-types scripts/check-mpi-data.mjs` (2,106 checks).
+
+Sources, all Ghana Statistical Service, read on 19 November 2026:
+
+- StatsBank database "MPI" holds one table, *Multidimensional Poverty Index (MPI) by Indicators, Year and District* (matrix `MPI_Inidicator_Contribution`, last updated 18 June 2026): the percentage contribution of 13 indicators to the district MPI, 261 districts, 2021 to 2025 (16,965 values, none missing). The database is not exposed through the StatsBank API; the table was saved from the web interface as JSON-stat 2. It holds no incidence, intensity or counts.
+- statsghana.gov.gh > Publications > Administrative Data Reports: *Multidimensional Poverty Report, 2024 Q1 to 2025 Q3* (81 pages), the *MPI 2025* infographic, *District-Level Multidimensional Poverty Rankings, 2021 to 2025* and 261 district fact sheets.
+
+Cross-checks: the district incidence in the ranking and the indicator contributions on StatsBank reproduce the Asunafo North Municipal fact sheet exactly. All 261 district names join across the three sources after three spelling differences (Kasena/Kassena Nankana Municipal and West; Prestea/Huni Valley and Prestea-Huni Valley). The 272 shapes in `public/map/District.gh.json` map to the 261 districts (six metropolitan areas are drawn as sub-metros).
+
+Conflicts and choices in the quarterly report:
+
+- **Regions "above 50%".** The foreword, executive summary, Figure 4.5 text and conclusion say North East and Savannah exceeded 50% in 2025 Q2 and Q3. Table 6.3 and the infographic give Savannah 33.8% (Q2) and 37.3% (Q3). The dashboard uses the table and does not repeat the sentence.
+- **Figure 4.4 text** says Ashanti "recorded an increase of 1.2 million persons" between Q2 and Q3; Table 6.4 shows a fall from 997,333 to 829,009. Table used; sentence not repeated. The executive summary names Ashanti and Eastern as regions with over one million poor persons; in Table 6.4 only Northern exceeds one million in 2025 Q3.
+- **Intensity, 2025 Q2 and Q3.** Table 6.2 prints 42.0 and 42.0 with intervals that do not contain them; Table 6.8 prints 43.4 and 43.1. Table 6.3 (42.1 and 41.9) is used because it reproduces the published MPI (0.231 × 0.421 = 0.097; 0.219 × 0.419 = 0.092).
+- **2025 Q1** is missing from Tables 6.2 to 6.34. National (23.9%, 7.80 million) and urban and rural values come from the infographic; Table 6.1 does include 2025 Q1 censored headcounts. Other 2025 Q1 values are shown as not published.
+- **Regional counts** in Table 6.4 add to within 0.2% of the national count, not exactly. The dashboard never adds regions up.
+- **Table 6.1 uncensored headcount** for overcrowding moves from 30.7% (2025 Q2) to 93.3% (2025 Q3), and school lag from 18.6% to 6.8%. Uncensored ratios are not shown; the censored ratios (11.4% to 21.6%; 7.9% to 3.9%) are shown as published with a note. This is worth confirming with the poverty statistics team.
+- **Report introduction** (p. 1) describes three dimensions and twelve indicators; the methodology (p. 7) and all tables use four dimensions and thirteen indicators. The dashboard follows Table 3.1.
+- **Nutrition cut-off.** Table 3.1 reads "underweight, stunted and wasting"; reproduced as published.
+- **District series, 2021.** The fact sheets note that child mortality was measured in 2021 and nutrition from 2022. The StatsBank table labels both "Nutrition". The dashboard marks 2021 and does not compare 2021 indicator shares with later years.
+- The existing SDG page figure "23.0%, Q1 to Q3 2025 average" (Ghana in Numbers, Figure 8.1) is consistent with the quarterly values 23.9, 23.1 and 21.9.
+
+Not transcribed: district counts of poor people, district intensity and district uncensored deprivations appear only in the 261 fact sheet PDFs; each district profile links to its fact sheet instead.
+
+## Multidimensional Poverty dashboard: annual series only (19 November 2026)
+
+At the user's instruction the page no longer uses the quarterly survey report (*Multidimensional Poverty Report, 2024 Q1 to 2025 Q3*) or its infographic. Everything in the section above that concerns those two documents (the Savannah, Ashanti, intensity, overcrowding and regional-count notes) no longer affects the page; it is kept as a record. The Ghana in Numbers chapter figures on the SDG page still come from the quarterly series and are unchanged.
+
+Sources now used: *Multidimensional Poverty Report* (2021 Population and Housing Census, 58 pages), the district rankings 2021 to 2025, StatsBank and the district fact sheets.
+
+- **Coherence.** In the census report the 261 district rows of Table 7.18 add to the regional rows of Table 7.1 and to the national 7,317,555 exactly, and each district's 2021 incidence equals the 2021 column of the district rankings. Asunafo North's 38,694 matches its fact sheet. The census report and the district rankings are therefore one series.
+- **Charts read by eye.** Figures 5.1, 5.2 and 5.5 to 5.16 are images with printed value labels; the values were transcribed from the labels, not measured from the bars.
+- **Name join.** Table 7.18 spells district names differently (for example "Cape Coast Metropolis"); rows are joined on region, published 2021 incidence and closest name, then checked against the incidence.
+- **Not published.** No national or regional figure is published in these sources after 2021, and no national MPI score is printed (only incidence 24.3% and intensity 43.8%), so the page shows neither. District counts of poor people after 2021 are only in the fact sheets.
+- **Wording conflicts in the census report.** The text box on p. 23 says "Four in every ten (40.9%) multidimensionally poor persons have never attended school"; Figure 5.12 shows 40.9% as the incidence among households whose head has no education. The figure is used. The foreword text on p. 11 calls intensity "severe poverty"; the page uses "intensity".
+- **Method table.** Table 4.1 (2021) defines the second health indicator as mortality and words several cut-offs differently from the 2021 to 2025 fact sheets (for example housing wall materials). The page shows the fact-sheet wording and the Table 4.1 weights, and states the 2021 mortality definition.
+
+## Multidimensional Poverty dashboard: both series (19 November 2026, later the same day)
+
+The annual-only change above was reversed at the user's instruction: the quarterly survey report and its infographic are back on the page, and the 2021 census report added for the annual-only version stays. The page now shows both series, kept apart (`mpi-dashboard-guidelines.md` section 1). All notes in both sections above therefore apply again. Quarterly figures are in `data/mpiQuarterlyData.ts`; annual figures in `data/mpiData.ts` and `data/mpiDistricts.json`.
