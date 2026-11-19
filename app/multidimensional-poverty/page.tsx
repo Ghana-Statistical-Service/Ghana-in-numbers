@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import DashboardShell from "@/components/layout/DashboardShell";
 import OverviewTopBar from "@/components/home/OverviewTopBar";
 import MpiDashboard from "@/components/mpi/MpiDashboard";
-import { PageBody, PageHeader } from "@/components/ui/Page";
+import { PageBody } from "@/components/ui/Page";
 
 export const metadata: Metadata = {
   title: "Multidimensional Poverty | Ghana in Numbers",
@@ -17,18 +17,7 @@ export default async function MultidimensionalPovertyPage({ searchParams }: { se
   return (
     <DashboardShell>
       <OverviewTopBar page="Multidimensional Poverty" regionalTarget="mpi-tabs" />
-      <PageBody>
-        <PageHeader
-          eyebrow="Thematic dashboard · SDG 1.2.2"
-          title="Multidimensional Poverty"
-          description="Poverty is more than a lack of money. This page shows how many people in Ghana go without several basic needs at once in health, living conditions, education and employment, where they live, and which needs matter most."
-          meta={[
-            { label: "Source", value: "Ghana Statistical Service: MPI reports and StatsBank" },
-            { label: "Latest", value: "2025 Q3 (national, regional); 2025 (districts)" },
-            { label: "Also", value: "2021 census (national, regional, household groups)" },
-            { label: "Status", value: "Official statistics, as published" },
-          ]}
-        />
+      <PageBody className="!pt-4 lg:!pt-5">
         <MpiDashboard view={one(params.view)} region={one(params.region)} district={one(params.district)} />
       </PageBody>
     </DashboardShell>

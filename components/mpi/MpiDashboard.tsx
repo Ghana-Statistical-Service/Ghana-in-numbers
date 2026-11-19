@@ -68,9 +68,16 @@ export default function MpiDashboard({ view: initialView, region: initialRegion,
 
   return (
     <div id="mpi-top" className="scroll-mt-2">
-      <PlaceSearch place={place} onPick={p => (p.kind === "region" ? openRegion(p.name) : openDistrict(p.name))} onClear={() => update({ region: null, district: null })} />
+      {/* Compact header: title and place search share one row so the tab bar and the headline panel sit high on the first screen. */}
+      <header className="mb-2 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.1em] text-brand">Thematic dashboard · SDG 1.2.2</p>
+          <h1 className="mt-1 text-[26px] font-semibold leading-tight tracking-tight text-ink sm:text-[28px]">Multidimensional Poverty</h1>
+        </div>
+        <PlaceSearch place={place} onPick={p => (p.kind === "region" ? openRegion(p.name) : openDistrict(p.name))} onClear={() => update({ region: null, district: null })} />
+      </header>
 
-      <div id="mpi-tabs" className="sticky top-0 z-20 -mx-4 mb-6 bg-canvas/90 px-4 py-2.5 backdrop-blur sm:-mx-6 sm:px-6 lg:top-12 lg:-mx-8 lg:px-8">
+      <div id="mpi-tabs" className="sticky top-0 z-20 -mx-4 mb-3 bg-canvas/90 px-4 py-2.5 backdrop-blur sm:-mx-6 sm:px-6 lg:top-12 lg:-mx-8 lg:px-8">
         <div role="tablist" aria-label="Multidimensional poverty views" className="flex gap-1.5 overflow-x-auto rounded-2xl border border-line bg-surface p-1.5 shadow-card">
           {mpiViews.map((v, index) => {
             const selected = v.id === view;
@@ -97,6 +104,15 @@ export default function MpiDashboard({ view: initialView, region: initialRegion,
         {view === "groups" && <GroupsView />}
         {view === "method" && <MethodView />}
       </div>
+
+      <footer className="mt-10 border-t border-line pt-4 text-[13px] leading-relaxed text-muted">
+        <p className="max-w-4xl">Poverty is more than a lack of money. This page shows how many people in Ghana go without several basic needs at once in health, living conditions, education and employment, where they live, and which needs matter most.</p>
+        <dl className="mt-2 flex flex-wrap gap-x-6 gap-y-1">
+          {[["Source", "Ghana Statistical Service: MPI reports and StatsBank"], ["Latest", "2025 Q3 (national, regional); 2025 (districts)"], ["Also", "2021 census (national, regional, household groups)"], ["Status", "Official statistics, as published"]].map(([label, value]) => (
+            <div key={label} className="flex gap-1.5"><dt className="text-subtle">{label}</dt><dd className="font-medium text-body">{value}</dd></div>
+          ))}
+        </dl>
+      </footer>
     </div>
   );
 }

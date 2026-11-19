@@ -40,16 +40,16 @@ export default function PlaceSearch({ place, onPick, onClear }: { place: Place |
   };
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-3">
-      <div className="relative min-w-[16rem] flex-1 sm:max-w-xl">
+    <div className="flex min-w-[min(100%,18rem)] flex-1 flex-wrap items-center justify-end gap-2.5">
+      <div className="relative order-2 min-w-[16rem] flex-1 sm:max-w-lg">
         <Search size={17} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-brand" />
         <input ref={input} type="text" role="combobox" aria-expanded={open} aria-controls={listId} aria-autocomplete="list" aria-label="Find a region or district"
           aria-activedescendant={open && matches[cursor] ? `${listId}-${cursor}` : undefined}
           value={query} placeholder="Find your region or district, for example Karaga or Volta"
           onChange={e => { setQuery(e.target.value); setOpen(true); setCursor(0); }} onFocus={() => setOpen(true)} onBlur={() => setTimeout(() => setOpen(false), 120)} onKeyDown={onKey}
-          className="h-12 w-full rounded-2xl border border-brand-line bg-surface pl-11 pr-4 text-[14px] text-ink shadow-card placeholder:text-subtle focus:border-brand" />
+          className="h-11 w-full rounded-2xl border border-brand-line bg-surface pl-11 pr-4 text-[14px] text-ink shadow-card placeholder:text-subtle focus:border-brand" />
         {open && (
-          <ul id={listId} role="listbox" aria-label="Regions and districts" className="absolute inset-x-0 top-[54px] z-40 max-h-[22rem] overflow-y-auto rounded-2xl border border-line bg-surface p-1.5 shadow-pop">
+          <ul id={listId} role="listbox" aria-label="Regions and districts" className="absolute inset-x-0 top-[50px] z-40 max-h-[22rem] overflow-y-auto rounded-2xl border border-line bg-surface p-1.5 shadow-pop">
             {!query && <li role="presentation" className="px-3 pb-1 pt-1.5 text-xs font-medium text-muted">Regions · type a name to search all 261 districts</li>}
             {matches.map((p, i) => (
               <li key={`${p.kind}-${p.name}`} id={`${listId}-${i}`} role="option" aria-selected={i === cursor}
@@ -64,7 +64,7 @@ export default function PlaceSearch({ place, onPick, onClear }: { place: Place |
         )}
       </div>
       {place && (
-        <p className="mpi-rise inline-flex min-h-10 items-center gap-2 rounded-full bg-[linear-gradient(135deg,#241B5A,#3C2FA3)] py-1 pl-4 pr-1.5 text-[13px] font-semibold text-white">
+        <p className="mpi-rise order-1 inline-flex min-h-10 items-center gap-2 rounded-full bg-[linear-gradient(135deg,#241B5A,#3C2FA3)] py-1 pl-4 pr-1.5 text-[13px] font-semibold text-white">
           <span className="text-white/75">Showing</span>{place.name}{place.kind === "region" ? " Region" : ""}
           <button type="button" onClick={onClear} aria-label={`Clear ${place.name} and show all of Ghana`} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 hover:bg-white/25"><X size={15} /></button>
         </p>
